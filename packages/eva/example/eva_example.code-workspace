@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Flutter",
+				"request": "launch",
+				"type": "dart",
+				"flutterMode": "debug"
+			}
+		],
+	},
+	"settings": {
+		"workbench.colorCustomizations": {
+			"activityBar.background": "#19207B",
+			"titleBar.activeBackground": "#242DAC",
+			"titleBar.activeForeground": "#F9FAFE"
+		}
+	}
+}
