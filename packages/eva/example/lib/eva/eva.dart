@@ -61,6 +61,9 @@ abstract class Eva {
   }
 
   static void emit(Event event) {
+    Log.debug(() => "Main is emitting `${event.runtimeType}`");
+    Log.verbose(() => event.toString());
+
     _domainSendPort.send(event);
   }
 }
@@ -81,8 +84,9 @@ abstract class Domain {
   }
 
   static void emit(Event event) {
-    Log.debug(() => "Domain is dispatching `${event.runtimeType}`");
+    Log.debug(() => "Domain is emitting `${event.runtimeType}`");
     Log.verbose(() => event.toString());
+
     _sendToMainPort.send(event);
   }
 
