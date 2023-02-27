@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import '../../../eva/log/log.dart';
-import '../shared/base_environment.dart';
+import '../../eva/log/log.dart';
+import 'base_environment.dart';
 
 @immutable
 class DevelopmentEnvironment extends BaseEnvironment {

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "br.com.kodel" "\0"
-            VALUE "FileDescription", "eva_example" "\0"
+            VALUE "FileDescription", "eva_to_do_example" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "eva_example" "\0"
+            VALUE "InternalName", "eva_to_do_example" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 br.com.kodel. All rights reserved." "\0"
-            VALUE "OriginalFilename", "eva_example.exe" "\0"
-            VALUE "ProductName", "eva_example" "\0"
+            VALUE "OriginalFilename", "eva_to_do_example.exe" "\0"
+            VALUE "ProductName", "eva_to_do_example" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

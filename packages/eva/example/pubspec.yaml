@@ -1,20 +1,22 @@
-name: eva_example
-description: EvA Example project
+name: eva_to_do_example
+description: EvA To Do Example
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0-218.1.beta <4.0.0'
+  sdk: '>=2.19.2 <3.0.0'
 
 dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-  kfx_dependency_injection: ^1.4.1
-  meta: ^1.9.0
+  kfx_dependency_injection: ^1.5.0
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

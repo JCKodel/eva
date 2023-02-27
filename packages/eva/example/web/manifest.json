@@ -1,6 +1,6 @@
 {
-    "name": "eva_example",
-    "short_name": "eva_example",
+    "name": "eva_to_do_example",
+    "short_name": "eva_to_do_example",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

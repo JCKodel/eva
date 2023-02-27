@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = eva_example
+PRODUCT_NAME = eva_to_do_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = br.com.kodel.evaExample
+PRODUCT_BUNDLE_IDENTIFIER = br.com.kodel.evaToDoExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 br.com.kodel. All rights reserved.

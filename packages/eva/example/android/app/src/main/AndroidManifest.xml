@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.kodel.eva_example">
+    package="br.com.kodel.eva_to_do_example">
    <application
-        android:label="eva_example"
+        android:label="eva_to_do_example"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'app/environments/development/development_environment.dart';
+import 'app/environments/development_environment.dart';
+import 'app/presentation/home/home_page.dart';
 import 'eva/eva.dart';
-import 'eva/events/eva_ready_event.dart';
 
 Future<void> main() async {
   await Eva.useEnvironment(() => const DevelopmentEnvironment());
@@ -15,14 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: TextButton(
-            onPressed: () => Eva.emit(const EvaReadyEvent()),
-            child: const Text("SEND TO DOMAIN"),
-          ),
-        ),
-      ),
+      color: Colors.teal,
+      darkTheme: ThemeData(primarySwatch: Colors.teal, brightness: Brightness.dark),
+      theme: ThemeData(primarySwatch: Colors.teal, brightness: Brightness.light),
+      themeMode: ThemeMode.system,
+      title: "EvA To Do Example",
+      home: const HomePage(),
     );
   }
 }

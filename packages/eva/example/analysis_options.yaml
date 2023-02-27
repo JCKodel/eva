@@ -5,9 +5,6 @@ analyzer:
     strict-casts: true
     strict-raw-types: true
     strict-inference: true
-  enable-experiment:
-    - records
-    - patterns
 
 linter:
   rules:
