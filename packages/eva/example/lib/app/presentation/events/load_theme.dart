@@ -8,13 +8,13 @@ class LoadTheme {
 }
 
 @immutable
-class LoadThemeEventHandler extends EventHandler {
+class LoadThemeEventHandler extends EventHandler<LoadTheme> {
   const LoadThemeEventHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
 
   final ThemeDomain _themeDomain;
 
   @override
-  Stream<IEvent> handle<TInput>(Event<TInput> event) async* {
+  Stream<IEvent> handleSuccess(Event<LoadTheme> event) async* {
     yield const Event<ToDoTheme>.waiting();
 
     final themeIsDark = await _themeDomain.getThemeIsDark();

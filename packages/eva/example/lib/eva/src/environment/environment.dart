@@ -9,7 +9,7 @@ import '../../eva.dart';
 abstract class Environment {
   const Environment();
 
-  static final _eventHandlers = <String, EventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
+  static final _eventHandlers = <String, IEventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
 
   Future<void> initialize();
 
@@ -39,7 +39,7 @@ abstract class Environment {
   }
 
   @protected
-  void registerEventHandler<T>(EventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) eventHandlerConstructor) {
+  void registerEventHandler<T>(IEventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) eventHandlerConstructor) {
     if (Isolate.current.debugName == "main") {
       throw IsolateSpawnException("Environments cannot be executed on the main thread (i.e.: never call an Environment directly from Flutter code)");
     }
@@ -68,7 +68,16 @@ abstract class Environment {
 
     try {
       // ignore: invalid_use_of_protected_member
-      handler(ServiceProvider.required, PlatformInfo.platformInfo).handle(event).forEach((event) {
+      final h = handler(ServiceProvider.required, PlatformInfo.platformInfo) as EventHandler;
+
+      final outputStream = event.match(
+        failure: (e) => h.handleFailure(e),
+        empty: (e) => h.handleEmpty(e),
+        waiting: (e) => h.handleWaiting(e),
+        success: (e) => h.handleSuccess(e),
+      );
+
+      outputStream.forEach((event) {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
         Log.verbose(() => event.toString());
 

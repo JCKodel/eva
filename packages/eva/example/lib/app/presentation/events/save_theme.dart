@@ -10,20 +10,13 @@ class SaveTheme {
 }
 
 @immutable
-class SaveThemeEventHandler extends EventHandler {
+class SaveThemeEventHandler extends EventHandler<SaveTheme> {
   const SaveThemeEventHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
 
   final ThemeDomain _themeDomain;
 
   @override
-  Stream<IEvent> handle<TInput>(Event<TInput> event) async* {
-    yield* event.maybeMatch(
-      success: (event) => _setTheme(event as SuccessEvent<SaveTheme>),
-      otherwise: (e) => throw e,
-    );
-  }
-
-  Stream<IEvent> _setTheme(SuccessEvent<SaveTheme> event) async* {
+  Stream<IEvent> handleSuccess(SuccessEvent<SaveTheme> event) async* {
     final saveResult = await _themeDomain.setThemeIsDark(event.value.isDarkTheme);
 
     yield saveResult.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: event.value.isDarkTheme));
