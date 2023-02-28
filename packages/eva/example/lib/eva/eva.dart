@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
+
 import 'environment/environment.dart';
-import 'events/eva_ready_event.dart';
 import 'events/event.dart';
 import 'log/log.dart';
 
@@ -13,6 +15,7 @@ abstract class Eva {
   static final ReceivePort _errorPort = ReceivePort("error");
   static late final SendPort _domainSendPort;
   static final _useEnvironmentCompleter = Completer<void>();
+  static final BehaviorSubject<Event> _eventBehaviorSubject = BehaviorSubject<Event>();
 
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
     if (Isolate.current.debugName != "main") {
@@ -51,21 +54,32 @@ abstract class Eva {
 
     Log.debug(() => "Main received event `${event.runtimeType}`");
     Log.verbose(() => event.toString());
+    _eventBehaviorSubject.add(message);
+  }
+
+  static Stream<EventOf<T>> getEventStream<T>() {
+    return _eventBehaviorSubject.stream.where((event) => event is EventOf<T>).cast<EventOf<T>>();
   }
 
   static void disposeEnvironment() {
     _domainReceivePort.close();
     _errorPort.close();
     _isolate.kill(priority: Isolate.immediate);
+    _eventBehaviorSubject.close();
     Log.warn(() => "Environment has being disposed");
   }
 
-  static void emit(Event event) {
+  static void emit<T>(EventOf<T> event) {
     Log.debug(() => "Main is emitting `${event.runtimeType}`");
     Log.verbose(() => event.toString());
 
     _domainSendPort.send(event);
   }
+}
+
+@immutable
+class EvaReady {
+  const EvaReady();
 }
 
 abstract class Domain {
@@ -80,10 +94,10 @@ abstract class Domain {
     Log.info(() => "Domain started as an isolated thread");
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     await _environment.initialize();
-    emit(const EvaReadyEvent());
+    emit(const EventOf<EvaReady>.success(EvaReady()));
   }
 
-  static void emit(Event event) {
+  static void emit<T>(EventOf<T> event) {
     Log.debug(() => "Domain is emitting `${event.runtimeType}`");
     Log.verbose(() => event.toString());
 
