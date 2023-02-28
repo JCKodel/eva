@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import '../events/event.dart';
+
 enum _ResponseType {
   failure,
   empty,
@@ -130,5 +132,13 @@ class ResponseOf<TSuccess> extends Response {
     } catch (ex) {
       return failure == null ? ResponseOf<TResult>.failure(ex) : failure(ex);
     }
+  }
+
+  Event<T> mapToEvent<T>({T Function(TSuccess value)? success}) {
+    return match(
+      success: success == null ? (v) => Event<T>.success(v as T) : (value) => Event<T>.success(success(value)),
+      empty: () => Event<T>.empty(),
+      failure: (exception) => Event<T>.failure(exception),
+    );
   }
 }

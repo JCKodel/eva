@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../eva.dart';
 import '../events/event.dart';
 
 class EventBuilder<T> extends StatelessWidget {
@@ -40,5 +41,30 @@ class EventBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SizedBox();
+  }
+}
+
+class QueryEventBuilder<TQueryEvent, TResponseEvent> extends EventBuilder<TResponseEvent> {
+  const QueryEventBuilder({
+    required this.query,
+    required super.successBuilder,
+    super.key,
+    super.initialValue,
+    super.emptyBuilder,
+    super.failureBuilder,
+    super.onEmpty,
+    super.onFailure,
+    super.onSuccess,
+    super.onWaiting,
+    super.waitingBuilder,
+  });
+
+  final TQueryEvent query;
+
+  @override
+  Widget build(context) {
+    Eva.emit(Event.success(query));
+
+    return super.build(context);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../eva/eva.dart';
 import '../domain/entities/to_do_theme.dart';
 
+import 'events/theme_events.dart';
 import 'home/home_page.dart';
 
 class ToDoApp extends StatelessWidget {
@@ -10,7 +11,8 @@ class ToDoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventBuilder<ToDoTheme>(
+    return QueryEventBuilder<LoadTheme, ToDoTheme>(
+      query: const LoadTheme(),
       initialValue: ToDoTheme(isDarkTheme: WidgetsBinding.instance.window.platformBrightness == Brightness.dark),
       successBuilder: (context, event) {
         const themeColor = Colors.teal;

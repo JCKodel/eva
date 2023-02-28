@@ -1,5 +1,3 @@
-import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
-
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 import '../domain/theme_domain.dart';
@@ -23,6 +21,8 @@ abstract class BaseEnvironment extends Environment {
 
   @override
   void registerEventHandlers() {
-    registerEventHandler<LoadTheme>((e) => ServiceProvider.required<ThemeDomain>().getThemeColor());
+    registerEventHandler<LoadTheme>(
+      (required, platform) => LoadThemeEventHandler(themeDomain: required<ThemeDomain>()),
+    );
   }
 }

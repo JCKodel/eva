@@ -28,7 +28,7 @@ enum LogColor {
 }
 
 abstract class Log {
-  static LogLevel minLogLevel = kDebugMode ? LogLevel.verbose : LogLevel.info;
+  static LogLevel minLogLevel = kDebugMode ? LogLevel.debug : LogLevel.info;
 
   static void verbose(String Function() messageGenerator) {
     if (kDebugMode) {

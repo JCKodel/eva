@@ -1,7 +1,7 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 
-const kColorKey = "color";
+const kBrightnessKey = "themeBrightness";
 
 @immutable
 class ThemeDomain implements IDomain {
@@ -12,13 +12,13 @@ class ThemeDomain implements IDomain {
   @override
   void initialize() {}
 
-  Future<ResponseOf<int>> getThemeColor() async {
-    final currentColor = await _appSettingsRepository.get(kColorKey);
+  Future<ResponseOf<bool>> getThemeIsDark() async {
+    final currentBrightness = await _appSettingsRepository.get(kBrightnessKey);
 
-    return currentColor.map(success: (value) => ResponseOf.success(int.parse(value)));
+    return currentBrightness.map(success: (value) => ResponseOf.success(value == "D"));
   }
 
-  Future<Response> setThemeColor(int color) async {
-    return _appSettingsRepository.set(kColorKey, color.toString());
+  Future<Response> setThemeIsDark(bool isDarkTheme) async {
+    return _appSettingsRepository.set(kBrightnessKey, isDarkTheme ? "D" : "L");
   }
 }
