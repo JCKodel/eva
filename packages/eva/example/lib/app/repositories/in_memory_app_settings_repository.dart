@@ -1,6 +1,4 @@
-import 'package:meta/meta.dart';
-
-import '../../eva/events/event.dart';
+import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 
 @immutable
@@ -16,19 +14,19 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   bool get canWatch => false;
 
   @override
-  Future<EventOf<String>> get(String key) async {
-    return EventOf<String>.success(_settings[key]);
+  Future<ResponseOf<String>> get(String key) async {
+    return ResponseOf<String>.success(_settings[key]);
   }
 
   @override
-  Future<Event> set(String key, String value) async {
+  Future<Response> set(String key, String value) async {
     _settings[key] = value;
 
-    return const Event.empty();
+    return const Response.empty();
   }
 
   @override
-  Future<EventOf<Stream<String>>> watch(String key) async {
-    return EventOf<Stream<String>>.failure(UnimplementedError());
+  Future<ResponseOf<Stream<String>>> watch(String key) async {
+    return ResponseOf<Stream<String>>.failure(UnimplementedError());
   }
 }

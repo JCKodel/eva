@@ -1,7 +1,4 @@
-import 'package:meta/meta.dart';
-
-import '../../eva/environment/environment.dart';
-import '../../eva/log/log.dart';
+import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 import '../domain/theme_domain.dart';
 import '../repositories/in_memory_app_settings_repository.dart';

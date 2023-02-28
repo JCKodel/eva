@@ -1,6 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../entities/i_equatable.dart';
 import '../validation/i_validation_error.dart';
 
 enum _EventType {
@@ -12,7 +12,7 @@ enum _EventType {
 }
 
 @immutable
-class Event implements IEquatable {
+class Event extends Equatable {
   const Event.failure(Object exception)
       : _type = _EventType.failure,
         _exception = exception,
@@ -116,77 +116,11 @@ class Event implements IEquatable {
   }
 
   @override
-  bool equals(Object other) {
-    return other == this;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (other is Event == false) {
-      return false;
-    }
-
-    if (identical(this, other)) {
-      return true;
-    }
-
-    // ignore: test_types_in_equals
-    final o = other as Event;
-
-    if (o._type != _type) {
-      return false;
-    }
-
-    switch (_type) {
-      case _EventType.failure:
-        return false;
-      case _EventType.validationErrors:
-        if (o._validationErrors.length != _validationErrors.length || o.runtimeType != runtimeType) {
-          return false;
-        }
-
-        final ol = o._validationErrors.toList();
-        final l = _validationErrors.toList();
-
-        for (var ct = 0; ct < l.length; ct++) {
-          if (ol[ct] != l[ct]) {
-            return false;
-          }
-        }
-
-        return true;
-      case _EventType.empty:
-        return true;
-      case _EventType.waiting:
-        return true;
-      case _EventType.success:
-        if (_value is IEquatable) {
-          return o.runtimeType == runtimeType && (_value as IEquatable).equals(o._value!);
-        }
-
-        return o.runtimeType == runtimeType && o._value == _value;
-    }
-  }
-
-  @override
-  int get hashCode {
-    switch (_type) {
-      case _EventType.failure:
-        return _exception.hashCode;
-      case _EventType.validationErrors:
-        return Object.hashAll(_validationErrors);
-      case _EventType.empty:
-        return _EventType.empty.hashCode;
-      case _EventType.waiting:
-        return _EventType.waiting.hashCode;
-      case _EventType.success:
-        return _value.hashCode;
-    }
-  }
+  List<Object?> get props => [_type, _exception, _value, _validationErrors];
 }
 
 @immutable
-class EventOf<TSuccess> extends Event {
+class EventOf<TSuccess extends Equatable> extends Event {
   const EventOf.failure(Object exception) : super.failure(exception);
   const EventOf.validationErrors(Iterable<IValidationError> validationErrors) : super.validationErrors(validationErrors);
   const EventOf.empty() : super.empty();
@@ -229,7 +163,7 @@ class EventOf<TSuccess> extends Event {
     );
   }
 
-  EventOf<TResult> map<TResult>({
+  EventOf<TResult> map<TResult extends Equatable>({
     required EventOf<TResult> Function(TSuccess value) success,
     EventOf<TResult> Function(Object exception)? failure,
     EventOf<TResult> Function(Iterable<IValidationError> validationErrors)? validationErrors,

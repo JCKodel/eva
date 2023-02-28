@@ -1,12 +1,9 @@
-import 'package:meta/meta.dart';
-
-import '../../eva/contracts/i_repository.dart';
-import '../../eva/events/event.dart';
+import '../../eva/eva.dart';
 
 @immutable
 abstract class IAppSettingsRepository implements IRepository {
   bool get canWatch;
-  Future<Event> set(String key, String value);
-  Future<EventOf<String>> get(String key);
-  Future<EventOf<Stream<String>>> watch(String key);
+  Future<Response> set(String key, String value);
+  Future<ResponseOf<String>> get(String key);
+  Future<ResponseOf<Stream<String>>> watch(String key);
 }

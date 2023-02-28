@@ -1,7 +1,4 @@
-import 'package:meta/meta.dart';
-
-import '../../eva/domain/i_domain.dart';
-import '../../eva/events/event.dart';
+import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 
 const kColorKey = "color";
@@ -15,15 +12,15 @@ class ThemeDomain implements IDomain {
   @override
   void initialize() {}
 
-  Future<EventOf<int>> getThemeColor() async {
+  Future<ResponseOf<int>> getThemeColor() async {
     final currentColor = await _appSettingsRepository.get(kColorKey);
 
-    return currentColor.map<int>(
-      success: (value) => EventOf<int>.success(int.parse(value)),
-    );
+    return currentColor.map(success: (value) => ResponseOf.success(int.parse(value)));
   }
 
   Future<Event> setThemeColor(int color) async {
-    return _appSettingsRepository.set(kColorKey, color.toString());
+    final response = await _appSettingsRepository.set(kColorKey, color.toString());
+
+    return response.toEvent();
   }
 }
