@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../eva/eva.dart';
 import '../domain/entities/to_do_theme.dart';
 
-import 'events/theme_events.dart';
+import 'events/load_theme.dart';
 import 'home/home_page.dart';
 
 class ToDoApp extends StatelessWidget {
@@ -23,8 +23,8 @@ class ToDoApp extends StatelessWidget {
 
     return MaterialApp(
       color: themeColor,
-      darkTheme: ThemeData(primarySwatch: themeColor, brightness: Brightness.dark),
-      theme: ThemeData(primarySwatch: themeColor, brightness: Brightness.light),
+      darkTheme: ThemeData(primarySwatch: themeColor, brightness: Brightness.dark, useMaterial3: true),
+      theme: ThemeData(primarySwatch: themeColor, brightness: Brightness.light, useMaterial3: true),
       themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       title: "EvA To Do Example",
       home: const HomePage(),

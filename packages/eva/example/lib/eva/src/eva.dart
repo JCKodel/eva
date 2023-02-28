@@ -94,7 +94,6 @@ abstract class Domain {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
 
-    Log.minLogLevel = _environment.minLogLevel;
     await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
@@ -102,14 +101,14 @@ abstract class Domain {
     Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);
-    emit(const Event.success(EvaReadyEvent()));
+    dispatchEventState(const EvaReadyEvent());
   }
 
   @protected
-  static void emit(IEvent event) {
-    Log.debug(() => "Domain is emitting `${event}`");
-    Log.verbose(() => event.toString());
+  static void dispatchEventState(Object eventState) {
+    Log.debug(() => "Domain is emitting `${eventState}`");
+    Log.verbose(() => eventState.toString());
 
-    _sendToMainPort.send(event);
+    _sendToMainPort.send(eventState);
   }
 }

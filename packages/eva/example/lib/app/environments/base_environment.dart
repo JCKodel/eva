@@ -1,7 +1,8 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 import '../domain/theme_domain.dart';
-import '../presentation/events/theme_events.dart';
+import '../presentation/events/load_theme.dart';
+import '../presentation/events/save_theme.dart';
 import '../repositories/in_memory_app_settings_repository.dart';
 
 @immutable
@@ -9,9 +10,7 @@ abstract class BaseEnvironment extends Environment {
   const BaseEnvironment();
 
   @override
-  Future<void> initialize() async {
-    Log.minLogLevel = LogLevel.verbose;
-  }
+  Future<void> initialize() async {}
 
   @override
   Future<void> registerDependencies() async {
@@ -27,11 +26,11 @@ abstract class BaseEnvironment extends Environment {
   @override
   void registerEventHandlers() {
     registerEventHandler<LoadTheme>(
-      (required, platform) => ThemeEventHandler(themeDomain: required<ThemeDomain>()),
+      (required, platform) => LoadThemeEventHandler(themeDomain: required<ThemeDomain>()),
     );
 
     registerEventHandler<SaveTheme>(
-      (required, platform) => ThemeEventHandler(themeDomain: required<ThemeDomain>()),
+      (required, platform) => SaveThemeEventHandler(themeDomain: required<ThemeDomain>()),
     );
   }
 }
