@@ -15,13 +15,21 @@ abstract class Eva {
   static final ReceivePort _errorPort = ReceivePort("error");
   static late final SendPort _domainSendPort;
   static final _useEnvironmentCompleter = Completer<void>();
-  static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
+
+  static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>(
+    onListen: () => Log.verbose(() => "A new subject was added to BehaviorSubject"),
+    onCancel: () => Log.warn(() => "The BehaviorSubject was cancelled"),
+    sync: false,
+  );
 
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
     if (Isolate.current.debugName != "main") {
       throw IsolateSpawnException("This method can only be called in the main thread");
     }
 
+    final environment = environmentFactory();
+
+    Log.minLogLevel = environment.minLogLevel;
     Log.info(() => "Initializing Eva with `${T}`");
 
     _errorPort.listen((error) {
@@ -71,11 +79,10 @@ abstract class Eva {
 
     _domainSendPort.send(event);
   }
-}
 
-@immutable
-class EvaReadyEvent {
-  const EvaReadyEvent();
+  static Stream<Event<T>> getEventsStream<T>() {
+    return _eventBehaviorSubject.stream.where((event) => event is Event<T>).cast<Event<T>>();
+  }
 }
 
 abstract class Domain {
@@ -87,10 +94,12 @@ abstract class Domain {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
 
-    Log.info(() => "Domain started as an isolated thread");
+    Log.minLogLevel = _environment.minLogLevel;
+    await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
     _environment.registerEventHandlers();
+    Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);
     emit(const Event.success(EvaReadyEvent()));

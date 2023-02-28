@@ -34,17 +34,13 @@ class Response {
     required T Function() empty,
     required T Function(dynamic value) success,
   }) {
-    try {
-      switch (_type) {
-        case _ResponseType.failure:
-          return failure(_exception!);
-        case _ResponseType.empty:
-          return empty();
-        case _ResponseType.success:
-          return success(_value);
-      }
-    } catch (ex) {
-      return failure(ex);
+    switch (_type) {
+      case _ResponseType.failure:
+        return failure(_exception!);
+      case _ResponseType.empty:
+        return empty();
+      case _ResponseType.success:
+        return success(_value);
     }
   }
 
@@ -54,17 +50,13 @@ class Response {
     T Function()? empty,
     T Function(dynamic value)? success,
   }) {
-    try {
-      switch (_type) {
-        case _ResponseType.failure:
-          return failure == null ? otherwise() : failure(_exception!);
-        case _ResponseType.empty:
-          return empty == null ? otherwise() : empty();
-        case _ResponseType.success:
-          return success == null ? otherwise() : success(_value);
-      }
-    } catch (ex) {
-      return failure == null ? otherwise() : failure(ex);
+    switch (_type) {
+      case _ResponseType.failure:
+        return failure == null ? otherwise() : failure(_exception!);
+      case _ResponseType.empty:
+        return empty == null ? otherwise() : empty();
+      case _ResponseType.success:
+        return success == null ? otherwise() : success(_value);
     }
   }
 
@@ -120,17 +112,13 @@ class ResponseOf<TSuccess> extends Response {
     ResponseOf<TResult> Function(Object exception)? failure,
     ResponseOf<TResult> Function()? empty,
   }) {
-    try {
-      switch (_type) {
-        case _ResponseType.failure:
-          return failure == null ? ResponseOf<TResult>.failure(_exception!) : failure(_exception!);
-        case _ResponseType.empty:
-          return empty == null ? ResponseOf<TResult>.empty() : empty();
-        case _ResponseType.success:
-          return success(_value as TSuccess);
-      }
-    } catch (ex) {
-      return failure == null ? ResponseOf<TResult>.failure(ex) : failure(ex);
+    switch (_type) {
+      case _ResponseType.failure:
+        return failure == null ? ResponseOf<TResult>.failure(_exception!) : failure(_exception!);
+      case _ResponseType.empty:
+        return empty == null ? ResponseOf<TResult>.empty() : empty();
+      case _ResponseType.success:
+        return success(_value as TSuccess);
     }
   }
 

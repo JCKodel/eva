@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../eva.dart';
-import '../events/event.dart';
+import '../../eva.dart';
 
 class EventBuilder<T> extends StatelessWidget {
   const EventBuilder({
@@ -40,7 +39,42 @@ class EventBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    return StreamBuilder<Event<T>>(
+      initialData: initialValue == null ? Event<T>.waiting() : Event<T>.success(initialValue as T),
+      stream: Eva.getEventsStream<T>(),
+      builder: (innerContext, snapshot) => _buildEvent(context, innerContext, snapshot),
+    );
+  }
+
+  Widget _buildEvent(BuildContext outerContext, BuildContext context, AsyncSnapshot<Event<T>> snapshot) {
+    Log.verbose(() => "${outerContext} received ${snapshot.data}");
+
+    if (snapshot.hasError) {
+      throw snapshot.error!;
+    }
+
+    final event = snapshot.data!;
+
+    Log.verbose(() => "${runtimeType} is building ${event}");
+
+    return event.match(
+      empty: (e) {
+        onEmpty?.call(context, e);
+        return (emptyBuilder ?? defaultEmptyBuilder)(context, e);
+      },
+      failure: (e) {
+        onFailure?.call(context, e);
+        return (failureBuilder ?? defaultFailureBuilder)(context, e);
+      },
+      waiting: (e) {
+        onWaiting?.call(context, e);
+        return (waitingBuilder ?? defaultWaitingBuilder)(context, e);
+      },
+      success: (e) {
+        onSuccess?.call(context, e);
+        return successBuilder(context, e);
+      },
+    );
   }
 }
 

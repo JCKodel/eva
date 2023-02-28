@@ -12,9 +12,13 @@ abstract class Environment {
 
   static final _eventHandlers = <String, EventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
 
+  Future<void> initialize();
+
   void registerDependencies();
 
   void registerEventHandlers();
+
+  LogLevel get minLogLevel;
 
   @protected
   void registerDependency<TService>(TService Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) constructor) {
@@ -70,6 +74,8 @@ abstract class Environment {
       Log.error(() => "Event `${event.runtimeType}` threw `${ex.runtimeType}`");
       Log.verbose(() => ex.toString());
       Log.verbose(() => event.toString());
+      // ignore: invalid_use_of_protected_member
+      Domain.emit(Event<UnexpectedExceptionEvent>.failure(ex));
     }
   }
 }

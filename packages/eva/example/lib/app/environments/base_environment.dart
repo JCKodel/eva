@@ -9,6 +9,11 @@ abstract class BaseEnvironment extends Environment {
   const BaseEnvironment();
 
   @override
+  Future<void> initialize() async {
+    Log.minLogLevel = LogLevel.verbose;
+  }
+
+  @override
   Future<void> registerDependencies() async {
     registerDependency<IAppSettingsRepository>(
       (requires, platform) => const InMemoryAppSettingsRepository(),
