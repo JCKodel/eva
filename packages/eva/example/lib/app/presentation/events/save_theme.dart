@@ -16,11 +16,16 @@ class SaveThemeEventHandler extends EventHandler {
   final ThemeDomain _themeDomain;
 
   @override
-  Stream<IEvent> handle<TInput>(TInput eventState) async* {
-    eventState as SaveTheme;
+  Stream<IEvent> handle<TInput>(Event<TInput> event) async* {
+    yield* event.maybeMatch(
+      success: (event) => _setTheme(event as SuccessEvent<SaveTheme>),
+      otherwise: (e) => throw e,
+    );
+  }
 
-    final saveResult = await _themeDomain.setThemeIsDark(eventState.isDarkTheme);
+  Stream<IEvent> _setTheme(SuccessEvent<SaveTheme> event) async* {
+    final saveResult = await _themeDomain.setThemeIsDark(event.value.isDarkTheme);
 
-    yield saveResult.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: eventState.isDarkTheme));
+    yield saveResult.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: event.value.isDarkTheme));
   }
 }

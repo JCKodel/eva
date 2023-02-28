@@ -14,7 +14,7 @@ class LoadThemeEventHandler extends EventHandler {
   final ThemeDomain _themeDomain;
 
   @override
-  Stream<IEvent> handle<TInput>(TInput eventState) async* {
+  Stream<IEvent> handle<TInput>(Event<TInput> event) async* {
     yield const Event<ToDoTheme>.waiting();
 
     final themeIsDark = await _themeDomain.getThemeIsDark();
