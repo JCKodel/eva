@@ -1,11 +1,8 @@
-import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
 
 @immutable
-class LoadThemeEvent extends Equatable {
-  const LoadThemeEvent();
-
-  @override
-  List<Object?> get props => [];
+class LoadTheme {
+  const LoadTheme();
 }

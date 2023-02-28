@@ -12,4 +12,3 @@ export 'src/events/event.dart';
 export 'src/log/log.dart';
 export 'src/presentation/event_builder.dart';
 export 'src/responses/responses.dart';
-export 'src/validation/i_validation_error.dart';

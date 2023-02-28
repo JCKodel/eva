@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -16,7 +15,7 @@ abstract class Eva {
   static final ReceivePort _errorPort = ReceivePort("error");
   static late final SendPort _domainSendPort;
   static final _useEnvironmentCompleter = Completer<void>();
-  static final BehaviorSubject<Event> _eventBehaviorSubject = BehaviorSubject<Event>();
+  static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
 
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
     if (Isolate.current.debugName != "main") {
@@ -58,10 +57,6 @@ abstract class Eva {
     _eventBehaviorSubject.add(message);
   }
 
-  static Stream<EventOf<T>> getEventStream<T extends Equatable>() {
-    return _eventBehaviorSubject.stream.where((event) => event is EventOf<T>).cast<EventOf<T>>();
-  }
-
   static void disposeEnvironment() {
     _domainReceivePort.close();
     _errorPort.close();
@@ -70,8 +65,8 @@ abstract class Eva {
     Log.warn(() => "Environment has being disposed");
   }
 
-  static void emit<T extends Equatable>(EventOf<T> event) {
-    Log.debug(() => "Main is emitting `${event.runtimeType}`");
+  static void emit(IEvent event) {
+    Log.debug(() => "Main is emitting `${event.runtimeType.toString()}`");
     Log.verbose(() => event.toString());
 
     _domainSendPort.send(event);
@@ -79,11 +74,8 @@ abstract class Eva {
 }
 
 @immutable
-class EvaReady extends Equatable {
-  const EvaReady();
-
-  @override
-  List<Object?> get props => [];
+class EvaReadyEvent {
+  const EvaReadyEvent();
 }
 
 abstract class Domain {
@@ -94,24 +86,21 @@ abstract class Domain {
   static Future<void> _isolateEntryPoint(List<dynamic> args) async {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
-    _listenerFromMainPort.listen(_onMessageReceived);
+
     Log.info(() => "Domain started as an isolated thread");
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
-    await _environment.initialize();
-    emit(const EventOf<EvaReady>.success(EvaReady()));
+    _environment.registerDependencies();
+    _environment.registerEventHandlers();
+    // ignore: invalid_use_of_protected_member
+    _listenerFromMainPort.listen(_environment.onMessageReceived);
+    emit(const Event.success(EvaReadyEvent()));
   }
 
-  static void emit<T extends Equatable>(EventOf<T> event) {
-    Log.debug(() => "Domain is emitting `${event.runtimeType}`");
+  @protected
+  static void emit(IEvent event) {
+    Log.debug(() => "Domain is emitting `${event}`");
     Log.verbose(() => event.toString());
 
     _sendToMainPort.send(event);
-  }
-
-  static void _onMessageReceived(dynamic message) {
-    final event = message as Event;
-
-    Log.debug(() => "Domain received event `${event.runtimeType}`");
-    Log.verbose(() => event.toString());
   }
 }

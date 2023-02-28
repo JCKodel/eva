@@ -5,7 +5,7 @@ import '../contracts/i_app_settings_repository.dart';
 class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   const InMemoryAppSettingsRepository();
 
-  static const Map<String, String> _settings = <String, String>{};
+  static final _settings = <String, String>{};
 
   @override
   void initialize() {}

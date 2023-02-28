@@ -18,9 +18,7 @@ class ThemeDomain implements IDomain {
     return currentColor.map(success: (value) => ResponseOf.success(int.parse(value)));
   }
 
-  Future<Event> setThemeColor(int color) async {
-    final response = await _appSettingsRepository.set(kColorKey, color.toString());
-
-    return response.toEvent();
+  Future<Response> setThemeColor(int color) async {
+    return _appSettingsRepository.set(kColorKey, color.toString());
   }
 }
