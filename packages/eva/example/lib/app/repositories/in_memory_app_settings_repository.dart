@@ -22,7 +22,7 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   Future<Response> set(String key, String value) async {
     _settings[key] = value;
 
-    return const Response.empty();
+    return const Response.success();
   }
 
   @override

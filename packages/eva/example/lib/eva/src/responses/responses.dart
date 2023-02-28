@@ -20,8 +20,8 @@ class Response {
         _exception = null,
         _value = null;
 
-  const Response.success([Object? value])
-      : _type = value == null ? _ResponseType.empty : _ResponseType.success,
+  const Response.success({Object? value, bool treatNullAsEmpty = false})
+      : _type = treatNullAsEmpty && value == null ? _ResponseType.empty : _ResponseType.success,
         _exception = null,
         _value = value;
 
@@ -60,6 +60,14 @@ class Response {
     }
   }
 
+  Event<T> mapToEvent<T>({T Function(dynamic value)? success}) {
+    return match(
+      success: success == null ? (v) => Event<T>.success(v as T) : (value) => Event<T>.success(success(value)),
+      empty: () => Event<T>.empty(),
+      failure: (exception) => Event<T>.failure(exception),
+    );
+  }
+
   @override
   String toString() {
     switch (_type) {
@@ -77,7 +85,7 @@ class Response {
 class ResponseOf<TSuccess> extends Response {
   const ResponseOf.failure(Object exception) : super.failure(exception);
   const ResponseOf.empty() : super.empty();
-  const ResponseOf.success([TSuccess? value]) : super.success(value);
+  const ResponseOf.success(TSuccess? value) : super.success(value: value, treatNullAsEmpty: true);
 
   @override
   T match<T>({
@@ -122,6 +130,7 @@ class ResponseOf<TSuccess> extends Response {
     }
   }
 
+  @override
   Event<T> mapToEvent<T>({T Function(TSuccess value)? success}) {
     return match(
       success: success == null ? (v) => Event<T>.success(v as T) : (value) => Event<T>.success(success(value)),

@@ -27,7 +27,11 @@ abstract class BaseEnvironment extends Environment {
   @override
   void registerEventHandlers() {
     registerEventHandler<LoadTheme>(
-      (required, platform) => LoadThemeEventHandler(themeDomain: required<ThemeDomain>()),
+      (required, platform) => ThemeEventHandler(themeDomain: required<ThemeDomain>()),
+    );
+
+    registerEventHandler<SaveTheme>(
+      (required, platform) => ThemeEventHandler(themeDomain: required<ThemeDomain>()),
     );
   }
 }

@@ -6,21 +6,25 @@ class EventBuilder<T> extends StatelessWidget {
   const EventBuilder({
     required this.successBuilder,
     super.key,
-    this.initialValue,
     this.emptyBuilder,
     this.failureBuilder,
+    this.initialValue,
     this.onEmpty,
     this.onFailure,
+    this.onOtherwise,
     this.onSuccess,
     this.onWaiting,
+    this.otherwiseBuilder,
     this.waitingBuilder,
   });
 
   final T? initialValue;
+  final Widget Function(BuildContext context, Event<T> event)? otherwiseBuilder;
   final Widget Function(BuildContext context, EmptyEvent<T> event)? emptyBuilder;
   final Widget Function(BuildContext context, WaitingEvent<T> event)? waitingBuilder;
   final Widget Function(BuildContext context, FailureEvent<T> event)? failureBuilder;
   final Widget Function(BuildContext context, SuccessEvent<T> event) successBuilder;
+  final void Function(BuildContext context, Event<T> event)? onOtherwise;
   final void Function(BuildContext context, EmptyEvent<T> event)? onEmpty;
   final void Function(BuildContext context, WaitingEvent<T> event)? onWaiting;
   final void Function(BuildContext context, FailureEvent<T> event)? onFailure;
@@ -59,16 +63,16 @@ class EventBuilder<T> extends StatelessWidget {
 
     return event.match(
       empty: (e) {
-        onEmpty?.call(context, e);
-        return (emptyBuilder ?? defaultEmptyBuilder)(context, e);
+        (onEmpty ?? onOtherwise)?.call(context, e);
+        return (emptyBuilder ?? otherwiseBuilder ?? defaultEmptyBuilder)(context, e);
       },
       failure: (e) {
-        onFailure?.call(context, e);
-        return (failureBuilder ?? defaultFailureBuilder)(context, e);
+        (onFailure ?? onOtherwise)?.call(context, e);
+        return (failureBuilder ?? otherwiseBuilder ?? defaultFailureBuilder)(context, e);
       },
       waiting: (e) {
-        onWaiting?.call(context, e);
-        return (waitingBuilder ?? defaultWaitingBuilder)(context, e);
+        (onWaiting ?? onOtherwise)?.call(context, e);
+        return (waitingBuilder ?? otherwiseBuilder ?? defaultWaitingBuilder)(context, e);
       },
       success: (e) {
         onSuccess?.call(context, e);
@@ -82,14 +86,16 @@ class QueryEventBuilder<TQueryEvent, TResponseEvent> extends EventBuilder<TRespo
   const QueryEventBuilder({
     required this.query,
     required super.successBuilder,
-    super.key,
-    super.initialValue,
     super.emptyBuilder,
     super.failureBuilder,
+    super.initialValue,
+    super.key,
     super.onEmpty,
     super.onFailure,
+    super.onOtherwise,
     super.onSuccess,
     super.onWaiting,
+    super.otherwiseBuilder,
     super.waitingBuilder,
   });
 

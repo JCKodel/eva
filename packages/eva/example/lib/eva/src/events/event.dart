@@ -22,7 +22,8 @@ abstract class ISuccessEvent implements IEvent {
 @immutable
 @sealed
 class Event<T> implements IEvent {
-  const Event();
+  const factory Event(T value) = SuccessEvent._;
+  const Event._();
   const factory Event.empty() = EmptyEvent._;
   const factory Event.waiting() = WaitingEvent._;
   const factory Event.failure(Object exception) = FailureEvent._;
@@ -86,7 +87,7 @@ class Event<T> implements IEvent {
 @immutable
 @sealed
 class EmptyEvent<T> extends Event<T> implements IEmptyEvent {
-  const EmptyEvent._();
+  const EmptyEvent._() : super._();
 
   @override
   String toString() => "{EmptyEvent<${T}>}";
@@ -95,7 +96,7 @@ class EmptyEvent<T> extends Event<T> implements IEmptyEvent {
 @immutable
 @sealed
 class WaitingEvent<T> extends Event<T> implements IWaitingEvent {
-  const WaitingEvent._();
+  const WaitingEvent._() : super._();
 
   @override
   String toString() => "{WaitingEvent<${T}>}";
@@ -104,7 +105,9 @@ class WaitingEvent<T> extends Event<T> implements IWaitingEvent {
 @immutable
 @sealed
 class FailureEvent<T> extends Event<T> implements IFailureEvent {
-  const FailureEvent._(Object exception) : _exception = exception;
+  const FailureEvent._(Object exception)
+      : _exception = exception,
+        super._();
 
   final Object _exception;
 
@@ -112,13 +115,15 @@ class FailureEvent<T> extends Event<T> implements IFailureEvent {
   Object get exception => _exception;
 
   @override
-  String toString() => "{FailureEvent<${T}>:${_exception.runtimeType}}";
+  String toString() => "{FailureEvent<${T}>:${_exception.runtimeType}:${_exception}}";
 }
 
 @immutable
 @sealed
 class SuccessEvent<T> extends Event<T> implements ISuccessEvent {
-  const SuccessEvent._(T value) : _value = value;
+  const SuccessEvent._(T value)
+      : _value = value,
+        super._();
 
   final T _value;
 
@@ -126,7 +131,7 @@ class SuccessEvent<T> extends Event<T> implements ISuccessEvent {
   T get value => _value;
 
   @override
-  String toString() => "{SuccessEvent<${T}>}";
+  String toString() => "{SuccessEvent<${T}>:${value}}";
 }
 
 @immutable

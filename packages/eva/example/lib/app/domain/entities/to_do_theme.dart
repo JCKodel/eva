@@ -1,10 +1,10 @@
-import '../../../eva/eva.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class ToDoTheme {
-  const ToDoTheme({
-    required this.isDarkTheme,
-  });
+part "to_do_theme.freezed.dart";
 
-  final bool isDarkTheme;
+@freezed
+class ToDoTheme with _$ToDoTheme {
+  const factory ToDoTheme({
+    required bool isDarkTheme,
+  }) = _ToDoTheme;
 }

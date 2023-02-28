@@ -4,7 +4,6 @@ import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 
 import '../../eva.dart';
-import '../events/event_handler.dart';
 
 @immutable
 abstract class Environment {
@@ -69,7 +68,13 @@ abstract class Environment {
 
     try {
       // ignore: invalid_use_of_protected_member
-      handler(ServiceProvider.required, PlatformInfo.platformInfo).handle(event).forEach((event) => Domain.emit(event));
+      handler(ServiceProvider.required, PlatformInfo.platformInfo).handle(event).forEach((event) {
+        Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
+        Log.verbose(() => event.toString());
+
+        // ignore: invalid_use_of_protected_member
+        Domain.emit(event);
+      });
     } catch (ex) {
       Log.error(() => "Event `${event.runtimeType}` threw `${ex.runtimeType}`");
       Log.verbose(() => ex.toString());

@@ -13,19 +13,21 @@ class ToDoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return QueryEventBuilder<LoadTheme, ToDoTheme>(
       query: const LoadTheme(),
-      initialValue: ToDoTheme(isDarkTheme: WidgetsBinding.instance.window.platformBrightness == Brightness.dark),
-      successBuilder: (context, event) {
-        const themeColor = Colors.teal;
+      otherwiseBuilder: (context, event) => _buildApp(context, WidgetsBinding.instance.window.platformBrightness == Brightness.dark),
+      successBuilder: (context, event) => _buildApp(context, event.value.isDarkTheme),
+    );
+  }
 
-        return MaterialApp(
-          color: themeColor,
-          darkTheme: ThemeData(primarySwatch: themeColor, brightness: Brightness.dark),
-          theme: ThemeData(primarySwatch: themeColor, brightness: Brightness.light),
-          themeMode: event.value.isDarkTheme ? ThemeMode.dark : ThemeMode.light,
-          title: "EvA To Do Example",
-          home: const HomePage(),
-        );
-      },
+  Widget _buildApp(BuildContext context, bool isDarkTheme) {
+    const themeColor = Colors.teal;
+
+    return MaterialApp(
+      color: themeColor,
+      darkTheme: ThemeData(primarySwatch: themeColor, brightness: Brightness.dark),
+      theme: ThemeData(primarySwatch: themeColor, brightness: Brightness.light),
+      themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      title: "EvA To Do Example",
+      home: const HomePage(),
     );
   }
 }
