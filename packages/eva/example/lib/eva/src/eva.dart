@@ -101,11 +101,11 @@ abstract class Domain {
     Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);
-    dispatchEventState(const EvaReadyEvent());
+    emit(const Event.success(EvaReadyEvent()));
   }
 
   @protected
-  static void dispatchEventState(Object eventState) {
+  static void emit(IEvent eventState) {
     Log.debug(() => "Domain is emitting `${eventState}`");
     Log.verbose(() => eventState.toString());
 
