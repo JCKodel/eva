@@ -19,6 +19,8 @@ class SaveThemeCommandHandler extends CommandHandler<SaveThemeCommand> {
   Stream<IEvent> handle(SaveThemeCommand command) async* {
     final saveResult = await _themeDomain.setThemeIsDark(command.isDarkTheme);
 
-    yield saveResult.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: command.isDarkTheme));
+    if (_themeDomain.canWatchThemeChanges == false) {
+      yield saveResult.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: command.isDarkTheme));
+    }
   }
 }

@@ -17,9 +17,23 @@ class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
   Stream<IEvent> handle(LoadThemeCommand command) async* {
     yield const Event<ToDoTheme>.waiting();
 
+    if (_themeDomain.canWatchThemeChanges) {
+      final watcherResponse = await _themeDomain.setupThemeIsDarkWatcher();
+
+      if (watcherResponse.type != ResponseType.success) {
+        yield await _loadThemeIsDark(command);
+      } else {
+        yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
+      }
+    } else {
+      yield await _loadThemeIsDark(command);
+    }
+  }
+
+  Future<IEvent> _loadThemeIsDark(LoadThemeCommand command) async {
     final themeIsDark = await _themeDomain.getThemeIsDark();
 
-    yield themeIsDark.mapToEvent(
+    return themeIsDark.mapToEvent(
       success: (isDarkTheme) => ToDoTheme(isDarkTheme: isDarkTheme),
     );
   }

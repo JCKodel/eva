@@ -12,11 +12,11 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
 
   @override
   void initialize() {
-    _dbFuture = Isar.open([AppSettingsModelSchema]);
+    _dbFuture = Isar.open([AppSettingsModelSchema], inspector: true, name: "AppSettings");
   }
 
   @override
-  bool get canWatch => false;
+  bool get canWatch => true;
 
   @override
   Future<ResponseOf<String>> get(String key) async {
@@ -37,7 +37,12 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
     await db.writeTxn(() async {
       var appSetting = await db.appSettingsModels.filter().keyEqualTo(key).build().findFirst();
 
-      appSetting ??= AppSettingsModel(key: key, value: value);
+      if (appSetting == null) {
+        appSetting = AppSettingsModel(key: key, value: value);
+      } else {
+        appSetting.value = value;
+      }
+
       await db.appSettingsModels.put(appSetting);
     });
 
@@ -46,6 +51,16 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
 
   @override
   Future<ResponseOf<Stream<String>>> watch(String key) async {
-    throw UnimplementedError();
+    final db = await _dbFuture;
+
+    return ResponseOf<Stream<String>>.success(
+      db.appSettingsModels
+          .filter()
+          .keyEqualTo(key)
+          .build()
+          .watch(fireImmediately: true)
+          .where((appSettings) => appSettings.isNotEmpty)
+          .map((appSettings) => appSettings.first.value),
+    );
   }
 }

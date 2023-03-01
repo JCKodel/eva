@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import '../events/event.dart';
 
-enum _ResponseType {
+enum ResponseType {
   failure,
   empty,
   success,
@@ -11,22 +11,32 @@ enum _ResponseType {
 @immutable
 class Response {
   const Response.failure(Object exception)
-      : _type = _ResponseType.failure,
+      : type = ResponseType.failure,
         _exception = exception,
         _value = null;
 
   const Response.empty()
-      : _type = _ResponseType.empty,
+      : type = ResponseType.empty,
         _exception = null,
         _value = null;
 
   const Response.success({Object? value, bool treatNullAsEmpty = false})
-      : _type = treatNullAsEmpty && value == null ? _ResponseType.empty : _ResponseType.success,
+      : type = treatNullAsEmpty && value == null ? ResponseType.empty : ResponseType.success,
         _exception = null,
         _value = value;
 
-  final _ResponseType _type;
+  final ResponseType type;
+
   final Object? _exception;
+
+  Object getException() {
+    if (type != ResponseType.failure) {
+      throw UnsupportedError("Cannot get exception from a response that is not a failure response");
+    }
+
+    return _exception!;
+  }
+
   final Object? _value;
 
   T match<T>({
@@ -34,12 +44,12 @@ class Response {
     required T Function() empty,
     required T Function(dynamic value) success,
   }) {
-    switch (_type) {
-      case _ResponseType.failure:
+    switch (type) {
+      case ResponseType.failure:
         return failure(_exception!);
-      case _ResponseType.empty:
+      case ResponseType.empty:
         return empty();
-      case _ResponseType.success:
+      case ResponseType.success:
         return success(_value);
     }
   }
@@ -50,12 +60,12 @@ class Response {
     T Function()? empty,
     T Function(dynamic value)? success,
   }) {
-    switch (_type) {
-      case _ResponseType.failure:
+    switch (type) {
+      case ResponseType.failure:
         return failure == null ? otherwise() : failure(_exception!);
-      case _ResponseType.empty:
+      case ResponseType.empty:
         return empty == null ? otherwise() : empty();
-      case _ResponseType.success:
+      case ResponseType.success:
         return success == null ? otherwise() : success(_value);
     }
   }
@@ -70,12 +80,12 @@ class Response {
 
   @override
   String toString() {
-    switch (_type) {
-      case _ResponseType.failure:
+    switch (type) {
+      case ResponseType.failure:
         return "{FailureOf<${_exception.runtimeType}>:${_exception}}";
-      case _ResponseType.empty:
+      case ResponseType.empty:
         return "{Empty}";
-      case _ResponseType.success:
+      case ResponseType.success:
         return "{SuccessOf<${_value.runtimeType}>:${_value}}";
     }
   }
@@ -86,6 +96,14 @@ class ResponseOf<TSuccess> extends Response {
   const ResponseOf.failure(Object exception) : super.failure(exception);
   const ResponseOf.empty() : super.empty();
   const ResponseOf.success(TSuccess? value) : super.success(value: value, treatNullAsEmpty: true);
+
+  TSuccess getValue() {
+    if (type != ResponseType.success) {
+      throw UnsupportedError("Cannot get value from a response that is not a success response");
+    }
+
+    return _value as TSuccess;
+  }
 
   @override
   T match<T>({
@@ -120,12 +138,12 @@ class ResponseOf<TSuccess> extends Response {
     ResponseOf<TResult> Function(Object exception)? failure,
     ResponseOf<TResult> Function()? empty,
   }) {
-    switch (_type) {
-      case _ResponseType.failure:
+    switch (type) {
+      case ResponseType.failure:
         return failure == null ? ResponseOf<TResult>.failure(_exception!) : failure(_exception!);
-      case _ResponseType.empty:
+      case ResponseType.empty:
         return empty == null ? ResponseOf<TResult>.empty() : empty();
-      case _ResponseType.success:
+      case ResponseType.success:
         return success(_value as TSuccess);
     }
   }
