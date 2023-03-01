@@ -1,6 +1,6 @@
 import '../../../eva/eva.dart';
-import '../../domain/entities/to_do_theme.dart';
-import '../../domain/theme_domain.dart';
+import '../../domain/entities/to_do.dart';
+import '../../domain/to_do_domain.dart';
 
 @immutable
 class LoadToDosCommand extends Command {
@@ -9,32 +9,32 @@ class LoadToDosCommand extends Command {
 
 @immutable
 class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
-  const LoadToDosCommandHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
+  const LoadToDosCommandHandler({required ToDoDomain toDoDomain}) : _toDoDomain = toDoDomain;
 
-  final ThemeDomain _themeDomain;
+  final ToDoDomain _toDoDomain;
 
   @override
   Stream<IEvent> handle(LoadToDosCommand command) async* {
-    yield const Event<ToDoTheme>.waiting();
+    yield const Event<List<ToDo>>.waiting();
 
-    if (_themeDomain.canWatchThemeChanges) {
-      final watcherResponse = await _themeDomain.setupThemeIsDarkWatcher();
+    if (_toDoDomain.canWatchToDoChanges) {
+      // final watcherResponse = await _themeDomain.setupThemeIsDarkWatcher();
 
-      if (watcherResponse.type != ResponseType.success) {
-        yield await _loadThemeIsDark(command);
-      } else {
-        yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
-      }
+      // if (watcherResponse.type != ResponseType.success) {
+      //   yield await _loadThemeIsDark(command);
+      // } else {
+      //   yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
+      // }
     } else {
-      yield await _loadThemeIsDark(command);
+      // yield await _loadThemeIsDark(command);
     }
   }
 
-  Future<IEvent> _loadThemeIsDark(LoadToDosCommand command) async {
-    final themeIsDark = await _themeDomain.getThemeIsDark();
+  // Future<IEvent> _loadThemeIsDark(LoadToDosCommand command) async {
+  //   // final themeIsDark = await _themeDomain.getThemeIsDark();
 
-    return themeIsDark.mapToEvent(
-      success: (isDarkTheme) => ToDoTheme(isDarkTheme: isDarkTheme),
-    );
-  }
+  //   // return themeIsDark.mapToEvent(
+  //   //   success: (isDarkTheme) => ToDo(isDarkTheme: isDarkTheme),
+  //   // );
+  // }
 }

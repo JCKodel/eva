@@ -1,5 +1,7 @@
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 
@@ -90,6 +92,11 @@ abstract class Environment {
 
       Log.error(() => "Command `${command.runtimeType}` threw `${ex.runtimeType}`\n${exceptionMessage}");
       Log.verbose(() => command.toString());
+
+      if (kDebugMode) {
+        rethrow;
+      }
+
       // ignore: invalid_use_of_protected_member
       Domain.dispatchEvent(Event<UnexpectedExceptionEvent>.failure(ex));
     }
