@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'commands/command.dart';
 import 'environment/environment.dart';
 import 'events/event.dart';
 import 'log/log.dart';
@@ -73,11 +74,11 @@ abstract class Eva {
     Log.warn(() => "Environment has being disposed");
   }
 
-  static void emit(IEvent event) {
-    Log.debug(() => "Main is emitting `${event.runtimeType.toString()}`");
-    Log.verbose(() => event.toString());
+  static void dispatchCommand(Command command) {
+    Log.debug(() => "Main is emitting `${command.runtimeType.toString()}`");
+    Log.verbose(() => command.toString());
 
-    _domainSendPort.send(event);
+    _domainSendPort.send(command);
   }
 
   static Stream<Event<T>> getEventsStream<T>() {
@@ -97,15 +98,15 @@ abstract class Domain {
     await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
-    _environment.registerEventHandlers();
+    _environment.registerCommandHandlers();
     Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);
-    emit(const Event.success(EvaReadyEvent()));
+    dispatchEvent(const Event.success(EvaReadyEvent()));
   }
 
   @protected
-  static void emit(IEvent eventState) {
+  static void dispatchEvent(IEvent eventState) {
     Log.debug(() => "Domain is emitting `${eventState}`");
     Log.verbose(() => eventState.toString());
 

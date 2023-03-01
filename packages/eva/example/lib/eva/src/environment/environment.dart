@@ -9,13 +9,13 @@ import '../../eva.dart';
 abstract class Environment {
   const Environment();
 
-  static final _eventHandlers = <String, IEventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
+  static final _commandHandlers = <Type, ICommandHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
 
   Future<void> initialize();
 
   void registerDependencies();
 
-  void registerEventHandlers();
+  void registerCommandHandlers();
 
   LogLevel get minLogLevel;
 
@@ -39,57 +39,49 @@ abstract class Environment {
   }
 
   @protected
-  void registerEventHandler<T>(IEventHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) eventHandlerConstructor) {
+  void registerCommandHandler<T>(ICommandHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) commandHandlerConstructor) {
     if (Isolate.current.debugName == "main") {
       throw IsolateSpawnException("Environments cannot be executed on the main thread (i.e.: never call an Environment directly from Flutter code)");
     }
 
-    _eventHandlers[T.toString()] = eventHandlerConstructor;
+    _commandHandlers[T] = commandHandlerConstructor;
     Log.info(
       () => "Event `Event<${T}>` will be handled by "
-          "`${eventHandlerConstructor.toString().replaceFirst("Closure: (<Y0>() => Y0, PlatformInfo) => ", "")}`",
+          "`${commandHandlerConstructor.toString().replaceFirst("Closure: (<Y0>() => Y0, PlatformInfo) => ", "")}`",
     );
   }
 
   @protected
   void onMessageReceived(dynamic message) {
-    final event = message as Event;
-    final eventName = event.runtimeType.toString().replaceFirst("SuccessEvent<", "").replaceFirst("EmptyEvent<", "").replaceFirst("FailureEvent<", "").replaceFirst(">", "");
-    final handler = _eventHandlers[eventName];
+    final command = message as Command;
+    final handler = _commandHandlers[command.runtimeType];
 
     if (handler == null) {
-      Log.warn(() => "Domain received event `${event.runtimeType}` (${eventName}), but no handler was registered to process it");
-      Log.verbose(() => event.toString());
+      Log.warn(() => "Domain received command `${command.runtimeType}` but no handler was registered to process it");
+      Log.verbose(() => command.toString());
       return;
     }
 
-    Log.debug(() => "Domain received event `${event.runtimeType}`");
-    Log.verbose(() => event.toString());
+    Log.debug(() => "Domain received command `${command.runtimeType}`");
+    Log.verbose(() => command.toString());
 
     try {
       // ignore: invalid_use_of_protected_member
-      final h = handler(ServiceProvider.required, PlatformInfo.platformInfo) as EventHandler;
+      final h = handler(ServiceProvider.required, PlatformInfo.platformInfo) as CommandHandler;
 
-      final outputStream = event.match(
-        failure: (e) => h.handleFailure(e),
-        empty: (e) => h.handleEmpty(e),
-        waiting: (e) => h.handleWaiting(e),
-        success: (e) => h.handleSuccess(e),
-      );
-
-      outputStream.forEach((event) {
+      h.handle(command).forEach((event) {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
         Log.verbose(() => event.toString());
 
         // ignore: invalid_use_of_protected_member
-        Domain.emit(event);
+        Domain.dispatchEvent(event);
       });
     } catch (ex) {
-      Log.error(() => "Event `${event.runtimeType}` threw `${ex.runtimeType}`");
+      Log.error(() => "Command `${command.runtimeType}` threw `${ex.runtimeType}`");
       Log.verbose(() => ex.toString());
-      Log.verbose(() => event.toString());
+      Log.verbose(() => command.toString());
       // ignore: invalid_use_of_protected_member
-      Domain.emit(Event<UnexpectedExceptionEvent>.failure(ex));
+      Domain.dispatchEvent(Event<UnexpectedExceptionEvent>.failure(ex));
     }
   }
 }

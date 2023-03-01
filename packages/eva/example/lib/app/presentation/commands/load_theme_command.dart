@@ -3,18 +3,18 @@ import '../../domain/entities/to_do_theme.dart';
 import '../../domain/theme_domain.dart';
 
 @immutable
-class LoadTheme {
-  const LoadTheme();
+class LoadThemeCommand extends Command {
+  const LoadThemeCommand();
 }
 
 @immutable
-class LoadThemeEventHandler extends EventHandler<LoadTheme> {
-  const LoadThemeEventHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
+class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
+  const LoadThemeCommandHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
 
   final ThemeDomain _themeDomain;
 
   @override
-  Stream<IEvent> handleSuccess(Event<LoadTheme> event) async* {
+  Stream<IEvent> handle(LoadThemeCommand command) async* {
     yield const Event<ToDoTheme>.waiting();
 
     final themeIsDark = await _themeDomain.getThemeIsDark();

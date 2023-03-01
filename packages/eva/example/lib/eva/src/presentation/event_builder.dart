@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../eva.dart';
 
-class EventBuilder<T> extends StatelessWidget {
+class EventBuilder<TEventState> extends StatelessWidget {
   const EventBuilder({
     required this.successBuilder,
     super.key,
@@ -18,17 +18,17 @@ class EventBuilder<T> extends StatelessWidget {
     this.waitingBuilder,
   });
 
-  final T? initialValue;
-  final Widget Function(BuildContext context, Event<T> event)? otherwiseBuilder;
-  final Widget Function(BuildContext context, EmptyEvent<T> event)? emptyBuilder;
-  final Widget Function(BuildContext context, WaitingEvent<T> event)? waitingBuilder;
-  final Widget Function(BuildContext context, FailureEvent<T> event)? failureBuilder;
-  final Widget Function(BuildContext context, SuccessEvent<T> event) successBuilder;
-  final void Function(BuildContext context, Event<T> event)? onOtherwise;
-  final void Function(BuildContext context, EmptyEvent<T> event)? onEmpty;
-  final void Function(BuildContext context, WaitingEvent<T> event)? onWaiting;
-  final void Function(BuildContext context, FailureEvent<T> event)? onFailure;
-  final void Function(BuildContext context, SuccessEvent<T> event)? onSuccess;
+  final TEventState? initialValue;
+  final Widget Function(BuildContext context, Event<TEventState> event)? otherwiseBuilder;
+  final Widget Function(BuildContext context, EmptyEvent<TEventState> event)? emptyBuilder;
+  final Widget Function(BuildContext context, WaitingEvent<TEventState> event)? waitingBuilder;
+  final Widget Function(BuildContext context, FailureEvent<TEventState> event)? failureBuilder;
+  final Widget Function(BuildContext context, SuccessEvent<TEventState> event) successBuilder;
+  final void Function(BuildContext context, Event<TEventState> event)? onOtherwise;
+  final void Function(BuildContext context, EmptyEvent<TEventState> event)? onEmpty;
+  final void Function(BuildContext context, WaitingEvent<TEventState> event)? onWaiting;
+  final void Function(BuildContext context, FailureEvent<TEventState> event)? onFailure;
+  final void Function(BuildContext context, SuccessEvent<TEventState> event)? onSuccess;
 
   static Widget Function(BuildContext context, IEmptyEvent event) defaultEmptyBuilder = (context, event) => const SizedBox();
 
@@ -43,14 +43,14 @@ class EventBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Event<T>>(
-      initialData: initialValue == null ? Event<T>.waiting() : Event<T>.success(initialValue as T),
-      stream: Eva.getEventsStream<T>(),
+    return StreamBuilder<Event<TEventState>>(
+      initialData: initialValue == null ? Event<TEventState>.waiting() : Event<TEventState>.success(initialValue as TEventState),
+      stream: Eva.getEventsStream<TEventState>(),
       builder: (innerContext, snapshot) => _buildEvent(context, innerContext, snapshot),
     );
   }
 
-  Widget _buildEvent(BuildContext outerContext, BuildContext context, AsyncSnapshot<Event<T>> snapshot) {
+  Widget _buildEvent(BuildContext outerContext, BuildContext context, AsyncSnapshot<Event<TEventState>> snapshot) {
     Log.verbose(() => "${outerContext} received ${snapshot.data}");
 
     if (snapshot.hasError) {
@@ -82,9 +82,9 @@ class EventBuilder<T> extends StatelessWidget {
   }
 }
 
-class QueryEventBuilder<TQueryEvent, TResponseEvent> extends EventBuilder<TResponseEvent> {
-  const QueryEventBuilder({
-    required this.query,
+class CommandEventBuilder<TCommand extends Command, TEventState> extends EventBuilder<TEventState> {
+  const CommandEventBuilder({
+    required this.command,
     required super.successBuilder,
     super.emptyBuilder,
     super.failureBuilder,
@@ -99,11 +99,11 @@ class QueryEventBuilder<TQueryEvent, TResponseEvent> extends EventBuilder<TRespo
     super.waitingBuilder,
   });
 
-  final TQueryEvent query;
+  final TCommand command;
 
   @override
   Widget build(context) {
-    Eva.emit(Event.success(query));
+    Eva.dispatchCommand(command);
 
     return super.build(context);
   }

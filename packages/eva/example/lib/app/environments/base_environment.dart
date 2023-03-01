@@ -1,8 +1,8 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 import '../domain/theme_domain.dart';
-import '../presentation/events/load_theme.dart';
-import '../presentation/events/save_theme.dart';
+import '../presentation/commands/load_theme_command.dart';
+import '../presentation/commands/save_theme_command.dart';
 import '../repositories/in_memory_app_settings_repository.dart';
 
 @immutable
@@ -24,13 +24,13 @@ abstract class BaseEnvironment extends Environment {
   }
 
   @override
-  void registerEventHandlers() {
-    registerEventHandler<LoadTheme>(
-      (required, platform) => LoadThemeEventHandler(themeDomain: required<ThemeDomain>()),
+  void registerCommandHandlers() {
+    registerCommandHandler<LoadThemeCommand>(
+      (required, platform) => LoadThemeCommandHandler(themeDomain: required<ThemeDomain>()),
     );
 
-    registerEventHandler<SaveTheme>(
-      (required, platform) => SaveThemeEventHandler(themeDomain: required<ThemeDomain>()),
+    registerCommandHandler<SaveThemeCommand>(
+      (required, platform) => SaveThemeCommandHandler(themeDomain: required<ThemeDomain>()),
     );
   }
 }

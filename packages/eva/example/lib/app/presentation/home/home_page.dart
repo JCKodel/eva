@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
 import '../../domain/entities/to_do_theme.dart';
-import '../events/save_theme.dart';
+import '../commands/save_theme_command.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
   Widget _buildThemeBrightnessCheckbox(BuildContext context, bool isDarkTheme) {
     return Switch.adaptive(
       value: isDarkTheme,
-      onChanged: (newValue) => Eva.emit(Event(SaveTheme(isDarkTheme: newValue))),
+      onChanged: (newValue) => Eva.dispatchCommand(SaveThemeCommand(isDarkTheme: newValue)),
     );
   }
 }
