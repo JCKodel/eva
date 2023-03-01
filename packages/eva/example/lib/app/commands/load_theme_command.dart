@@ -1,6 +1,6 @@
-import '../../../eva/eva.dart';
-import '../../domain/entities/to_do_theme.dart';
-import '../../domain/theme_domain.dart';
+import '../../eva/eva.dart';
+import '../domain/entities/to_do_theme.dart';
+import '../domain/settings_domain.dart';
 
 @immutable
 class LoadThemeCommand extends Command {
@@ -9,16 +9,16 @@ class LoadThemeCommand extends Command {
 
 @immutable
 class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
-  const LoadThemeCommandHandler({required ThemeDomain themeDomain}) : _themeDomain = themeDomain;
+  const LoadThemeCommandHandler({required SettingsDomain settingsDomain}) : _settingsDomain = settingsDomain;
 
-  final ThemeDomain _themeDomain;
+  final SettingsDomain _settingsDomain;
 
   @override
   Stream<IEvent> handle(LoadThemeCommand command) async* {
     yield const Event<ToDoTheme>.waiting();
 
-    if (_themeDomain.canWatchThemeChanges) {
-      final watcherResponse = await _themeDomain.setupThemeIsDarkWatcher();
+    if (_settingsDomain.canWatchSetingsChanges) {
+      final watcherResponse = await _settingsDomain.setupThemeIsDarkWatcher();
 
       if (watcherResponse.type != ResponseType.success) {
         yield await _loadThemeIsDark(command);
@@ -31,10 +31,8 @@ class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
   }
 
   Future<IEvent> _loadThemeIsDark(LoadThemeCommand command) async {
-    final themeIsDark = await _themeDomain.getThemeIsDark();
+    final response = await _settingsDomain.getThemeIsDark();
 
-    return themeIsDark.mapToEvent(
-      success: (isDarkTheme) => ToDoTheme(isDarkTheme: isDarkTheme),
-    );
+    return response.mapToEvent(success: (isDarkTheme) => ToDoTheme(isDarkTheme: isDarkTheme));
   }
 }

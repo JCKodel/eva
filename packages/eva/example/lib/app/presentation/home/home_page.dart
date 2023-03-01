@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
-import '../../domain/entities/to_do.dart';
 import '../../domain/entities/to_do_theme.dart';
-import '../commands/load_to_dos_command.dart';
-import '../commands/save_theme_command.dart';
+import '../../commands/save_theme_command.dart';
+
+import 'list_to_dos.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,12 +21,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: CommandEventBuilder<LoadToDosCommand, List<ToDo>>(
-        command: const LoadToDosCommand(),
-        successBuilder: (context, event) => Center(
-          child: Text("There are ${event.value.length} to dos on the list"),
-        ),
-      ),
+      body: const ListToDos(),
     );
   }
 

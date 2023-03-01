@@ -1,6 +1,8 @@
 import '../../eva/eva.dart';
 import '../contracts/i_to_do_repository.dart';
 
+import 'entities/to_do.dart';
+
 @immutable
 class ToDoDomain implements IDomain {
   const ToDoDomain({required IToDoRepository toDoRepository}) : _toDoRepository = toDoRepository;
@@ -11,4 +13,8 @@ class ToDoDomain implements IDomain {
 
   @override
   void initialize() {}
+
+  Future<ResponseOf<Iterable<ToDo>>> listToDos(ListToDosFilter filter) async {
+    return _toDoRepository.listToDos(filter);
+  }
 }

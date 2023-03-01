@@ -62,13 +62,17 @@ abstract class Environment {
     final handler = _commandHandlers[command.runtimeType];
 
     if (handler == null) {
-      Log.warn(() => "Domain received command `${command.runtimeType}` but no handler was registered to process it");
-      Log.verbose(() => command.toString());
+      final errorMessage = "Domain received command `${command.runtimeType}` but no handler was registered to process it";
+
+      Log.error(() => errorMessage);
+
+      if (kDebugMode) {
+        throw UnimplementedError(errorMessage);
+      }
       return;
     }
 
     Log.debug(() => "Domain received command `${command.runtimeType}`");
-    Log.verbose(() => command.toString());
 
     try {
       // ignore: invalid_use_of_protected_member
@@ -76,7 +80,6 @@ abstract class Environment {
 
       h.handle(command).forEach((event) {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
-        Log.verbose(() => event.toString());
 
         // ignore: invalid_use_of_protected_member
         Domain.dispatchEvent(event);

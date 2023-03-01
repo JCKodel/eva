@@ -1,11 +1,12 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 import '../contracts/i_to_do_repository.dart';
-import '../domain/theme_domain.dart';
+import '../domain/settings_domain.dart';
 import '../domain/to_do_domain.dart';
-import '../presentation/commands/load_theme_command.dart';
-import '../presentation/commands/load_to_dos_command.dart';
-import '../presentation/commands/save_theme_command.dart';
+import '../commands/load_theme_command.dart';
+import '../commands/load_to_do_filter_setting_command.dart';
+import '../commands/load_to_dos_command.dart';
+import '../commands/save_theme_command.dart';
 import '../repositories/in_memory_app_settings_repository.dart';
 import '../repositories/in_memory_to_do_repository.dart';
 
@@ -22,8 +23,8 @@ abstract class BaseEnvironment extends Environment {
       (requires, platform) => const InMemoryAppSettingsRepository(),
     );
 
-    registerDependency<ThemeDomain>(
-      (requires, platform) => ThemeDomain(appSettingsRepository: requires<IAppSettingsRepository>()),
+    registerDependency<SettingsDomain>(
+      (requires, platform) => SettingsDomain(appSettingsRepository: requires<IAppSettingsRepository>()),
     );
 
     registerDependency<IToDoRepository>(
@@ -38,11 +39,15 @@ abstract class BaseEnvironment extends Environment {
   @override
   void registerCommandHandlers() {
     registerCommandHandler<LoadThemeCommand>(
-      (required, platform) => LoadThemeCommandHandler(themeDomain: required<ThemeDomain>()),
+      (required, platform) => LoadThemeCommandHandler(settingsDomain: required<SettingsDomain>()),
     );
 
     registerCommandHandler<SaveThemeCommand>(
-      (required, platform) => SaveThemeCommandHandler(themeDomain: required<ThemeDomain>()),
+      (required, platform) => SaveThemeCommandHandler(settingsDomain: required<SettingsDomain>()),
+    );
+
+    registerCommandHandler<LoadToDoFilterSettingCommand>(
+      (required, platform) => LoadToDoFilterSettingCommandHandler(settingsDomain: required<SettingsDomain>()),
     );
 
     registerCommandHandler<LoadToDosCommand>(

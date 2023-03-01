@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 import '../../../eva/eva.dart';
 import '../../contracts/i_app_settings_repository.dart';
 
-import 'app_settings_model.dart';
+import 'models/app_settings_model.dart';
 
 class IsarAppSettingsRepository implements IAppSettingsRepository {
   IsarAppSettingsRepository();
@@ -27,7 +27,7 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
       return const ResponseOf<String>.empty();
     }
 
-    return ResponseOf<String>.success(appSetting.value);
+    return ResponseOf.success(appSetting.value);
   }
 
   @override
@@ -53,7 +53,7 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
   Future<ResponseOf<Stream<String>>> watch(String key) async {
     final db = await _dbFuture;
 
-    return ResponseOf<Stream<String>>.success(
+    return ResponseOf.success(
       db.appSettingsModels
           .filter()
           .keyEqualTo(key)

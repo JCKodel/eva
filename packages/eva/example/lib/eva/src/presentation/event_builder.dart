@@ -51,13 +51,25 @@ class EventBuilder<TEventState> extends StatelessWidget {
   }
 
   Widget _buildEvent(BuildContext outerContext, BuildContext context, AsyncSnapshot<Event<TEventState>> snapshot) {
-    Log.verbose(() => "${outerContext} received ${snapshot.data}");
-
     if (snapshot.hasError) {
       throw snapshot.error!;
     }
 
-    final event = snapshot.data!;
+    late final Event<TEventState> event;
+
+    if (initialValue == null) {
+      event = snapshot.data!;
+    } else {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        event = Event.success(initialValue as TEventState);
+      } else {
+        event = snapshot.data!.maybeMatch(
+          empty: (e) => Event.success(initialValue as TEventState),
+          waiting: (e) => Event.success(initialValue as TEventState),
+          otherwise: (e) => e,
+        );
+      }
+    }
 
     Log.verbose(() => "${runtimeType} is building ${event}");
 

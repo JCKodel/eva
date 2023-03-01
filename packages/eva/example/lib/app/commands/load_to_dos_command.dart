@@ -1,10 +1,13 @@
-import '../../../eva/eva.dart';
-import '../../domain/entities/to_do.dart';
-import '../../domain/to_do_domain.dart';
+import '../../eva/eva.dart';
+import '../contracts/i_to_do_repository.dart';
+import '../domain/entities/to_do.dart';
+import '../domain/to_do_domain.dart';
 
 @immutable
 class LoadToDosCommand extends Command {
-  const LoadToDosCommand();
+  const LoadToDosCommand({required this.filter});
+
+  final ListToDosFilter filter;
 }
 
 @immutable
@@ -26,15 +29,15 @@ class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
       //   yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
       // }
     } else {
-      // yield await _loadThemeIsDark(command);
+      yield await _loadToDos(command);
     }
   }
 
-  // Future<IEvent> _loadThemeIsDark(LoadToDosCommand command) async {
-  //   // final themeIsDark = await _themeDomain.getThemeIsDark();
+  Future<IEvent> _loadToDos(LoadToDosCommand command) async {
+    final response = await _toDoDomain.listToDos(command.filter);
 
-  //   // return themeIsDark.mapToEvent(
-  //   //   success: (isDarkTheme) => ToDo(isDarkTheme: isDarkTheme),
-  //   // );
-  // }
+    return response.mapToEvent(
+      success: (toDos) => toDos,
+    );
+  }
 }

@@ -58,7 +58,6 @@ abstract class Eva {
     final event = message as Event;
 
     Log.debug(() => "Main received event `${event.runtimeType}`");
-    Log.verbose(() => event.toString());
     _eventBehaviorSubject.add(message);
   }
 
@@ -71,7 +70,7 @@ abstract class Eva {
   }
 
   static void dispatchCommand(Command command) {
-    Log.debug(() => "Main is emitting `${command.runtimeType.toString()}`");
+    Log.debug(() => "Main is emitting `${command.runtimeType}`");
     Log.verbose(() => command.toString());
 
     _domainSendPort.send(command);
@@ -124,7 +123,7 @@ abstract class Domain {
 
   @protected
   static void dispatchEvent(IEvent eventState) {
-    Log.debug(() => "Domain is emitting `${eventState}`");
+    Log.debug(() => "Domain is emitting `${eventState.runtimeType}`");
     Log.verbose(() => eventState.toString());
 
     _sendToMainPort.send(eventState);
