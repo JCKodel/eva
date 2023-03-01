@@ -17,11 +17,7 @@ abstract class Eva {
   static late final SendPort _domainSendPort;
   static final _useEnvironmentCompleter = Completer<void>();
 
-  static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>(
-    onListen: () => Log.verbose(() => "A new subject was added to BehaviorSubject"),
-    onCancel: () => Log.warn(() => "The BehaviorSubject was cancelled"),
-    sync: false,
-  );
+  static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
 
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
     if (Isolate.current.debugName != "main") {
@@ -81,8 +77,29 @@ abstract class Eva {
     _domainSendPort.send(command);
   }
 
-  static Stream<Event<T>> getEventsStream<T>() {
-    return _eventBehaviorSubject.stream.where((event) => event is Event<T>).cast<Event<T>>();
+  static final Map<int, Object> _lastEmmitedEvents = <int, Object>{};
+
+  static Stream<Event<T>> getEventsStream<T>(int consumer) {
+    return _eventBehaviorSubject.stream.where((event) {
+      if (event is Event<T> == false) {
+        return false;
+      }
+
+      if (event is SuccessEvent<T> == false) {
+        return true;
+      }
+
+      final value = (event as SuccessEvent<T>).value;
+      final lastEmmitedValue = _lastEmmitedEvents[consumer];
+
+      _lastEmmitedEvents[consumer] = value as Object;
+
+      if (lastEmmitedValue == null) {
+        return true;
+      }
+
+      return value != lastEmmitedValue;
+    }).cast<Event<T>>();
   }
 }
 

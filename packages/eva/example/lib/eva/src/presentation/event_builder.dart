@@ -45,7 +45,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<Event<TEventState>>(
       initialData: initialValue == null ? Event<TEventState>.waiting() : Event<TEventState>.success(initialValue as TEventState),
-      stream: Eva.getEventsStream<TEventState>(),
+      stream: Eva.getEventsStream<TEventState>(hashCode),
       builder: (innerContext, snapshot) => _buildEvent(context, innerContext, snapshot),
     );
   }
