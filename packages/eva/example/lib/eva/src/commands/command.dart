@@ -6,6 +6,6 @@ abstract class Command {
 
   @override
   String toString() {
-    return "{${runtimeType}";
+    return "[${runtimeType}]";
   }
 }

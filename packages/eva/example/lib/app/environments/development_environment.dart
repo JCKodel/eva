@@ -1,4 +1,6 @@
 import '../../eva/eva.dart';
+import '../contracts/i_app_settings_repository.dart';
+import '../repositories/isar/isar_app_settings_repository.dart';
 
 import 'base_environment.dart';
 
@@ -8,4 +10,13 @@ class DevelopmentEnvironment extends BaseEnvironment {
 
   @override
   LogLevel get minLogLevel => LogLevel.verbose;
+
+  @override
+  Future<void> registerDependencies() async {
+    await super.registerDependencies();
+
+    registerDependency<IAppSettingsRepository>(
+      (requires, platform) => IsarAppSettingsRepository(),
+    );
+  }
 }

@@ -1,9 +1,9 @@
 import '../../eva/eva.dart';
 
-import 'base_environment.dart';
+import 'development_environment.dart';
 
 @immutable
-class ProductionEnvironment extends BaseEnvironment {
+class ProductionEnvironment extends DevelopmentEnvironment {
   const ProductionEnvironment();
 
   @override

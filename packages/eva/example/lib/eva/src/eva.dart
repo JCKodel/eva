@@ -94,7 +94,7 @@ abstract class Domain {
   static Future<void> _isolateEntryPoint(List<dynamic> args) async {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
-
+    Log.minLogLevel = _environment.minLogLevel;
     await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();

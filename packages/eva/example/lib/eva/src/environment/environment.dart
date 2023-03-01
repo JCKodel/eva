@@ -11,10 +11,13 @@ abstract class Environment {
 
   static final _commandHandlers = <Type, ICommandHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
 
+  @mustCallSuper
   Future<void> initialize();
 
+  @mustCallSuper
   void registerDependencies();
 
+  @mustCallSuper
   void registerCommandHandlers();
 
   LogLevel get minLogLevel;
@@ -77,8 +80,15 @@ abstract class Environment {
         Domain.dispatchEvent(event);
       });
     } catch (ex) {
-      Log.error(() => "Command `${command.runtimeType}` threw `${ex.runtimeType}`");
-      Log.verbose(() => ex.toString());
+      late String exceptionMessage;
+
+      try {
+        exceptionMessage = (ex as dynamic).message as String;
+      } catch (_) {
+        exceptionMessage = ex.toString();
+      }
+
+      Log.error(() => "Command `${command.runtimeType}` threw `${ex.runtimeType}`\n${exceptionMessage}");
       Log.verbose(() => command.toString());
       // ignore: invalid_use_of_protected_member
       Domain.dispatchEvent(Event<UnexpectedExceptionEvent>.failure(ex));
