@@ -8,23 +8,14 @@ class LoadToDosCommand extends Command {
   const LoadToDosCommand({required this.filter});
 
   final ListToDosFilter filter;
-}
-
-@immutable
-class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
-  const LoadToDosCommandHandler({required ToDoDomain toDoDomain}) : _toDoDomain = toDoDomain;
-
-  final ToDoDomain _toDoDomain;
 
   @override
-  Stream<IEvent> handle(LoadToDosCommand command) async* {
+  Stream<IEvent> handle(required, platformInfo) async* {
     yield const Event<List<ToDoEntity>>.waiting();
-    yield await _loadToDos(command);
-  }
 
-  Future<IEvent> _loadToDos(LoadToDosCommand command) async {
-    final response = await _toDoDomain.listToDos(command.filter);
+    final toDoDomain = required<ToDoDomain>();
+    final response = await toDoDomain.listToDos(filter);
 
-    return response.mapToEvent(success: (toDos) => toDos);
+    yield response.mapToEvent(success: (toDos) => toDos);
   }
 }

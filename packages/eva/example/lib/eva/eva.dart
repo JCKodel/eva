@@ -5,7 +5,6 @@ library eva;
 export 'package:meta/meta.dart';
 
 export 'src/commands/command.dart';
-export 'src/commands/command_handler.dart';
 export 'src/contracts/i_repository.dart';
 export 'src/domain/i_domain.dart';
 export 'src/environment/environment.dart';

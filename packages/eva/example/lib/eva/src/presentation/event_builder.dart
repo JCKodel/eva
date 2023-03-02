@@ -2,6 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../eva.dart';
 
+@immutable
+class EventState<TEventState> extends InheritedWidget {
+  const EventState({required this.state, required super.child, super.key});
+
+  final Event<TEventState> state;
+
+  @override
+  bool updateShouldNotify(EventState<TEventState> oldWidget) {
+    return state != oldWidget.state;
+  }
+
+  static EventState<TEventState> of<TEventState>(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<EventState<TEventState>>()!;
+  }
+}
+
 class EventBuilder<TEventState> extends StatelessWidget {
   const EventBuilder({
     required this.successBuilder,
@@ -72,23 +88,26 @@ class EventBuilder<TEventState> extends StatelessWidget {
 
     Log.verbose(() => "${runtimeType} is building ${event}");
 
-    return event.match(
-      empty: (e) {
-        (onEmpty ?? onOtherwise)?.call(context, e);
-        return (emptyBuilder ?? otherwiseBuilder ?? defaultEmptyBuilder)(context, e);
-      },
-      failure: (e) {
-        (onFailure ?? onOtherwise)?.call(context, e);
-        return (failureBuilder ?? otherwiseBuilder ?? defaultFailureBuilder)(context, e);
-      },
-      waiting: (e) {
-        (onWaiting ?? onOtherwise)?.call(context, e);
-        return (waitingBuilder ?? otherwiseBuilder ?? defaultWaitingBuilder)(context, e);
-      },
-      success: (e) {
-        onSuccess?.call(context, e);
-        return successBuilder(context, e);
-      },
+    return EventState<TEventState>(
+      state: event,
+      child: event.match(
+        empty: (e) {
+          (onEmpty ?? onOtherwise)?.call(context, e);
+          return (emptyBuilder ?? otherwiseBuilder ?? defaultEmptyBuilder)(context, e);
+        },
+        failure: (e) {
+          (onFailure ?? onOtherwise)?.call(context, e);
+          return (failureBuilder ?? otherwiseBuilder ?? defaultFailureBuilder)(context, e);
+        },
+        waiting: (e) {
+          (onWaiting ?? onOtherwise)?.call(context, e);
+          return (waitingBuilder ?? otherwiseBuilder ?? defaultWaitingBuilder)(context, e);
+        },
+        success: (e) {
+          onSuccess?.call(context, e);
+          return successBuilder(context, e);
+        },
+      ),
     );
   }
 }

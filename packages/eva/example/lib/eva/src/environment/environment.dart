@@ -11,16 +11,11 @@ import '../../eva.dart';
 abstract class Environment {
   const Environment();
 
-  static final _commandHandlers = <Type, ICommandHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform)>{};
-
   @mustCallSuper
   Future<void> initialize();
 
   @mustCallSuper
   void registerDependencies();
-
-  @mustCallSuper
-  void registerCommandHandlers();
 
   LogLevel get minLogLevel;
 
@@ -44,40 +39,14 @@ abstract class Environment {
   }
 
   @protected
-  void registerCommandHandler<T>(ICommandHandler Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) commandHandlerConstructor) {
-    if (Isolate.current.debugName == "main") {
-      throw IsolateSpawnException("Environments cannot be executed on the main thread (i.e.: never call an Environment directly from Flutter code)");
-    }
-
-    _commandHandlers[T] = commandHandlerConstructor;
-    Log.info(
-      () => "Event `Event<${T}>` will be handled by "
-          "`${commandHandlerConstructor.toString().replaceFirst("Closure: (<Y0>() => Y0, PlatformInfo) => ", "")}`",
-    );
-  }
-
-  @protected
   void onMessageReceived(dynamic message) {
     final command = message as Command;
-    final handler = _commandHandlers[command.runtimeType];
-
-    if (handler == null) {
-      final errorMessage = "Domain received command `${command.runtimeType}` but no handler was registered to process it";
-
-      Log.error(() => errorMessage);
-
-      if (kDebugMode) {
-        throw UnimplementedError(errorMessage);
-      }
-      return;
-    }
 
     Log.debug(() => "Domain received command `${command.runtimeType}`");
 
     try {
       // ignore: invalid_use_of_protected_member
-      final commandHandler = handler(ServiceProvider.required, PlatformInfo.platformInfo) as CommandHandler;
-      final outputStream = commandHandler.handle(command);
+      final outputStream = command.handle(ServiceProvider.required, PlatformInfo.platformInfo);
 
       outputStream.forEach((event) {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");

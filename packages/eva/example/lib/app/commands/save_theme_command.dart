@@ -7,18 +7,12 @@ class SaveThemeCommand extends Command {
   const SaveThemeCommand({required this.isDarkTheme});
 
   final bool isDarkTheme;
-}
-
-@immutable
-class SaveThemeCommandHandler extends CommandHandler<SaveThemeCommand> {
-  const SaveThemeCommandHandler({required SettingsDomain settingsDomain}) : _settingsDomain = settingsDomain;
-
-  final SettingsDomain _settingsDomain;
 
   @override
-  Stream<IEvent> handle(SaveThemeCommand command) async* {
-    final response = await _settingsDomain.setThemeIsDark(command.isDarkTheme);
+  Stream<IEvent> handle(required, platformInfo) async* {
+    final settingsDomain = required<SettingsDomain>();
+    final response = await settingsDomain.setThemeIsDark(isDarkTheme);
 
-    yield response.mapToEvent(success: (_) => ToDoThemeEntity(isDarkTheme: command.isDarkTheme));
+    yield response.mapToEvent(success: (_) => ToDoThemeEntity(isDarkTheme: isDarkTheme));
   }
 }

@@ -114,7 +114,6 @@ abstract class Domain {
     await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
-    _environment.registerCommandHandlers();
     Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);

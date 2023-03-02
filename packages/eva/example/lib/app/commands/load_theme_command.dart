@@ -5,23 +5,14 @@ import '../domain/settings_domain.dart';
 @immutable
 class LoadThemeCommand extends Command {
   const LoadThemeCommand();
-}
-
-@immutable
-class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
-  const LoadThemeCommandHandler({required SettingsDomain settingsDomain}) : _settingsDomain = settingsDomain;
-
-  final SettingsDomain _settingsDomain;
 
   @override
-  Stream<IEvent> handle(LoadThemeCommand command) async* {
+  Stream<IEvent> handle(required, platformInfo) async* {
     yield const Event<ToDoThemeEntity>.waiting();
-    yield await _loadThemeIsDark(command);
-  }
 
-  Future<IEvent> _loadThemeIsDark(LoadThemeCommand command) async {
-    final response = await _settingsDomain.getThemeIsDark();
+    final settingsDomain = required<SettingsDomain>();
+    final response = await settingsDomain.getThemeIsDark();
 
-    return response.mapToEvent(success: (isDarkTheme) => ToDoThemeEntity(isDarkTheme: isDarkTheme));
+    yield response.mapToEvent(success: (isDarkTheme) => ToDoThemeEntity(isDarkTheme: isDarkTheme));
   }
 }
