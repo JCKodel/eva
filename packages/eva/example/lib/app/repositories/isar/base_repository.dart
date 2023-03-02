@@ -9,10 +9,12 @@ import 'data/to_do.dart';
 abstract class BaseRepository implements IRepository {
   @override
   void initialize() {
-    Isar.openSync(
-      [AppSettingSchema, ToDoSchema],
-      inspector: true,
-      compactOnLaunch: const CompactCondition(minFileSize: 1024 * 1024),
-    );
+    if (Isar.getInstance() == null) {
+      Isar.openSync(
+        [AppSettingSchema, ToDoSchema],
+        inspector: true,
+        compactOnLaunch: const CompactCondition(minFileSize: 1024 * 1024),
+      );
+    }
   }
 }

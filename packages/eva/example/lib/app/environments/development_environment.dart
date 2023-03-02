@@ -1,6 +1,8 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
+import '../contracts/i_to_do_repository.dart';
 import '../repositories/isar/isar_app_settings_repository.dart';
+import '../repositories/isar/isar_to_do_repository.dart';
 
 import 'base_environment.dart';
 
@@ -17,6 +19,10 @@ class DevelopmentEnvironment extends BaseEnvironment {
 
     registerDependency<IAppSettingsRepository>(
       (requires, platform) => IsarAppSettingsRepository(),
+    );
+
+    registerDependency<IToDoRepository>(
+      (requires, platform) => IsarToDoRepository(),
     );
   }
 }

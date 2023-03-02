@@ -18,7 +18,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
     final db = Isar.getInstance()!;
 
     return ResponseOf.success(
-      db.toDos.where().watch(fireImmediately: true).cast<Iterable<ToDoEntity>>(),
+      db.toDos.where().watch(fireImmediately: true).map((toDos) => toDos.map((toDo) => toDo.toEntity())),
     );
   }
 
@@ -45,18 +45,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
         return const ResponseOf<Iterable<ToDoEntity>>.empty();
       }
 
-      return ResponseOf.success(
-        toDos.map(
-          (toDo) => ToDoEntity(
-            id: toDo.id,
-            title: toDo.title,
-            description: toDo.description,
-            completed: toDo.completed,
-            creationDate: toDo.creationDate,
-            completionDate: toDo.completionDate,
-          ),
-        ),
-      );
+      return ResponseOf.success(toDos.map((toDo) => toDo.toEntity()));
     });
   }
 }

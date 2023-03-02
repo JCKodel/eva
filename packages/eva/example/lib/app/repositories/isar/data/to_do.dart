@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 
+import '../../../domain/entities/to_do_entity.dart';
+
 part 'to_do.g.dart';
 
 @collection
@@ -27,4 +29,15 @@ class ToDo {
 
   @Index()
   DateTime? completionDate;
+
+  ToDoEntity toEntity() {
+    return ToDoEntity(
+      id: id,
+      title: title,
+      description: description,
+      completed: completed,
+      creationDate: creationDate,
+      completionDate: completionDate,
+    );
+  }
 }

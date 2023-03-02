@@ -76,9 +76,10 @@ abstract class Environment {
 
     try {
       // ignore: invalid_use_of_protected_member
-      final h = handler(ServiceProvider.required, PlatformInfo.platformInfo) as CommandHandler;
+      final commandHandler = handler(ServiceProvider.required, PlatformInfo.platformInfo) as CommandHandler;
+      final outputStream = commandHandler.handle(command);
 
-      h.handle(command).forEach((event) {
+      outputStream.forEach((event) {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
 
         // ignore: invalid_use_of_protected_member
