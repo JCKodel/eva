@@ -16,31 +16,12 @@ class LoadToDoFilterSettingCommandHandler extends CommandHandler<LoadToDoFilterS
   @override
   Stream<IEvent> handle(LoadToDoFilterSettingCommand command) async* {
     yield const Event<ListToDosFilter>.waiting();
-
-    if (_settingsDomain.canWatchSetingsChanges) {
-      final firstResult = await _loadListToDosFilter(command);
-
-      yield firstResult;
-
-      final watcherResponse = await _settingsDomain.setupListToDosFilterWatcher();
-
-      if (watcherResponse.type == ResponseType.success) {
-        final stream = watcherResponse.getValue();
-
-        if (await stream.isEmpty) {
-          yield* watcherResponse.getValue().map((filter) => Event<ListToDosFilter>.success(filter));
-        }
-      }
-    } else {
-      yield await _loadListToDosFilter(command);
-    }
+    yield await _loadListToDosFilter(command);
   }
 
   Future<IEvent> _loadListToDosFilter(LoadToDoFilterSettingCommand command) async {
     final response = await _settingsDomain.getListToDosFilter();
 
-    return response.mapToEvent(
-      success: (filter) => filter,
-    );
+    return response.mapToEvent(success: (filter) => filter);
   }
 }

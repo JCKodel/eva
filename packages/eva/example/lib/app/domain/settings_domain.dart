@@ -11,8 +11,6 @@ class SettingsDomain implements IDomain {
   @override
   void initialize() {}
 
-  bool get canWatchSetingsChanges => _appSettingsRepository.canWatch;
-
   static const kBrightnessKey = "themeBrightness";
 
   Future<ResponseOf<bool>> getThemeIsDark() async {
@@ -23,14 +21,6 @@ class SettingsDomain implements IDomain {
 
   Future<Response> setThemeIsDark(bool isDarkTheme) async {
     return _appSettingsRepository.set(kBrightnessKey, isDarkTheme ? "D" : "L");
-  }
-
-  Future<ResponseOf<Stream<bool>>> setupThemeIsDarkWatcher() async {
-    final watchStream = await _appSettingsRepository.watch(kBrightnessKey);
-
-    return watchStream.map(
-      success: (stream) => ResponseOf<Stream<bool>>.success(stream.map((value) => value == "D")),
-    );
   }
 
   static const kListToDosFilter = "listToDosFilter";
@@ -46,17 +36,5 @@ class SettingsDomain implements IDomain {
 
   Future<Response> setListToDosFilter(ListToDosFilter filter) async {
     return _appSettingsRepository.set(kListToDosFilter, filter.toString());
-  }
-
-  Future<ResponseOf<Stream<ListToDosFilter>>> setupListToDosFilterWatcher() async {
-    final watchStream = await _appSettingsRepository.watch(kListToDosFilter);
-
-    return watchStream.map(
-      success: (stream) => ResponseOf<Stream<ListToDosFilter>>.success(
-        stream.map(
-          (value) => ListToDosFilter.values.firstWhere((v) => v.toString() == value),
-        ),
-      ),
-    );
   }
 }

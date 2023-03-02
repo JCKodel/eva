@@ -9,16 +9,14 @@ class ToDoDomain implements IDomain {
 
   final IToDoRepository _toDoRepository;
 
-  bool get canWatchToDoChanges => _toDoRepository.canWatch;
-
   @override
   void initialize() {}
 
   Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
-    return _toDoRepository.listToDos(filter);
-  }
+    final response = await _toDoRepository.listToDos(filter);
 
-  Future<ResponseOf<Stream<Iterable<ToDoEntity>>>> setupToDosWatcher() {
-    return _toDoRepository.watch();
+    return response.map(
+      success: (value) => value.isEmpty ? const ResponseOf<Iterable<ToDoEntity>>.empty() : ResponseOf<Iterable<ToDoEntity>>.success(value),
+    );
   }
 }

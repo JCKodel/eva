@@ -10,9 +10,6 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
   IsarAppSettingsRepository();
 
   @override
-  bool get canWatch => true;
-
-  @override
   Future<ResponseOf<String>> get(String key) async {
     final db = Isar.getInstance()!;
     final appSetting = await db.txn(() => db.appSettings.filter().keyEqualTo(key).build().findFirst());
@@ -41,20 +38,5 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
     });
 
     return const Response.success();
-  }
-
-  @override
-  Future<ResponseOf<Stream<String>>> watch(String key) async {
-    final db = Isar.getInstance()!;
-
-    return ResponseOf.success(
-      db.appSettings
-          .filter()
-          .keyEqualTo(key)
-          .build()
-          .watch(fireImmediately: true)
-          .where((appSettings) => appSettings.isNotEmpty)
-          .map((appSettings) => appSettings.first.value),
-    );
   }
 }

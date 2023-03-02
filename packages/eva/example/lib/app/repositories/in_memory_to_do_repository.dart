@@ -17,9 +17,6 @@ class InMemoryToDoRepository implements IToDoRepository {
   };
 
   @override
-  bool get canWatch => false;
-
-  @override
   void initialize() {}
 
   @override
@@ -32,10 +29,5 @@ class InMemoryToDoRepository implements IToDoRepository {
       case ListToDosFilter.uncompletedOnly:
         return ResponseOf.success(_toDos.values.where((toDo) => toDo.completed == false));
     }
-  }
-
-  @override
-  Future<ResponseOf<Stream<Iterable<ToDoEntity>>>> watch() {
-    throw UnimplementedError();
   }
 }

@@ -11,18 +11,6 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
   IsarToDoRepository();
 
   @override
-  bool get canWatch => true;
-
-  @override
-  Future<ResponseOf<Stream<Iterable<ToDoEntity>>>> watch() async {
-    final db = Isar.getInstance()!;
-
-    return ResponseOf.success(
-      db.toDos.where().watch(fireImmediately: true).map((toDos) => toDos.map((toDo) => toDo.toEntity())),
-    );
-  }
-
-  @override
   Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     final db = Isar.getInstance()!;
 

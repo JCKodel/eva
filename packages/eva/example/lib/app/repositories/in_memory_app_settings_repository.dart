@@ -11,9 +11,6 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   void initialize() {}
 
   @override
-  bool get canWatch => false;
-
-  @override
   Future<ResponseOf<String>> get(String key) async {
     return ResponseOf.success(_settings[key]);
   }
@@ -23,10 +20,5 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
     _settings[key] = value;
 
     return const Response.success();
-  }
-
-  @override
-  Future<ResponseOf<Stream<String>>> watch(String key) async {
-    return ResponseOf.failure(UnimplementedError());
   }
 }
