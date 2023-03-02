@@ -11,9 +11,11 @@ import '../../eva.dart';
 abstract class Environment {
   const Environment();
 
+  /// Called after `registerDependencies`
   @mustCallSuper
-  Future<void> initialize();
+  Future<void> initialize(TService Function<TService>({String? key}) required, PlatformInfo platform);
 
+  /// Called before `initialize`
   @mustCallSuper
   void registerDependencies();
 

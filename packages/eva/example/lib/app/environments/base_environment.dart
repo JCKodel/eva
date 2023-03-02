@@ -11,24 +11,29 @@ abstract class BaseEnvironment extends Environment {
   const BaseEnvironment();
 
   @override
-  Future<void> initialize() async {}
-
-  @override
   Future<void> registerDependencies() async {
     registerDependency<IAppSettingsRepository>(
-      (requires, platform) => const InMemoryAppSettingsRepository(),
+      (required, platform) => const InMemoryAppSettingsRepository(),
     );
 
     registerDependency<SettingsDomain>(
-      (requires, platform) => SettingsDomain(appSettingsRepository: requires<IAppSettingsRepository>()),
+      (required, platform) => SettingsDomain(appSettingsRepository: required<IAppSettingsRepository>()),
     );
 
     registerDependency<IToDoRepository>(
-      (requires, platform) => const InMemoryToDoRepository(),
+      (required, platform) => const InMemoryToDoRepository(),
     );
 
     registerDependency<ToDoDomain>(
-      (requires, platform) => ToDoDomain(toDoRepository: requires<IToDoRepository>()),
+      (required, platform) => ToDoDomain(toDoRepository: required<IToDoRepository>()),
     );
+  }
+
+  @override
+  Future<void> initialize(required, platform) async {
+    await Future.wait([
+      required<IAppSettingsRepository>().initialize(),
+      required<IToDoRepository>().initialize(),
+    ]);
   }
 }

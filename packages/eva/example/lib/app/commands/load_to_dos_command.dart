@@ -1,7 +1,7 @@
 import '../../eva/eva.dart';
-import '../contracts/i_to_do_repository.dart';
-import '../domain/entities/to_do_entity.dart';
 import '../domain/to_do_domain.dart';
+import '../entities/list_to_dos_filter.dart';
+import '../entities/to_do_entity.dart';
 
 @immutable
 class LoadToDosCommand extends Command {
@@ -10,7 +10,7 @@ class LoadToDosCommand extends Command {
   final ListToDosFilter filter;
 
   @override
-  Stream<IEvent> handle(required, platformInfo) async* {
+  Stream<IEvent> handle(required, platform) async* {
     yield const Event<List<ToDoEntity>>.waiting();
 
     final toDoDomain = required<ToDoDomain>();

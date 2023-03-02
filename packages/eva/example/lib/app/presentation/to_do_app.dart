@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../eva/eva.dart';
-import '../domain/entities/to_do_theme_entity.dart';
 
 import '../commands/load_theme_command.dart';
+import '../entities/to_do_theme_entity.dart';
 import 'home/home_page.dart';
 
 class ToDoApp extends StatelessWidget {

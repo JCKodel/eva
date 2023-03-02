@@ -4,8 +4,8 @@ import '../../../eva/eva.dart';
 import '../../commands/load_to_do_filter_setting_command.dart';
 import '../../commands/save_theme_command.dart';
 import '../../commands/set_to_do_filter_setting_command.dart';
-import '../../contracts/i_to_do_repository.dart';
-import '../../domain/entities/to_do_theme_entity.dart';
+import '../../entities/list_to_dos_filter.dart';
+import '../../entities/to_do_theme_entity.dart';
 
 import 'to_dos_list.dart';
 

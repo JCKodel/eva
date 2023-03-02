@@ -7,7 +7,7 @@ import '../events/event.dart';
 abstract class Command {
   const Command();
 
-  Stream<IEvent> handle(TService Function<TService>({String? key}) required, PlatformInfo platformInfo);
+  Stream<IEvent> handle(TService Function<TService>({String? key}) required, PlatformInfo platform);
 
   @override
   String toString() {

@@ -1,7 +1,7 @@
 import '../../eva/eva.dart';
 import '../contracts/i_to_do_repository.dart';
-
-import 'entities/to_do_entity.dart';
+import '../entities/list_to_dos_filter.dart';
+import '../entities/to_do_entity.dart';
 
 @immutable
 class ToDoDomain implements IDomain {

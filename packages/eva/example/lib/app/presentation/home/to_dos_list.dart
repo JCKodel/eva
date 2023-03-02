@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../eva/src/presentation/event_builder.dart';
 import '../../commands/load_to_dos_command.dart';
-import '../../contracts/i_to_do_repository.dart';
-import '../../domain/entities/to_do_entity.dart';
+import '../../entities/list_to_dos_filter.dart';
+import '../../entities/to_do_entity.dart';
 
 class ToDosList extends StatelessWidget {
   const ToDosList({required this.listToDosFilter, super.key});

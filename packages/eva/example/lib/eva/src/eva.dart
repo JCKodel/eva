@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
+import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -111,9 +113,10 @@ abstract class Domain {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
     Log.minLogLevel = _environment.minLogLevel;
-    await _environment.initialize();
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
+    // ignore: invalid_use_of_protected_member
+    await _environment.initialize(ServiceProvider.required, PlatformInfo.platformInfo);
     Log.info(() => "Domain started as an isolated thread");
     // ignore: invalid_use_of_protected_member
     _listenerFromMainPort.listen(_environment.onMessageReceived);

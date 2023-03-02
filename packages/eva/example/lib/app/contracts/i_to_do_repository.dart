@@ -1,11 +1,6 @@
 import '../../eva/eva.dart';
-import '../domain/entities/to_do_entity.dart';
-
-enum ListToDosFilter {
-  all,
-  completedOnly,
-  uncompletedOnly,
-}
+import '../entities/list_to_dos_filter.dart';
+import '../entities/to_do_entity.dart';
 
 @immutable
 abstract class IToDoRepository implements IRepository {

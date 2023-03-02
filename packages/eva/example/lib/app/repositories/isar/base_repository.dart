@@ -8,9 +8,9 @@ import 'data/to_do.dart';
 @immutable
 abstract class BaseRepository implements IRepository {
   @override
-  void initialize() {
+  Future<void> initialize() async {
     if (Isar.getInstance() == null) {
-      Isar.openSync(
+      await Isar.open(
         [AppSettingSchema, ToDoSchema],
         inspector: true,
         compactOnLaunch: const CompactCondition(minFileSize: 1024 * 1024),

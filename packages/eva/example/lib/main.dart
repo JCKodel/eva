@@ -8,7 +8,7 @@ import 'eva/eva.dart';
 
 Future<void> main() async {
   if (kDebugMode) {
-    IsarAppSettingsRepository().initialize();
+    await IsarAppSettingsRepository().initialize();
   }
 
   await Eva.useEnvironment(() => const DevelopmentEnvironment());

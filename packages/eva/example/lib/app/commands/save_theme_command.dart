@@ -1,6 +1,6 @@
 import '../../eva/eva.dart';
-import '../domain/entities/to_do_theme_entity.dart';
 import '../domain/settings_domain.dart';
+import '../entities/to_do_theme_entity.dart';
 
 @immutable
 class SaveThemeCommand extends Command {
@@ -9,7 +9,7 @@ class SaveThemeCommand extends Command {
   final bool isDarkTheme;
 
   @override
-  Stream<IEvent> handle(required, platformInfo) async* {
+  Stream<IEvent> handle(required, platform) async* {
     final settingsDomain = required<SettingsDomain>();
     final response = await settingsDomain.setThemeIsDark(isDarkTheme);
 

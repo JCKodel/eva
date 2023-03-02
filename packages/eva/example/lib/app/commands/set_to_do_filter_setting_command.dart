@@ -1,6 +1,6 @@
 import '../../eva/eva.dart';
-import '../contracts/i_to_do_repository.dart';
 import '../domain/settings_domain.dart';
+import '../entities/list_to_dos_filter.dart';
 
 @immutable
 class SetToDoFilterSettingCommand extends Command {
@@ -9,7 +9,7 @@ class SetToDoFilterSettingCommand extends Command {
   final ListToDosFilter filter;
 
   @override
-  Stream<IEvent> handle(required, platformInfo) async* {
+  Stream<IEvent> handle(required, platform) async* {
     final settingsDomain = required<SettingsDomain>();
 
     await settingsDomain.setListToDosFilter(filter);

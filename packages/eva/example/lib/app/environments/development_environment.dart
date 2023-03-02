@@ -18,11 +18,11 @@ class DevelopmentEnvironment extends BaseEnvironment {
     await super.registerDependencies();
 
     registerDependency<IAppSettingsRepository>(
-      (requires, platform) => IsarAppSettingsRepository(),
+      (required, platform) => IsarAppSettingsRepository(),
     );
 
     registerDependency<IToDoRepository>(
-      (requires, platform) => IsarToDoRepository(),
+      (required, platform) => IsarToDoRepository(),
     );
   }
 }

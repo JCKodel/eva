@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-import '../../../domain/entities/to_do_entity.dart';
+import '../../../entities/to_do_entity.dart';
 
 part 'to_do.g.dart';
 

@@ -1,6 +1,6 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
-import '../contracts/i_to_do_repository.dart';
+import '../entities/list_to_dos_filter.dart';
 
 @immutable
 class SettingsDomain implements IDomain {
