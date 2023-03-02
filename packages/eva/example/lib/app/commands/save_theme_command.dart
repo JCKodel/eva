@@ -1,5 +1,5 @@
 import '../../eva/eva.dart';
-import '../domain/entities/to_do_theme.dart';
+import '../domain/entities/to_do_theme_entity.dart';
 import '../domain/settings_domain.dart';
 
 @immutable
@@ -20,7 +20,7 @@ class SaveThemeCommandHandler extends CommandHandler<SaveThemeCommand> {
     final response = await _settingsDomain.setThemeIsDark(command.isDarkTheme);
 
     if (_settingsDomain.canWatchSetingsChanges == false) {
-      yield response.mapToEvent(success: (_) => ToDoTheme(isDarkTheme: command.isDarkTheme));
+      yield response.mapToEvent(success: (_) => ToDoThemeEntity(isDarkTheme: command.isDarkTheme));
     }
   }
 }

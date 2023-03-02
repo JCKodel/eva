@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
-import '../../domain/entities/to_do_theme.dart';
 import '../../commands/save_theme_command.dart';
+import '../../domain/entities/to_do_theme_entity.dart';
 
 import 'list_to_dos.dart';
 
@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("EvA To Do"),
         actions: [
-          EventBuilder<ToDoTheme>(
+          EventBuilder<ToDoThemeEntity>(
             otherwiseBuilder: (context, event) => _buildThemeBrightnessCheckbox(context, WidgetsBinding.instance.window.platformBrightness == Brightness.dark),
             successBuilder: (context, event) => _buildThemeBrightnessCheckbox(context, event.value.isDarkTheme),
           ),

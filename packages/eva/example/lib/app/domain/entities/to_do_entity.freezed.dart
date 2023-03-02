@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'to_do.dart';
+part of 'to_do_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$ToDo {
+mixin _$ToDoEntity {
   int? get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
@@ -24,13 +24,15 @@ mixin _$ToDo {
   DateTime? get completionDate => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ToDoCopyWith<ToDo> get copyWith => throw _privateConstructorUsedError;
+  $ToDoEntityCopyWith<ToDoEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ToDoCopyWith<$Res> {
-  factory $ToDoCopyWith(ToDo value, $Res Function(ToDo) then) =
-      _$ToDoCopyWithImpl<$Res, ToDo>;
+abstract class $ToDoEntityCopyWith<$Res> {
+  factory $ToDoEntityCopyWith(
+          ToDoEntity value, $Res Function(ToDoEntity) then) =
+      _$ToDoEntityCopyWithImpl<$Res, ToDoEntity>;
   @useResult
   $Res call(
       {int? id,
@@ -42,9 +44,9 @@ abstract class $ToDoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ToDoCopyWithImpl<$Res, $Val extends ToDo>
-    implements $ToDoCopyWith<$Res> {
-  _$ToDoCopyWithImpl(this._value, this._then);
+class _$ToDoEntityCopyWithImpl<$Res, $Val extends ToDoEntity>
+    implements $ToDoEntityCopyWith<$Res> {
+  _$ToDoEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -91,9 +93,11 @@ class _$ToDoCopyWithImpl<$Res, $Val extends ToDo>
 }
 
 /// @nodoc
-abstract class _$$_ToDoCopyWith<$Res> implements $ToDoCopyWith<$Res> {
-  factory _$$_ToDoCopyWith(_$_ToDo value, $Res Function(_$_ToDo) then) =
-      __$$_ToDoCopyWithImpl<$Res>;
+abstract class _$$_ToDoEntityCopyWith<$Res>
+    implements $ToDoEntityCopyWith<$Res> {
+  factory _$$_ToDoEntityCopyWith(
+          _$_ToDoEntity value, $Res Function(_$_ToDoEntity) then) =
+      __$$_ToDoEntityCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -106,9 +110,11 @@ abstract class _$$_ToDoCopyWith<$Res> implements $ToDoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ToDoCopyWithImpl<$Res> extends _$ToDoCopyWithImpl<$Res, _$_ToDo>
-    implements _$$_ToDoCopyWith<$Res> {
-  __$$_ToDoCopyWithImpl(_$_ToDo _value, $Res Function(_$_ToDo) _then)
+class __$$_ToDoEntityCopyWithImpl<$Res>
+    extends _$ToDoEntityCopyWithImpl<$Res, _$_ToDoEntity>
+    implements _$$_ToDoEntityCopyWith<$Res> {
+  __$$_ToDoEntityCopyWithImpl(
+      _$_ToDoEntity _value, $Res Function(_$_ToDoEntity) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -121,7 +127,7 @@ class __$$_ToDoCopyWithImpl<$Res> extends _$ToDoCopyWithImpl<$Res, _$_ToDo>
     Object? completed = null,
     Object? completionDate = freezed,
   }) {
-    return _then(_$_ToDo(
+    return _then(_$_ToDoEntity(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -152,8 +158,8 @@ class __$$_ToDoCopyWithImpl<$Res> extends _$ToDoCopyWithImpl<$Res, _$_ToDo>
 
 /// @nodoc
 
-class _$_ToDo implements _ToDo {
-  const _$_ToDo(
+class _$_ToDoEntity implements _ToDoEntity {
+  const _$_ToDoEntity(
       {this.id,
       required this.title,
       required this.description,
@@ -176,14 +182,14 @@ class _$_ToDo implements _ToDo {
 
   @override
   String toString() {
-    return 'ToDo(id: $id, title: $title, description: $description, creationDate: $creationDate, completed: $completed, completionDate: $completionDate)';
+    return 'ToDoEntity(id: $id, title: $title, description: $description, creationDate: $creationDate, completed: $completed, completionDate: $completionDate)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ToDo &&
+            other is _$_ToDoEntity &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
@@ -203,18 +209,18 @@ class _$_ToDo implements _ToDo {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ToDoCopyWith<_$_ToDo> get copyWith =>
-      __$$_ToDoCopyWithImpl<_$_ToDo>(this, _$identity);
+  _$$_ToDoEntityCopyWith<_$_ToDoEntity> get copyWith =>
+      __$$_ToDoEntityCopyWithImpl<_$_ToDoEntity>(this, _$identity);
 }
 
-abstract class _ToDo implements ToDo {
-  const factory _ToDo(
+abstract class _ToDoEntity implements ToDoEntity {
+  const factory _ToDoEntity(
       {final int? id,
       required final String title,
       required final String description,
       required final DateTime creationDate,
       required final bool completed,
-      final DateTime? completionDate}) = _$_ToDo;
+      final DateTime? completionDate}) = _$_ToDoEntity;
 
   @override
   int? get id;
@@ -230,5 +236,6 @@ abstract class _ToDo implements ToDo {
   DateTime? get completionDate;
   @override
   @JsonKey(ignore: true)
-  _$$_ToDoCopyWith<_$_ToDo> get copyWith => throw _privateConstructorUsedError;
+  _$$_ToDoEntityCopyWith<_$_ToDoEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -1,15 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part "to_do.freezed.dart";
+part "to_do_entity.freezed.dart";
 
 @freezed
-class ToDo with _$ToDo {
-  const factory ToDo({
+class ToDoEntity with _$ToDoEntity {
+  const factory ToDoEntity({
     int? id,
     required String title,
     required String description,
     required DateTime creationDate,
     required bool completed,
     DateTime? completionDate,
-  }) = _ToDo;
+  }) = _ToDoEntity;
 }

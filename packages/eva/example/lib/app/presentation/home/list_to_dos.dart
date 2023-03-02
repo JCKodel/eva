@@ -4,7 +4,7 @@ import '../../../eva/src/presentation/event_builder.dart';
 import '../../commands/load_to_do_filter_setting_command.dart';
 import '../../commands/load_to_dos_command.dart';
 import '../../contracts/i_to_do_repository.dart';
-import '../../domain/entities/to_do.dart';
+import '../../domain/entities/to_do_entity.dart';
 
 class ListToDos extends StatelessWidget {
   const ListToDos({super.key});
@@ -14,7 +14,7 @@ class ListToDos extends StatelessWidget {
     return CommandEventBuilder<LoadToDoFilterSettingCommand, ListToDosFilter>(
       initialValue: ListToDosFilter.all,
       command: const LoadToDoFilterSettingCommand(),
-      successBuilder: (context, event) => CommandEventBuilder<LoadToDosCommand, Iterable<ToDo>>(
+      successBuilder: (context, event) => CommandEventBuilder<LoadToDosCommand, Iterable<ToDoEntity>>(
         command: LoadToDosCommand(filter: event.value),
         successBuilder: (context, event) => Center(
           child: Text("There are ${event.value.length} to dos on the list"),

@@ -1,10 +1,14 @@
 import 'package:isar/isar.dart';
 
-part 'app_settings_model.g.dart';
+part 'app_setting.g.dart';
 
 @collection
-class AppSettingsModel {
-  AppSettingsModel({required this.key, required this.value, this.id});
+class AppSetting {
+  AppSetting({
+    this.id,
+    required this.key,
+    required this.value,
+  });
 
   Id? id = Isar.autoIncrement;
 

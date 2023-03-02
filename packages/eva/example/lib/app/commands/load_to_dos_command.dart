@@ -1,6 +1,6 @@
 import '../../eva/eva.dart';
 import '../contracts/i_to_do_repository.dart';
-import '../domain/entities/to_do.dart';
+import '../domain/entities/to_do_entity.dart';
 import '../domain/to_do_domain.dart';
 
 @immutable
@@ -18,7 +18,7 @@ class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
 
   @override
   Stream<IEvent> handle(LoadToDosCommand command) async* {
-    yield const Event<List<ToDo>>.waiting();
+    yield const Event<List<ToDoEntity>>.waiting();
 
     if (_toDoDomain.canWatchToDoChanges) {
       final firstResult = await _loadToDos(command);
@@ -28,7 +28,7 @@ class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
       final watcherResponse = await _toDoDomain.setupToDosWatcher();
 
       if (watcherResponse.type == ResponseType.success) {
-        yield* watcherResponse.getValue().map((toDos) => Event<Iterable<ToDo>>.success(toDos));
+        yield* watcherResponse.getValue().map((toDos) => Event<Iterable<ToDoEntity>>.success(toDos));
       }
     } else {
       yield await _loadToDos(command);

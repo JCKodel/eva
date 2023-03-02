@@ -1,5 +1,5 @@
 import '../../eva/eva.dart';
-import '../domain/entities/to_do.dart';
+import '../domain/entities/to_do_entity.dart';
 
 enum ListToDosFilter {
   all,
@@ -10,6 +10,6 @@ enum ListToDosFilter {
 @immutable
 abstract class IToDoRepository implements IRepository {
   bool get canWatch;
-  Future<ResponseOf<Iterable<ToDo>>> listToDos(ListToDosFilter filter);
-  Future<ResponseOf<Stream<Iterable<ToDo>>>> watch();
+  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter);
+  Future<ResponseOf<Stream<Iterable<ToDoEntity>>>> watch();
 }

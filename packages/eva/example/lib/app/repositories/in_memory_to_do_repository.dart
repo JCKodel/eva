@@ -1,13 +1,13 @@
 import '../../eva/eva.dart';
 import '../contracts/i_to_do_repository.dart';
-import '../domain/entities/to_do.dart';
+import '../domain/entities/to_do_entity.dart';
 
 @immutable
 class InMemoryToDoRepository implements IToDoRepository {
   const InMemoryToDoRepository();
 
-  static final _toDos = <int, ToDo>{
-    1: ToDo(
+  static final _toDos = <int, ToDoEntity>{
+    1: ToDoEntity(
       id: 1,
       title: "First To Do",
       description: "You are using the in memory to do repository",
@@ -23,7 +23,7 @@ class InMemoryToDoRepository implements IToDoRepository {
   void initialize() {}
 
   @override
-  Future<ResponseOf<Iterable<ToDo>>> listToDos(ListToDosFilter filter) async {
+  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     switch (filter) {
       case ListToDosFilter.all:
         return ResponseOf.success(_toDos.values);
@@ -35,7 +35,7 @@ class InMemoryToDoRepository implements IToDoRepository {
   }
 
   @override
-  Future<ResponseOf<Stream<Iterable<ToDo>>>> watch() {
+  Future<ResponseOf<Stream<Iterable<ToDoEntity>>>> watch() {
     throw UnimplementedError();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../eva/eva.dart';
-import '../domain/entities/to_do_theme.dart';
+import '../domain/entities/to_do_theme_entity.dart';
 
 import '../commands/load_theme_command.dart';
 import 'home/home_page.dart';
@@ -11,7 +11,7 @@ class ToDoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CommandEventBuilder<LoadThemeCommand, ToDoTheme>(
+    return CommandEventBuilder<LoadThemeCommand, ToDoThemeEntity>(
       command: const LoadThemeCommand(),
       otherwiseBuilder: (context, event) => _buildApp(context, WidgetsBinding.instance.window.platformBrightness == Brightness.dark),
       successBuilder: (context, event) => _buildApp(context, event.value.isDarkTheme),

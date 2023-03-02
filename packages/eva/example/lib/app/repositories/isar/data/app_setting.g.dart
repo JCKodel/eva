@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_settings_model.dart';
+part of 'app_setting.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'app_settings_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
-extension GetAppSettingsModelCollection on Isar {
-  IsarCollection<AppSettingsModel> get appSettingsModels => this.collection();
+extension GetAppSettingCollection on Isar {
+  IsarCollection<AppSetting> get appSettings => this.collection();
 }
 
-const AppSettingsModelSchema = CollectionSchema(
-  name: r'AppSettingsModel',
-  id: -638838212012723081,
+const AppSettingSchema = CollectionSchema(
+  name: r'AppSetting',
+  id: -948817443998796339,
   properties: {
     r'key': PropertySchema(
       id: 0,
@@ -28,10 +28,10 @@ const AppSettingsModelSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _appSettingsModelEstimateSize,
-  serialize: _appSettingsModelSerialize,
-  deserialize: _appSettingsModelDeserialize,
-  deserializeProp: _appSettingsModelDeserializeProp,
+  estimateSize: _appSettingEstimateSize,
+  serialize: _appSettingSerialize,
+  deserialize: _appSettingDeserialize,
+  deserializeProp: _appSettingDeserializeProp,
   idName: r'id',
   indexes: {
     r'key': IndexSchema(
@@ -50,14 +50,14 @@ const AppSettingsModelSchema = CollectionSchema(
   },
   links: {},
   embeddedSchemas: {},
-  getId: _appSettingsModelGetId,
-  getLinks: _appSettingsModelGetLinks,
-  attach: _appSettingsModelAttach,
+  getId: _appSettingGetId,
+  getLinks: _appSettingGetLinks,
+  attach: _appSettingAttach,
   version: '3.0.5',
 );
 
-int _appSettingsModelEstimateSize(
-  AppSettingsModel object,
+int _appSettingEstimateSize(
+  AppSetting object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -67,8 +67,8 @@ int _appSettingsModelEstimateSize(
   return bytesCount;
 }
 
-void _appSettingsModelSerialize(
-  AppSettingsModel object,
+void _appSettingSerialize(
+  AppSetting object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -77,13 +77,13 @@ void _appSettingsModelSerialize(
   writer.writeString(offsets[1], object.value);
 }
 
-AppSettingsModel _appSettingsModelDeserialize(
+AppSetting _appSettingDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = AppSettingsModel(
+  final object = AppSetting(
     id: id,
     key: reader.readString(offsets[0]),
     value: reader.readString(offsets[1]),
@@ -91,7 +91,7 @@ AppSettingsModel _appSettingsModelDeserialize(
   return object;
 }
 
-P _appSettingsModelDeserializeProp<P>(
+P _appSettingDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -107,32 +107,30 @@ P _appSettingsModelDeserializeProp<P>(
   }
 }
 
-Id _appSettingsModelGetId(AppSettingsModel object) {
+Id _appSettingGetId(AppSetting object) {
   return object.id ?? Isar.autoIncrement;
 }
 
-List<IsarLinkBase<dynamic>> _appSettingsModelGetLinks(AppSettingsModel object) {
+List<IsarLinkBase<dynamic>> _appSettingGetLinks(AppSetting object) {
   return [];
 }
 
-void _appSettingsModelAttach(
-    IsarCollection<dynamic> col, Id id, AppSettingsModel object) {
+void _appSettingAttach(IsarCollection<dynamic> col, Id id, AppSetting object) {
   object.id = id;
 }
 
-extension AppSettingsModelQueryWhereSort
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QWhere> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhere> anyId() {
+extension AppSettingQueryWhereSort
+    on QueryBuilder<AppSetting, AppSetting, QWhere> {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension AppSettingsModelQueryWhere
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QWhereClause> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause> idEqualTo(
-      Id id) {
+extension AppSettingQueryWhere
+    on QueryBuilder<AppSetting, AppSetting, QWhereClause> {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -141,8 +139,7 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause>
-      idNotEqualTo(Id id) {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -164,8 +161,8 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -173,8 +170,8 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -182,7 +179,7 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause> idBetween(
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -198,8 +195,8 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause>
-      keyEqualTo(String key) {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> keyEqualTo(
+      String key) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'key',
@@ -208,8 +205,8 @@ extension AppSettingsModelQueryWhere
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterWhereClause>
-      keyNotEqualTo(String key) {
+  QueryBuilder<AppSetting, AppSetting, QAfterWhereClause> keyNotEqualTo(
+      String key) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -244,10 +241,9 @@ extension AppSettingsModelQueryWhere
   }
 }
 
-extension AppSettingsModelQueryFilter
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QFilterCondition> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idIsNull() {
+extension AppSettingQueryFilter
+    on QueryBuilder<AppSetting, AppSetting, QFilterCondition> {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'id',
@@ -255,8 +251,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idIsNotNull() {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'id',
@@ -264,8 +259,8 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idEqualTo(Id? value) {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idEqualTo(
+      Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -274,8 +269,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idGreaterThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idGreaterThan(
     Id? value, {
     bool include = false,
   }) {
@@ -288,8 +282,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idLessThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idLessThan(
     Id? value, {
     bool include = false,
   }) {
@@ -302,8 +295,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      idBetween(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> idBetween(
     Id? lower,
     Id? upper, {
     bool includeLower = true,
@@ -320,8 +312,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyEqualTo(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -334,8 +325,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyGreaterThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -350,8 +340,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyLessThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -366,8 +355,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyBetween(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -386,8 +374,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyStartsWith(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -400,8 +387,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyEndsWith(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -414,8 +400,9 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'key',
@@ -425,8 +412,9 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'key',
@@ -436,8 +424,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyIsEmpty() {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'key',
@@ -446,8 +433,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      keyIsNotEmpty() {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> keyIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'key',
@@ -456,8 +442,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueEqualTo(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -470,8 +455,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueGreaterThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -486,8 +470,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueLessThan(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -502,8 +485,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueBetween(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -522,8 +504,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueStartsWith(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -536,8 +517,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueEndsWith(
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -550,8 +530,9 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'value',
@@ -561,8 +542,9 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'value',
@@ -572,8 +554,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
-      valueIsEmpty() {
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition> valueIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'value',
@@ -582,7 +563,7 @@ extension AppSettingsModelQueryFilter
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterFilterCondition>
+  QueryBuilder<AppSetting, AppSetting, QAfterFilterCondition>
       valueIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -593,93 +574,88 @@ extension AppSettingsModelQueryFilter
   }
 }
 
-extension AppSettingsModelQueryObject
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QFilterCondition> {}
+extension AppSettingQueryObject
+    on QueryBuilder<AppSetting, AppSetting, QFilterCondition> {}
 
-extension AppSettingsModelQueryLinks
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QFilterCondition> {}
+extension AppSettingQueryLinks
+    on QueryBuilder<AppSetting, AppSetting, QFilterCondition> {}
 
-extension AppSettingsModelQuerySortBy
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QSortBy> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy> sortByKey() {
+extension AppSettingQuerySortBy
+    on QueryBuilder<AppSetting, AppSetting, QSortBy> {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> sortByKey() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'key', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy>
-      sortByKeyDesc() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> sortByKeyDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'key', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy> sortByValue() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> sortByValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy>
-      sortByValueDesc() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> sortByValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.desc);
     });
   }
 }
 
-extension AppSettingsModelQuerySortThenBy
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QSortThenBy> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy> thenById() {
+extension AppSettingQuerySortThenBy
+    on QueryBuilder<AppSetting, AppSetting, QSortThenBy> {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy>
-      thenByIdDesc() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy> thenByKey() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenByKey() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'key', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy>
-      thenByKeyDesc() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenByKeyDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'key', Sort.desc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy> thenByValue() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenByValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.asc);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QAfterSortBy>
-      thenByValueDesc() {
+  QueryBuilder<AppSetting, AppSetting, QAfterSortBy> thenByValueDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'value', Sort.desc);
     });
   }
 }
 
-extension AppSettingsModelQueryWhereDistinct
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QDistinct> {
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QDistinct> distinctByKey(
+extension AppSettingQueryWhereDistinct
+    on QueryBuilder<AppSetting, AppSetting, QDistinct> {
+  QueryBuilder<AppSetting, AppSetting, QDistinct> distinctByKey(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'key', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<AppSettingsModel, AppSettingsModel, QDistinct> distinctByValue(
+  QueryBuilder<AppSetting, AppSetting, QDistinct> distinctByValue(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'value', caseSensitive: caseSensitive);
@@ -687,21 +663,21 @@ extension AppSettingsModelQueryWhereDistinct
   }
 }
 
-extension AppSettingsModelQueryProperty
-    on QueryBuilder<AppSettingsModel, AppSettingsModel, QQueryProperty> {
-  QueryBuilder<AppSettingsModel, int, QQueryOperations> idProperty() {
+extension AppSettingQueryProperty
+    on QueryBuilder<AppSetting, AppSetting, QQueryProperty> {
+  QueryBuilder<AppSetting, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<AppSettingsModel, String, QQueryOperations> keyProperty() {
+  QueryBuilder<AppSetting, String, QQueryOperations> keyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'key');
     });
   }
 
-  QueryBuilder<AppSettingsModel, String, QQueryOperations> valueProperty() {
+  QueryBuilder<AppSetting, String, QQueryOperations> valueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'value');
     });

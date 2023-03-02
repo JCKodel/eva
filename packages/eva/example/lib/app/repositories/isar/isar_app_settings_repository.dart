@@ -3,25 +3,19 @@ import 'package:isar/isar.dart';
 import '../../../eva/eva.dart';
 import '../../contracts/i_app_settings_repository.dart';
 
-import 'models/app_settings_model.dart';
+import 'base_repository.dart';
+import 'data/app_setting.dart';
 
-class IsarAppSettingsRepository implements IAppSettingsRepository {
+class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRepository {
   IsarAppSettingsRepository();
-
-  late final Future<Isar> _dbFuture;
-
-  @override
-  void initialize() {
-    _dbFuture = Isar.open([AppSettingsModelSchema], inspector: true, name: "AppSettings");
-  }
 
   @override
   bool get canWatch => true;
 
   @override
   Future<ResponseOf<String>> get(String key) async {
-    final db = await _dbFuture;
-    final appSetting = await db.txn(() => db.appSettingsModels.filter().keyEqualTo(key).build().findFirst());
+    final db = Isar.getInstance()!;
+    final appSetting = await db.txn(() => db.appSettings.filter().keyEqualTo(key).build().findFirst());
 
     if (appSetting == null) {
       return const ResponseOf<String>.empty();
@@ -32,18 +26,18 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
 
   @override
   Future<Response> set(String key, String value) async {
-    final db = await _dbFuture;
+    final db = Isar.getInstance()!;
 
     await db.writeTxn(() async {
-      var appSetting = await db.appSettingsModels.filter().keyEqualTo(key).build().findFirst();
+      var appSetting = await db.appSettings.filter().keyEqualTo(key).build().findFirst();
 
       if (appSetting == null) {
-        appSetting = AppSettingsModel(key: key, value: value);
+        appSetting = AppSetting(key: key, value: value);
       } else {
         appSetting.value = value;
       }
 
-      await db.appSettingsModels.put(appSetting);
+      await db.appSettings.put(appSetting);
     });
 
     return const Response.success();
@@ -51,10 +45,10 @@ class IsarAppSettingsRepository implements IAppSettingsRepository {
 
   @override
   Future<ResponseOf<Stream<String>>> watch(String key) async {
-    final db = await _dbFuture;
+    final db = Isar.getInstance()!;
 
     return ResponseOf.success(
-      db.appSettingsModels
+      db.appSettings
           .filter()
           .keyEqualTo(key)
           .build()
