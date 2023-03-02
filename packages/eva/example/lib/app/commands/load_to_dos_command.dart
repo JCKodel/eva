@@ -21,13 +21,15 @@ class LoadToDosCommandHandler extends CommandHandler<LoadToDosCommand> {
     yield const Event<List<ToDo>>.waiting();
 
     if (_toDoDomain.canWatchToDoChanges) {
-      // final watcherResponse = await _themeDomain.setupThemeIsDarkWatcher();
+      final firstResult = await _loadToDos(command);
 
-      // if (watcherResponse.type != ResponseType.success) {
-      //   yield await _loadThemeIsDark(command);
-      // } else {
-      //   yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
-      // }
+      yield firstResult;
+
+      final watcherResponse = await _toDoDomain.setupToDosWatcher();
+
+      if (watcherResponse.type == ResponseType.success) {
+        yield* watcherResponse.getValue().map((toDos) => Event<Iterable<ToDo>>.success(toDos));
+      }
     } else {
       yield await _loadToDos(command);
     }

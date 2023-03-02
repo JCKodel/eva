@@ -17,4 +17,8 @@ class ToDoDomain implements IDomain {
   Future<ResponseOf<Iterable<ToDo>>> listToDos(ListToDosFilter filter) async {
     return _toDoRepository.listToDos(filter);
   }
+
+  Future<ResponseOf<Stream<Iterable<ToDo>>>> setupToDosWatcher() {
+    return _toDoRepository.watch();
+  }
 }

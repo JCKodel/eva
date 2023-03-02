@@ -11,4 +11,5 @@ enum ListToDosFilter {
 abstract class IToDoRepository implements IRepository {
   bool get canWatch;
   Future<ResponseOf<Iterable<ToDo>>> listToDos(ListToDosFilter filter);
+  Future<ResponseOf<Stream<Iterable<ToDo>>>> watch();
 }

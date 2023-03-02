@@ -64,7 +64,6 @@ class EventBuilder<TEventState> extends StatelessWidget {
         event = Event.success(initialValue as TEventState);
       } else {
         event = snapshot.data!.maybeMatch(
-          empty: (e) => Event.success(initialValue as TEventState),
           waiting: (e) => Event.success(initialValue as TEventState),
           otherwise: (e) => e,
         );

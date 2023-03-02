@@ -33,4 +33,9 @@ class InMemoryToDoRepository implements IToDoRepository {
         return ResponseOf.success(_toDos.values.where((toDo) => toDo.completed == false));
     }
   }
+
+  @override
+  Future<ResponseOf<Stream<Iterable<ToDo>>>> watch() {
+    throw UnimplementedError();
+  }
 }

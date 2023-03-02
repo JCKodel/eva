@@ -18,11 +18,13 @@ class LoadThemeCommandHandler extends CommandHandler<LoadThemeCommand> {
     yield const Event<ToDoTheme>.waiting();
 
     if (_settingsDomain.canWatchSetingsChanges) {
+      final firstResult = await _loadThemeIsDark(command);
+
+      yield firstResult;
+
       final watcherResponse = await _settingsDomain.setupThemeIsDarkWatcher();
 
-      if (watcherResponse.type != ResponseType.success) {
-        yield await _loadThemeIsDark(command);
-      } else {
+      if (watcherResponse.type == ResponseType.success) {
         yield* watcherResponse.getValue().map((isDarkTheme) => Event<ToDoTheme>.success(ToDoTheme(isDarkTheme: isDarkTheme)));
       }
     } else {

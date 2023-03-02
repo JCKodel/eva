@@ -18,16 +18,16 @@ class LoadToDoFilterSettingCommandHandler extends CommandHandler<LoadToDoFilterS
     yield const Event<ListToDosFilter>.waiting();
 
     if (_settingsDomain.canWatchSetingsChanges) {
+      final firstResult = await _loadListToDosFilter(command);
+
+      yield firstResult;
+
       final watcherResponse = await _settingsDomain.setupListToDosFilterWatcher();
 
-      if (watcherResponse.type != ResponseType.success) {
-        yield await _loadListToDosFilter(command);
-      } else {
+      if (watcherResponse.type == ResponseType.success) {
         final stream = watcherResponse.getValue();
 
         if (await stream.isEmpty) {
-          yield await _loadListToDosFilter(command);
-        } else {
           yield* watcherResponse.getValue().map((filter) => Event<ListToDosFilter>.success(filter));
         }
       }
