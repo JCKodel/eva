@@ -69,7 +69,10 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildThemeBrightnessCheckbox(BuildContext context, bool isDarkTheme) {
-    return Switch.adaptive(
+    return Switch(
+      thumbIcon: MaterialStateProperty.resolveWith<Icon?>(
+        (Set<MaterialState> states) => isDarkTheme ? const Icon(Icons.light_mode) : const Icon(Icons.dark_mode),
+      ),
       value: isDarkTheme,
       onChanged: (newValue) => Eva.dispatchCommand(SaveThemeCommand(isDarkTheme: newValue)),
     );
