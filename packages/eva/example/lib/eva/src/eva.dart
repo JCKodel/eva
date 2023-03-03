@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'commands/command.dart';
@@ -47,14 +48,17 @@ abstract class Eva {
       onError: _errorPort.sendPort,
     );
 
-    await _useEnvironmentCompleter.future.timeout(const Duration(seconds: 1));
+    await _useEnvironmentCompleter.future;
   }
 
   static void _onMessageReceived(dynamic message) {
     if (message is SendPort) {
       _domainSendPort = message;
-      _useEnvironmentCompleter.complete();
       return;
+    }
+
+    if (message is SuccessEvent<EvaReadyEvent>) {
+      _useEnvironmentCompleter.complete();
     }
 
     final event = message as Event;
@@ -115,6 +119,7 @@ abstract class Domain {
     Log.minLogLevel = _environment.minLogLevel;
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
+    await Future<void>.delayed(const Duration(milliseconds: 10));
     // ignore: invalid_use_of_protected_member
     await _environment.initialize(ServiceProvider.required, PlatformInfo.platformInfo);
     Log.info(() => "Domain started as an isolated thread");

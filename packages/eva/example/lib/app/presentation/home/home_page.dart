@@ -28,6 +28,34 @@ class HomePage extends StatelessWidget {
               success: (e) => _buildThemeBrightnessCheckbox(context, e.value.isDarkTheme),
             ),
           ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: CheckboxListTile(
+              tristate: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (newValue) => Eva.dispatchCommand(
+                SetToDoFilterSettingCommand(
+                  filter: newValue == null
+                      ? ListToDosFilter.all
+                      : newValue
+                          ? ListToDosFilter.completedOnly
+                          : ListToDosFilter.uncompletedOnly,
+                ),
+              ),
+              value: listToDosFilterEvent.value == ListToDosFilter.all
+                  ? null
+                  : listToDosFilterEvent.value == ListToDosFilter.completedOnly
+                      ? true
+                      : false,
+              title: Text(
+                listToDosFilterEvent.value == ListToDosFilter.all
+                    ? "Show all"
+                    : listToDosFilterEvent.value == ListToDosFilter.completedOnly
+                        ? "Show completed only"
+                        : "Show uncompleted only",
+              ),
+            ),
+          ),
         ),
         body: ToDosList(
           listToDosFilter: listToDosFilterEvent.value,
@@ -35,44 +63,6 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: const Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomNavigationBar: SizedBox(
-          height: kToolbarHeight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Divider(height: 0),
-              Expanded(
-                child: CheckboxListTile(
-                  tristate: true,
-                  controlAffinity: ListTileControlAffinity.leading,
-                  onChanged: (newValue) => Eva.dispatchCommand(
-                    SetToDoFilterSettingCommand(
-                      filter: newValue == null
-                          ? ListToDosFilter.all
-                          : newValue
-                              ? ListToDosFilter.completedOnly
-                              : ListToDosFilter.uncompletedOnly,
-                    ),
-                  ),
-                  value: listToDosFilterEvent.value == ListToDosFilter.all
-                      ? null
-                      : listToDosFilterEvent.value == ListToDosFilter.completedOnly
-                          ? true
-                          : false,
-                  title: Text(
-                    listToDosFilterEvent.value == ListToDosFilter.all
-                        ? "Show all"
-                        : listToDosFilterEvent.value == ListToDosFilter.completedOnly
-                            ? "Show completed only"
-                            : "Show uncompleted only",
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

@@ -25,4 +25,12 @@ class DevelopmentEnvironment extends BaseEnvironment {
       (required, platform) => IsarToDoRepository(),
     );
   }
+
+  @override
+  Future<void> initialize(required, platform) async {
+    await Future.wait([
+      required<IAppSettingsRepository>().initialize(),
+      required<IToDoRepository>().initialize(),
+    ]);
+  }
 }
