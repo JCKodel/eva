@@ -80,4 +80,20 @@ class ToDoDomain implements IDomain {
 
     return response.toResponseOf<SavingToDoEntity>(success: () => SavingToDoEntity(toDo: editingToDo.toDo));
   }
+
+  Future<ResponseOf<ToDoEntity>> setToDoCompletedCommand({required int toDoId, required bool completed}) async {
+    final currentToDo = await _toDoRepository.getToDoById(toDoId);
+
+    return currentToDo.mapAsync(
+      success: (toDo) async {
+        if (toDo.completed == completed) {
+          return ResponseOf.success(toDo);
+        }
+
+        final response = await _toDoRepository.saveToDo(toDo.copyWith(completed: completed, completionDate: DateTime.now()));
+
+        return response.toResponseOf();
+      },
+    );
+  }
 }

@@ -44,15 +44,13 @@ class InMemoryToDoRepository implements IToDoRepository {
   }
 
   @override
-  Future<Response> saveToDo(ToDoEntity toDo) async {
+  Future<ResponseOf<ToDoEntity>> saveToDo(ToDoEntity toDo) async {
     if (toDo.id == null) {
       final id = _toDos.length + 1;
 
-      _toDos[id] = toDo.copyWith(id: id);
-    } else {
-      _toDos[toDo.id!] = toDo;
+      return ResponseOf.success(_toDos[id] = toDo.copyWith(id: id));
     }
 
-    return const Response.success();
+    return ResponseOf.success(_toDos[toDo.id!] = toDo);
   }
 }

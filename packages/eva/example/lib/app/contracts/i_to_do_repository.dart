@@ -6,5 +6,5 @@ import '../entities/to_do_entity.dart';
 abstract class IToDoRepository implements IRepository {
   Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter);
   Future<ResponseOf<ToDoEntity>> getToDoById(int id);
-  Future<Response> saveToDo(ToDoEntity toDo);
+  Future<ResponseOf<ToDoEntity>> saveToDo(ToDoEntity toDo);
 }

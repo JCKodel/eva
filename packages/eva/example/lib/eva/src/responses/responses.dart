@@ -94,7 +94,7 @@ class Response {
     return match(
       failure: ResponseOf<T>.failure,
       empty: ResponseOf<T>.empty,
-      success: (_) => success == null ? ResponseOf<T>.empty() : ResponseOf<T>.success(success()),
+      success: (value) => success == null ? ResponseOf<T>.success(value as T) : ResponseOf<T>.success(success()),
     );
   }
 }
@@ -151,6 +151,21 @@ class ResponseOf<TSuccess> extends Response {
         return failure == null ? ResponseOf<TResult>.failure(_exception!) : failure(_exception!);
       case ResponseType.empty:
         return empty == null ? ResponseOf<TResult>.empty() : empty();
+      case ResponseType.success:
+        return success(_value as TSuccess);
+    }
+  }
+
+  Future<ResponseOf<TResult>> mapAsync<TResult>({
+    required Future<ResponseOf<TResult>> Function(TSuccess value) success,
+    Future<ResponseOf<TResult>> Function(Object exception)? failure,
+    Future<ResponseOf<TResult>> Function()? empty,
+  }) async {
+    switch (type) {
+      case ResponseType.failure:
+        return failure == null ? ResponseOf<TResult>.failure(_exception!) : await failure(_exception!);
+      case ResponseType.empty:
+        return empty == null ? ResponseOf<TResult>.empty() : await empty();
       case ResponseType.success:
         return success(_value as TSuccess);
     }

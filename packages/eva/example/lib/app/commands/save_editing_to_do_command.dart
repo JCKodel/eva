@@ -9,6 +9,11 @@ class SaveEditingToDoCommand extends Command {
   final EditingToDoEntity editingToDo;
 
   @override
+  String toStringBody() {
+    return editingToDo.toString();
+  }
+
+  @override
   Stream<IEvent> handle(required, platform) async* {
     yield const Event<SavingToDoEntity>.waiting();
 

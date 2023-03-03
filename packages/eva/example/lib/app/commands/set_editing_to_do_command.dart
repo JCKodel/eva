@@ -9,6 +9,11 @@ class SetEditingToDoCommand extends Command {
   final int? toDoId;
 
   @override
+  String toStringBody() {
+    return "toDoId: ${toDoId}";
+  }
+
+  @override
   Stream<IEvent> handle(required, platform) async* {
     yield const Event<EditingToDoEntity>.waiting();
 

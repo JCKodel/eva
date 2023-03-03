@@ -26,7 +26,7 @@ class _ToDoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const themeColor = Colors.teal;
+    const themeColor = Colors.blue;
 
     return MaterialApp(
       color: themeColor,

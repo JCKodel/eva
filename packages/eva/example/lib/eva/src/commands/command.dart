@@ -11,6 +11,16 @@ abstract class Command {
 
   @override
   String toString() {
-    return "[${runtimeType}]";
+    final body = toStringBody();
+
+    if (body == "") {
+      return "[${runtimeType}]";
+    }
+
+    return "[${runtimeType}:${body}]";
+  }
+
+  String toStringBody() {
+    return "";
   }
 }

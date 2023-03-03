@@ -25,6 +25,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
     this.emptyBuilder,
     this.failureBuilder,
     this.initialValue,
+    this.successFilter,
     this.onEmpty,
     this.onFailure,
     this.onOtherwise,
@@ -45,6 +46,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
   final void Function(BuildContext context, WaitingEvent<TEventState> event)? onWaiting;
   final void Function(BuildContext context, FailureEvent<TEventState> event)? onFailure;
   final void Function(BuildContext context, SuccessEvent<TEventState> event)? onSuccess;
+  final bool Function(TEventState value)? successFilter;
 
   static Widget Function(BuildContext context, IEmptyEvent event) defaultEmptyBuilder = (context, event) => const SizedBox();
 
@@ -59,9 +61,13 @@ class EventBuilder<TEventState> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stream = successFilter == null
+        ? Eva.getEventsStream<TEventState>(hashCode)
+        : Eva.getEventsStream<TEventState>(hashCode).where((event) => event is SuccessEvent<TEventState> && successFilter!(event.value));
+
     return StreamBuilder<Event<TEventState>>(
       initialData: initialValue == null ? Event<TEventState>.waiting() : Event<TEventState>.success(initialValue as TEventState),
-      stream: Eva.getEventsStream<TEventState>(hashCode),
+      stream: stream,
       builder: (innerContext, snapshot) {
         if (snapshot.hasError) {
           throw snapshot.error!;

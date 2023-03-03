@@ -5,6 +5,8 @@ import '../../commands/load_to_dos_command.dart';
 import '../../entities/list_to_dos_filter.dart';
 import '../../entities/to_do_entity.dart';
 
+import 'to_do_card.dart';
+
 class ToDosList extends StatelessWidget {
   const ToDosList({required this.listToDosFilter, super.key});
 
@@ -34,8 +36,13 @@ class ToDosList extends StatelessWidget {
           ),
         );
       },
-      successBuilder: (context, event) => Center(
-        child: Text("There are ${event.value.length} to dos on the list"),
+      successBuilder: (context, event) => ListView.builder(
+        padding: const EdgeInsets.only(bottom: 16),
+        itemCount: event.value.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: ToDoCard(toDo: event.value.elementAt(index)),
+        ),
       ),
     );
   }

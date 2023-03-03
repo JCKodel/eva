@@ -9,6 +9,11 @@ class SetToDoFilterSettingCommand extends Command {
   final ListToDosFilter filter;
 
   @override
+  String toStringBody() {
+    return "filter: ${filter}";
+  }
+
+  @override
   Stream<IEvent> handle(required, platform) async* {
     final settingsDomain = required<SettingsDomain>();
 

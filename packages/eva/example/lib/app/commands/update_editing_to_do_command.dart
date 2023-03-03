@@ -9,6 +9,11 @@ class UpdateEditingToDoCommand extends Command {
   final EditingToDoEntity editingToDo;
 
   @override
+  String toStringBody() {
+    return editingToDo.toString();
+  }
+
+  @override
   Stream<IEvent> handle(required, platform) async* {
     final toDoDomain = required<ToDoDomain>();
 
