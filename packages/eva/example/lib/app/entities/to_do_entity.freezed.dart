@@ -526,3 +526,122 @@ abstract class _SavingToDoEntity implements SavingToDoEntity {
   _$$_SavingToDoEntityCopyWith<_$_SavingToDoEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$DeletedToDoEntity {
+  int get toDoId => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $DeletedToDoEntityCopyWith<DeletedToDoEntity> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DeletedToDoEntityCopyWith<$Res> {
+  factory $DeletedToDoEntityCopyWith(
+          DeletedToDoEntity value, $Res Function(DeletedToDoEntity) then) =
+      _$DeletedToDoEntityCopyWithImpl<$Res, DeletedToDoEntity>;
+  @useResult
+  $Res call({int toDoId});
+}
+
+/// @nodoc
+class _$DeletedToDoEntityCopyWithImpl<$Res, $Val extends DeletedToDoEntity>
+    implements $DeletedToDoEntityCopyWith<$Res> {
+  _$DeletedToDoEntityCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? toDoId = null,
+  }) {
+    return _then(_value.copyWith(
+      toDoId: null == toDoId
+          ? _value.toDoId
+          : toDoId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_DeletedToDoEntityCopyWith<$Res>
+    implements $DeletedToDoEntityCopyWith<$Res> {
+  factory _$$_DeletedToDoEntityCopyWith(_$_DeletedToDoEntity value,
+          $Res Function(_$_DeletedToDoEntity) then) =
+      __$$_DeletedToDoEntityCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int toDoId});
+}
+
+/// @nodoc
+class __$$_DeletedToDoEntityCopyWithImpl<$Res>
+    extends _$DeletedToDoEntityCopyWithImpl<$Res, _$_DeletedToDoEntity>
+    implements _$$_DeletedToDoEntityCopyWith<$Res> {
+  __$$_DeletedToDoEntityCopyWithImpl(
+      _$_DeletedToDoEntity _value, $Res Function(_$_DeletedToDoEntity) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? toDoId = null,
+  }) {
+    return _then(_$_DeletedToDoEntity(
+      toDoId: null == toDoId
+          ? _value.toDoId
+          : toDoId // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_DeletedToDoEntity implements _DeletedToDoEntity {
+  const _$_DeletedToDoEntity({required this.toDoId});
+
+  @override
+  final int toDoId;
+
+  @override
+  String toString() {
+    return 'DeletedToDoEntity(toDoId: $toDoId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_DeletedToDoEntity &&
+            (identical(other.toDoId, toDoId) || other.toDoId == toDoId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, toDoId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DeletedToDoEntityCopyWith<_$_DeletedToDoEntity> get copyWith =>
+      __$$_DeletedToDoEntityCopyWithImpl<_$_DeletedToDoEntity>(
+          this, _$identity);
+}
+
+abstract class _DeletedToDoEntity implements DeletedToDoEntity {
+  const factory _DeletedToDoEntity({required final int toDoId}) =
+      _$_DeletedToDoEntity;
+
+  @override
+  int get toDoId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_DeletedToDoEntityCopyWith<_$_DeletedToDoEntity> get copyWith =>
+      throw _privateConstructorUsedError;
+}

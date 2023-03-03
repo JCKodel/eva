@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
+import '../../commands/delete_to_do_command.dart';
 import '../../commands/load_to_do_command.dart';
 import '../../commands/load_to_dos_command.dart';
 import '../../commands/save_editing_to_do_command.dart';
@@ -25,13 +26,6 @@ class EditToDo extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text("${event.value.toDo.id == null ? "New" : "Edit"} To Do"),
-            actions: [
-              TextButton.icon(
-                onPressed: () => _saveToDo(context, event.value),
-                icon: const Icon(Icons.save),
-                label: const Text("Save"),
-              ),
-            ],
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -71,6 +65,23 @@ class EditToDo extends StatelessWidget {
                   title: const Text("This to do is completed"),
                   onChanged: (value) => Eva.dispatchCommand(UpdateEditingToDoCommand(editingToDo: event.value.copyWith.toDo(completed: value))),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+                  child: FilledButton.tonalIcon(
+                    onPressed: () => _saveToDo(context, event.value),
+                    icon: const Icon(Icons.save_alt),
+                    label: const Text("SAVE"),
+                  ),
+                ),
+                if (event.value.toDo.id != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: TextButton.icon(
+                      onPressed: () => _deleteToDo(context, event.value.toDo.id!),
+                      icon: const Icon(Icons.delete_forever, color: Colors.red),
+                      label: const Text("DELETE", style: TextStyle(color: Colors.red)),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -102,6 +113,46 @@ class EditToDo extends StatelessWidget {
             backgroundColor: theme.colorScheme.errorContainer,
           ),
         );
+      },
+    );
+  }
+
+  Future<void> _deleteToDo(BuildContext context, int toDoId) async {
+    final canDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete to do?"),
+        content: const Text("Are you sure you want to delete this to do?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("Discard"),
+          ),
+        ],
+      ),
+    );
+
+    if (canDelete == false) {
+      return;
+    }
+
+    final response = await Eva.dispatchCommand(DeleteToDoCommand(toDoId: toDoId)).thenWaitFor<DeletedToDoEntity>();
+
+    response.maybeMatch(
+      otherwise: (e) {},
+      success: (event) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("To Do was deleted")));
+        Eva.dispatchCommand(const LoadToDosCommand());
+      },
+      failure: (event) {
+        if (event.exception is Iterable<ToDoValidationFailure> == false) {
+          throw event.exception;
+        }
       },
     );
   }

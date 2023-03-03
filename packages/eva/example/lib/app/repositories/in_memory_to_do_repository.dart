@@ -53,4 +53,15 @@ class InMemoryToDoRepository implements IToDoRepository {
 
     return Response.success(_toDos[toDo.id!] = toDo);
   }
+
+  @override
+  Future<Response<bool>> deleteToDoById(int toDoId) async {
+    if (_toDos.containsKey(toDoId) == false) {
+      return const Response.success(false);
+    }
+
+    _toDos.remove(toDoId);
+
+    return const Response.success(true);
+  }
 }

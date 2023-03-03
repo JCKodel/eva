@@ -33,3 +33,10 @@ class SavingToDoEntity with _$SavingToDoEntity {
     required ToDoEntity toDo,
   }) = _SavingToDoEntity;
 }
+
+@freezed
+class DeletedToDoEntity with _$DeletedToDoEntity {
+  const factory DeletedToDoEntity({
+    required int toDoId,
+  }) = _DeletedToDoEntity;
+}

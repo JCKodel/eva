@@ -107,4 +107,10 @@ class ToDoDomain implements IDomain {
   Future<Response<ToDoEntity>> loadToDo({required int toDoId}) async {
     return _toDoRepository.getToDoById(toDoId);
   }
+
+  Future<Response<int>> deleteToDo({required int toDoId}) async {
+    final response = await _toDoRepository.deleteToDoById(toDoId);
+
+    return response.map(success: (_) => Response.success(toDoId));
+  }
 }

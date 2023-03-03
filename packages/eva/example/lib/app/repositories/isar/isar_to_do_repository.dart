@@ -74,4 +74,12 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
       },
     );
   }
+
+  @override
+  Future<Response<bool>> deleteToDoById(int toDoId) async {
+    final db = Isar.getInstance()!;
+    final deleted = await db.writeTxn(() => db.toDos.delete(toDoId));
+
+    return Response.success(deleted);
+  }
 }
