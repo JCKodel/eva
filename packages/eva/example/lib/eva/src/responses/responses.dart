@@ -89,6 +89,14 @@ class Response {
         return "{SuccessOf<${_value.runtimeType}>:${_value}}";
     }
   }
+
+  ResponseOf<T> toResponseOf<T>({required T Function() success}) {
+    return match(
+      failure: ResponseOf<T>.failure,
+      empty: ResponseOf<T>.empty,
+      success: (_) => ResponseOf<T>.success(success()),
+    );
+  }
 }
 
 @immutable

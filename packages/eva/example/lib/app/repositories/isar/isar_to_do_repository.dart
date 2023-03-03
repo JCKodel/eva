@@ -37,4 +37,39 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
       return ResponseOf.success(toDos.map((toDo) => toDo.toEntity()));
     });
   }
+
+  @override
+  Future<ResponseOf<ToDoEntity>> getToDoById(int id) async {
+    final db = Isar.getInstance()!;
+
+    return db.txn(() async {
+      final toDo = await db.toDos.get(id);
+
+      if (toDo == null) {
+        return const ResponseOf.empty();
+      }
+
+      return ResponseOf.success(toDo.toEntity());
+    });
+  }
+
+  @override
+  Future<Response> saveToDo(ToDoEntity toDo) async {
+    final db = Isar.getInstance()!;
+
+    await db.writeTxn(
+      () async => db.toDos.put(
+        ToDo(
+          id: toDo.id,
+          title: toDo.title,
+          description: toDo.description,
+          completed: toDo.completed,
+          creationDate: toDo.creationDate,
+          completionDate: toDo.completionDate,
+        ),
+      ),
+    );
+
+    return const Response.success();
+  }
 }

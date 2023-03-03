@@ -62,52 +62,50 @@ class EventBuilder<TEventState> extends StatelessWidget {
     return StreamBuilder<Event<TEventState>>(
       initialData: initialValue == null ? Event<TEventState>.waiting() : Event<TEventState>.success(initialValue as TEventState),
       stream: Eva.getEventsStream<TEventState>(hashCode),
-      builder: (innerContext, snapshot) => _buildEvent(context, innerContext, snapshot),
-    );
-  }
+      builder: (innerContext, snapshot) {
+        if (snapshot.hasError) {
+          throw snapshot.error!;
+        }
 
-  Widget _buildEvent(BuildContext outerContext, BuildContext context, AsyncSnapshot<Event<TEventState>> snapshot) {
-    if (snapshot.hasError) {
-      throw snapshot.error!;
-    }
+        late final Event<TEventState> event;
 
-    late final Event<TEventState> event;
+        if (initialValue == null) {
+          event = snapshot.data!;
+        } else {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            event = Event.success(initialValue as TEventState);
+          } else {
+            event = snapshot.data!.maybeMatch(
+              waiting: (e) => Event.success(initialValue as TEventState),
+              otherwise: (e) => e,
+            );
+          }
+        }
 
-    if (initialValue == null) {
-      event = snapshot.data!;
-    } else {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        event = Event.success(initialValue as TEventState);
-      } else {
-        event = snapshot.data!.maybeMatch(
-          waiting: (e) => Event.success(initialValue as TEventState),
-          otherwise: (e) => e,
+        Log.verbose(() => "${runtimeType} is building ${event}");
+
+        return EventState<TEventState>(
+          state: event,
+          child: event.match(
+            empty: (e) {
+              Future<void>.delayed(const Duration(milliseconds: 10)).then((_) => (onEmpty ?? onOtherwise)?.call(context, e));
+              return (emptyBuilder ?? otherwiseBuilder ?? defaultEmptyBuilder)(context, e);
+            },
+            failure: (e) {
+              Future<void>.delayed(const Duration(milliseconds: 10)).then((_) => (onFailure ?? onOtherwise)?.call(context, e));
+              return (failureBuilder ?? otherwiseBuilder ?? defaultFailureBuilder)(context, e);
+            },
+            waiting: (e) {
+              Future<void>.delayed(const Duration(milliseconds: 10)).then((_) => (onWaiting ?? onOtherwise)?.call(context, e));
+              return (waitingBuilder ?? otherwiseBuilder ?? defaultWaitingBuilder)(context, e);
+            },
+            success: (e) {
+              Future<void>.delayed(const Duration(milliseconds: 10)).then((_) => onSuccess?.call(context, e));
+              return successBuilder(context, e);
+            },
+          ),
         );
-      }
-    }
-
-    Log.verbose(() => "${runtimeType} is building ${event}");
-
-    return EventState<TEventState>(
-      state: event,
-      child: event.match(
-        empty: (e) {
-          (onEmpty ?? onOtherwise)?.call(context, e);
-          return (emptyBuilder ?? otherwiseBuilder ?? defaultEmptyBuilder)(context, e);
-        },
-        failure: (e) {
-          (onFailure ?? onOtherwise)?.call(context, e);
-          return (failureBuilder ?? otherwiseBuilder ?? defaultFailureBuilder)(context, e);
-        },
-        waiting: (e) {
-          (onWaiting ?? onOtherwise)?.call(context, e);
-          return (waitingBuilder ?? otherwiseBuilder ?? defaultWaitingBuilder)(context, e);
-        },
-        success: (e) {
-          onSuccess?.call(context, e);
-          return successBuilder(context, e);
-        },
-      ),
+      },
     );
   }
 }

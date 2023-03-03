@@ -13,3 +13,23 @@ class ToDoEntity with _$ToDoEntity {
     DateTime? completionDate,
   }) = _ToDoEntity;
 }
+
+enum ToDoValidationFailure {
+  titleIsEmpty,
+  descriptionIsEmpty,
+}
+
+@freezed
+class EditingToDoEntity with _$EditingToDoEntity {
+  const factory EditingToDoEntity({
+    required ToDoEntity toDo,
+    required Iterable<ToDoValidationFailure> validationFailures,
+  }) = _EditingToDoEntity;
+}
+
+@freezed
+class SavingToDoEntity with _$SavingToDoEntity {
+  const factory SavingToDoEntity({
+    required ToDoEntity toDo,
+  }) = _SavingToDoEntity;
+}

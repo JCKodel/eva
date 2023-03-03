@@ -75,11 +75,13 @@ abstract class Eva {
     Log.warn(() => "Environment has being disposed");
   }
 
-  static void dispatchCommand(Command command) {
+  static DispatchBuilder dispatchCommand(Command command) {
     Log.debug(() => "Main is emitting `${command.runtimeType}`");
     Log.verbose(() => command.toString());
 
     _domainSendPort.send(command);
+
+    return DispatchBuilder._(command);
   }
 
   static final Map<int, Object> _lastEmmitedEvents = <int, Object>{};
@@ -134,5 +136,20 @@ abstract class Domain {
     Log.verbose(() => eventState.toString());
 
     _sendToMainPort.send(eventState);
+  }
+}
+
+class DispatchBuilder {
+  DispatchBuilder._(this.command);
+
+  final Command command;
+
+  Future<Event<T>> thenWaitFor<T>({Duration timeout = const Duration(seconds: 5)}) async {
+    final stream = Eva.getEventsStream<T>(hashCode);
+
+    return stream.where((e) => e is WaitingEvent == false).first.timeout(
+          timeout,
+          onTimeout: () => Event<T>.failure(TimeoutException("Timeout while waiting for a ${T} event after command ${command}")),
+        );
   }
 }
