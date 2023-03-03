@@ -28,6 +28,8 @@ enum LogColor {
 }
 
 abstract class Log {
+  static DateTime? _lastLogEntry;
+
   static LogLevel _minLogLevel = kDebugMode ? LogLevel.debug : LogLevel.info;
 
   static LogLevel get minLogLevel => _minLogLevel;
@@ -71,15 +73,24 @@ abstract class Log {
 
   static void _log(LogLevel level, LogColor color, String header, String Function() messageGenerator, [Object? error]) {
     final levelDescription = level.toString().substring("LogLevel.".length);
+    final now = DateTime.now();
+
+    if (_lastLogEntry != null && now.difference(_lastLogEntry!).inMilliseconds > 999) {
+      _lastLogEntry = null;
+    }
+
+    final logTime = "+${_lastLogEntry == null ? now : now.difference(_lastLogEntry!).inMilliseconds}";
+
+    _lastLogEntry = now;
 
     if (kIsWeb) {
       // ignore: avoid_print
       print(
-        "[${levelDescription}] ${header} ${color.ansiString}: ${messageGenerator()}${LogColor.reset.ansiString}",
+        "[${levelDescription}] ${header} \x1B[38;5;242m${logTime}${color.ansiString}: ${messageGenerator()}${LogColor.reset.ansiString}\n\n",
       );
     } else {
       log(
-        "${header} ${color.ansiString}${messageGenerator()}${LogColor.reset.ansiString}",
+        "${header} \x1B[38;5;242m${logTime}${color.ansiString}: ${messageGenerator()}${LogColor.reset.ansiString}\n\n",
         error: error,
         level: color.index,
         name: Isolate.current.debugName ?? "",
