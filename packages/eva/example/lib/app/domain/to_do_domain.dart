@@ -90,7 +90,7 @@ class ToDoDomain implements IDomain {
     );
   }
 
-  Future<Response<ToDoEntity>> setToDoCompletedCommand({required int toDoId, required bool completed}) async {
+  Future<Response<ToDoEntity>> setToDoCompleted({required int toDoId, required bool completed}) async {
     final currentToDo = await _toDoRepository.getToDoById(toDoId);
 
     return currentToDo.mapAsync(
@@ -102,5 +102,9 @@ class ToDoDomain implements IDomain {
         return _toDoRepository.saveToDo(toDo.copyWith(completed: completed, completionDate: DateTime.now()));
       },
     );
+  }
+
+  Future<Response<ToDoEntity>> loadToDo({required int toDoId}) async {
+    return _toDoRepository.getToDoById(toDoId);
   }
 }

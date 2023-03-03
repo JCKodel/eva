@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
+import '../../commands/load_to_do_command.dart';
 import '../../commands/load_to_dos_command.dart';
 import '../../commands/save_editing_to_do_command.dart';
 import '../../commands/update_editing_to_do_command.dart';
@@ -39,7 +40,8 @@ class EditToDo extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: TextField(
+                  child: TextFormField(
+                    initialValue: event.value.toDo.title,
                     decoration: InputDecoration(
                       label: const Text("Title"),
                       errorText: event.value.validationFailures.contains(ToDoValidationFailure.titleIsEmpty) ? "Title cannot be empty" : null,
@@ -51,7 +53,8 @@ class EditToDo extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: TextField(
+                  child: TextFormField(
+                    initialValue: event.value.toDo.description,
                     decoration: InputDecoration(
                       label: const Text("Description"),
                       errorText: event.value.validationFailures.contains(ToDoValidationFailure.descriptionIsEmpty) ? "Description cannot be empty" : null,
@@ -104,29 +107,32 @@ class EditToDo extends StatelessWidget {
   }
 
   Future<bool> _onWillPop(BuildContext context, EditingToDoEntity value) async {
-    if (value.toDo.id == null) {
-      bool? canPop = value.toDo.title == "" && value.toDo.description == "";
+    final canPop = value.toDo.id == null ? value.toDo.title == "" && value.toDo.description == "" : await _compareToOriginal(value.toDo);
 
-      if (canPop == true) {
-        return true;
-      }
-
-      canPop = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Discard changes?"),
-          content: const Text("Are you sure you want to discard all changes made?"),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text("Cancel")),
-            TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text("Discard")),
-          ],
-        ),
-      );
-
-      return canPop ?? false;
+    if (canPop) {
+      return true;
     }
 
-    // TODO: compare this to db
-    return false;
+    return (await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Discard changes?"),
+            content: const Text("Are you sure you want to discard all changes made?"),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text("Cancel")),
+              TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text("Discard")),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
+  Future<bool> _compareToOriginal(ToDoEntity toDo) async {
+    final response = await Eva.dispatchCommand(LoadToDoCommand(toDoId: toDo.id!)).thenWaitFor<ToDoEntity>();
+
+    return response.maybeMatch(
+      success: (original) => original.value.title == toDo.title && original.value.description == toDo.description && original.value.completed == toDo.completed,
+      otherwise: (_) => false,
+    );
   }
 }
