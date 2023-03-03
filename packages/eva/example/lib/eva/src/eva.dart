@@ -147,9 +147,13 @@ class DispatchBuilder {
   Future<Event<T>> thenWaitFor<T>({Duration timeout = const Duration(seconds: 5)}) async {
     final stream = Eva.getEventsStream<T>(hashCode);
 
-    return stream.where((e) => e is WaitingEvent == false).first.timeout(
-          timeout,
-          onTimeout: () => Event<T>.failure(TimeoutException("Timeout while waiting for a ${T} event after command ${command}")),
-        );
+    try {
+      return stream.where((e) => e is WaitingEvent == false).first.timeout(
+            timeout,
+            onTimeout: () => Event<T>.failure(TimeoutException("Timeout while waiting for a ${T} event after command ${command}")),
+          );
+    } catch (ex) {
+      return Event<T>.failure(ex);
+    }
   }
 }

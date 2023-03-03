@@ -13,28 +13,32 @@ class SettingsDomain implements IDomain {
 
   static const kBrightnessKey = "themeBrightness";
 
-  Future<ResponseOf<bool>> getThemeIsDark() async {
+  Future<Response<bool>> getThemeIsDark() async {
     final setting = await _appSettingsRepository.get(kBrightnessKey);
 
-    return setting.map(success: (value) => ResponseOf.success(value == "D"));
+    return setting.map(success: (value) => Response.success(value == "D"));
   }
 
-  Future<Response> setThemeIsDark(bool isDarkTheme) async {
-    return _appSettingsRepository.set(kBrightnessKey, isDarkTheme ? "D" : "L");
+  Future<Response<bool>> setThemeIsDark(bool isDarkTheme) async {
+    final response = await _appSettingsRepository.set(kBrightnessKey, isDarkTheme ? "D" : "L");
+
+    return response.map(success: (value) => Response.success(isDarkTheme));
   }
 
   static const kListToDosFilter = "listToDosFilter";
 
-  Future<ResponseOf<ListToDosFilter>> getListToDosFilter() async {
+  Future<Response<ListToDosFilter>> getListToDosFilter() async {
     final setting = await _appSettingsRepository.get(kListToDosFilter);
 
     return setting.map(
-      success: (value) => ResponseOf.success(ListToDosFilter.values.firstWhere((v) => v.toString() == value)),
-      empty: () => const ResponseOf.success(ListToDosFilter.all),
+      success: (value) => Response.success(ListToDosFilter.values.firstWhere((v) => v.toString() == value)),
+      empty: () => const Response.success(ListToDosFilter.all),
     );
   }
 
-  Future<Response> setListToDosFilter(ListToDosFilter filter) async {
-    return _appSettingsRepository.set(kListToDosFilter, filter.toString());
+  Future<Response<ListToDosFilter>> setListToDosFilter(ListToDosFilter filter) async {
+    final response = await _appSettingsRepository.set(kListToDosFilter, filter.toString());
+
+    return response.map(success: (value) => Response.success(filter));
   }
 }

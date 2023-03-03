@@ -21,36 +21,36 @@ class InMemoryToDoRepository implements IToDoRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
+  Future<Response<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     switch (filter) {
       case ListToDosFilter.all:
-        return ResponseOf.success(_toDos.values);
+        return Response.success(_toDos.values);
       case ListToDosFilter.completedOnly:
-        return ResponseOf.success(_toDos.values.where((toDo) => toDo.completed));
+        return Response.success(_toDos.values.where((toDo) => toDo.completed));
       case ListToDosFilter.uncompletedOnly:
-        return ResponseOf.success(_toDos.values.where((toDo) => toDo.completed == false));
+        return Response.success(_toDos.values.where((toDo) => toDo.completed == false));
     }
   }
 
   @override
-  Future<ResponseOf<ToDoEntity>> getToDoById(int id) async {
+  Future<Response<ToDoEntity>> getToDoById(int id) async {
     final toDo = _toDos[id];
 
     if (toDo == null) {
-      return const ResponseOf.empty();
+      return const Response.empty();
     }
 
-    return ResponseOf.success(toDo);
+    return Response.success(toDo);
   }
 
   @override
-  Future<ResponseOf<ToDoEntity>> saveToDo(ToDoEntity toDo) async {
+  Future<Response<ToDoEntity>> saveToDo(ToDoEntity toDo) async {
     if (toDo.id == null) {
       final id = _toDos.length + 1;
 
-      return ResponseOf.success(_toDos[id] = toDo.copyWith(id: id));
+      return Response.success(_toDos[id] = toDo.copyWith(id: id));
     }
 
-    return ResponseOf.success(_toDos[toDo.id!] = toDo);
+    return Response.success(_toDos[toDo.id!] = toDo);
   }
 }

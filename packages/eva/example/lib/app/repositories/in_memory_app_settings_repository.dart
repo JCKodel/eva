@@ -11,14 +11,14 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   Future<void> initialize() async {}
 
   @override
-  Future<ResponseOf<String>> get(String key) async {
-    return ResponseOf.success(_settings[key]);
+  Future<Response<String>> get(String key) async {
+    return Response.success(_settings[key]);
   }
 
   @override
-  Future<Response> set(String key, String value) async {
+  Future<Response<String>> set(String key, String value) async {
     _settings[key] = value;
 
-    return const Response.success();
+    return Response.success(value);
   }
 }

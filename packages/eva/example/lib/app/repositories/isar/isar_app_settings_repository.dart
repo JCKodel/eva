@@ -10,19 +10,19 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
   IsarAppSettingsRepository();
 
   @override
-  Future<ResponseOf<String>> get(String key) async {
+  Future<Response<String>> get(String key) async {
     final db = Isar.getInstance()!;
     final appSetting = await db.txn(() => db.appSettings.filter().keyEqualTo(key).build().findFirst());
 
     if (appSetting == null) {
-      return const ResponseOf<String>.empty();
+      return const Response<String>.empty();
     }
 
-    return ResponseOf.success(appSetting.value);
+    return Response.success(appSetting.value);
   }
 
   @override
-  Future<Response> set(String key, String value) async {
+  Future<Response<String>> set(String key, String value) async {
     final db = Isar.getInstance()!;
 
     await db.writeTxn(() async {
@@ -37,6 +37,6 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
       await db.appSettings.put(appSetting);
     });
 
-    return const Response.success();
+    return Response.success(value);
   }
 }

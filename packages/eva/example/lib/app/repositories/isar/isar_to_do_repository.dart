@@ -12,7 +12,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
   IsarToDoRepository();
 
   @override
-  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
+  Future<Response<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     final db = Isar.getInstance()!;
 
     return db.txn(() async {
@@ -31,30 +31,30 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
       }
 
       if (toDos.isEmpty) {
-        return const ResponseOf<Iterable<ToDoEntity>>.empty();
+        return const Response<Iterable<ToDoEntity>>.empty();
       }
 
-      return ResponseOf.success(toDos.map((toDo) => toDo.toEntity()));
+      return Response.success(toDos.map((toDo) => toDo.toEntity()));
     });
   }
 
   @override
-  Future<ResponseOf<ToDoEntity>> getToDoById(int id) async {
+  Future<Response<ToDoEntity>> getToDoById(int id) async {
     final db = Isar.getInstance()!;
 
     return db.txn(() async {
       final toDo = await db.toDos.get(id);
 
       if (toDo == null) {
-        return const ResponseOf.empty();
+        return const Response.empty();
       }
 
-      return ResponseOf.success(toDo.toEntity());
+      return Response.success(toDo.toEntity());
     });
   }
 
   @override
-  Future<ResponseOf<ToDoEntity>> saveToDo(ToDoEntity toDo) async {
+  Future<Response<ToDoEntity>> saveToDo(ToDoEntity toDo) async {
     final db = Isar.getInstance()!;
 
     return db.writeTxn(
@@ -70,7 +70,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
           ),
         );
 
-        return ResponseOf.success(toDo.copyWith(id: id));
+        return Response.success(toDo.copyWith(id: id));
       },
     );
   }

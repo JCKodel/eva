@@ -16,22 +16,21 @@ class ToDoDomain implements IDomain {
   @override
   void initialize() {}
 
-  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos() async {
+  Future<Response<Iterable<ToDoEntity>>> listToDos() async {
     final filterResponse = await _settingsDomain.getListToDosFilter();
 
-    if (filterResponse.type != ResponseType.success) {
-      return filterResponse.toResponseOf();
-    }
+    return filterResponse.mapAsync(
+      success: (filter) async {
+        final response = await _toDoRepository.listToDos(filter);
 
-    final filter = filterResponse.getValue();
-    final response = await _toDoRepository.listToDos(filter);
-
-    return response.map(
-      success: (value) => value.isEmpty ? const ResponseOf<Iterable<ToDoEntity>>.empty() : ResponseOf<Iterable<ToDoEntity>>.success(value),
+        return response.map(
+          success: (value) => value.isEmpty ? const Response<Iterable<ToDoEntity>>.empty() : Response<Iterable<ToDoEntity>>.success(value),
+        );
+      },
     );
   }
 
-  Future<ResponseOf<EditingToDoEntity>> startEditingToDo(int? toDoId) async {
+  Future<Response<EditingToDoEntity>> startEditingToDo(int? toDoId) async {
     if (toDoId == null) {
       final emptyToDo = ToDoEntity(
         title: "",
@@ -50,7 +49,7 @@ class ToDoDomain implements IDomain {
     );
   }
 
-  ResponseOf<EditingToDoEntity> validateToDo(ToDoEntity toDo) {
+  Response<EditingToDoEntity> validateToDo(ToDoEntity toDo) {
     final validationFailures = <ToDoValidationFailure>[];
 
     if (toDo.title == "") {
@@ -61,7 +60,7 @@ class ToDoDomain implements IDomain {
       validationFailures.add(ToDoValidationFailure.descriptionIsEmpty);
     }
 
-    return ResponseOf.success(
+    return Response.success(
       EditingToDoEntity(
         toDo: toDo,
         validationFailures: validationFailures,
@@ -69,30 +68,38 @@ class ToDoDomain implements IDomain {
     );
   }
 
-  Future<ResponseOf<SavingToDoEntity>> saveEditingToDo(EditingToDoEntity editingToDo) async {
-    final validationResult = validateToDo(editingToDo.toDo).getValue();
+  Future<Response<SavingToDoEntity>> saveEditingToDo(EditingToDoEntity editingToDo) async {
+    final validationResult = validateToDo(editingToDo.toDo);
 
-    if (validationResult.validationFailures.isNotEmpty) {
-      return ResponseOf.failure(validationResult.validationFailures);
-    }
+    return validationResult.mapAsync(
+      success: (validation) async {
+        if (validation.validationFailures.isNotEmpty) {
+          return Response.failure(validation.validationFailures);
+        }
 
-    final response = await _toDoRepository.saveToDo(editingToDo.toDo);
+        late Response<ToDoEntity> response;
 
-    return response.toResponseOf<SavingToDoEntity>(success: () => SavingToDoEntity(toDo: editingToDo.toDo));
+        if (editingToDo.toDo.id == null && editingToDo.toDo.completed) {
+          response = await _toDoRepository.saveToDo(editingToDo.toDo.copyWith(completionDate: DateTime.now()));
+        } else {
+          response = await _toDoRepository.saveToDo(editingToDo.toDo);
+        }
+
+        return response.map(success: (toDo) => Response.success(SavingToDoEntity(toDo: toDo)));
+      },
+    );
   }
 
-  Future<ResponseOf<ToDoEntity>> setToDoCompletedCommand({required int toDoId, required bool completed}) async {
+  Future<Response<ToDoEntity>> setToDoCompletedCommand({required int toDoId, required bool completed}) async {
     final currentToDo = await _toDoRepository.getToDoById(toDoId);
 
     return currentToDo.mapAsync(
       success: (toDo) async {
         if (toDo.completed == completed) {
-          return ResponseOf.success(toDo);
+          return Response.success(toDo);
         }
 
-        final response = await _toDoRepository.saveToDo(toDo.copyWith(completed: completed, completionDate: DateTime.now()));
-
-        return response.toResponseOf();
+        return _toDoRepository.saveToDo(toDo.copyWith(completed: completed, completionDate: DateTime.now()));
       },
     );
   }

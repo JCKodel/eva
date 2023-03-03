@@ -9,7 +9,7 @@ enum ResponseType {
 }
 
 @immutable
-class Response {
+class Response<T> {
   const Response.failure(Object exception)
       : type = ResponseType.failure,
         _exception = exception,
@@ -20,8 +20,8 @@ class Response {
         _exception = null,
         _value = null;
 
-  const Response.success({Object? value, bool treatNullAsEmpty = false})
-      : type = treatNullAsEmpty && value == null ? ResponseType.empty : ResponseType.success,
+  const Response.success(T? value)
+      : type = value == null ? ResponseType.empty : ResponseType.success,
         _exception = null,
         _value = value;
 
@@ -37,12 +37,12 @@ class Response {
     return _exception!;
   }
 
-  final Object? _value;
+  final T? _value;
 
-  T match<T>({
-    required T Function(Object exception) failure,
-    required T Function() empty,
-    required T Function(dynamic value) success,
+  TResult match<TResult>({
+    required TResult Function(Object exception) failure,
+    required TResult Function() empty,
+    required TResult Function(dynamic value) success,
   }) {
     switch (type) {
       case ResponseType.failure:
@@ -54,11 +54,11 @@ class Response {
     }
   }
 
-  T maybeMatch<T>({
-    required T Function() otherwise,
-    T Function(Object exception)? failure,
-    T Function()? empty,
-    T Function(dynamic value)? success,
+  TResult maybeMatch<TResult>({
+    required TResult Function() otherwise,
+    TResult Function(Object exception)? failure,
+    TResult Function()? empty,
+    TResult Function(dynamic value)? success,
   }) {
     switch (type) {
       case ResponseType.failure:
@@ -70,12 +70,42 @@ class Response {
     }
   }
 
-  Event<T> mapToEvent<T>({T Function(dynamic value)? success}) {
+  Event<TResult> mapToEvent<TResult>({TResult Function(T value)? success}) {
     return match(
-      success: success == null ? (v) => Event<T>.success(v as T) : (value) => Event<T>.success(success(value)),
-      empty: () => Event<T>.empty(),
-      failure: (exception) => Event<T>.failure(exception),
+      success: success == null ? (v) => Event<TResult>.success(v as TResult) : (value) => Event<TResult>.success(success(value as T)),
+      empty: () => Event<TResult>.empty(),
+      failure: (exception) => Event<TResult>.failure(exception),
     );
+  }
+
+  Response<TResult> map<TResult>({
+    required Response<TResult> Function(T value) success,
+    Response<TResult> Function(Object exception)? failure,
+    Response<TResult> Function()? empty,
+  }) {
+    switch (type) {
+      case ResponseType.failure:
+        return failure == null ? Response<TResult>.failure(_exception!) : failure(_exception!);
+      case ResponseType.empty:
+        return empty == null ? Response<TResult>.empty() : empty();
+      case ResponseType.success:
+        return success(_value as T);
+    }
+  }
+
+  Future<Response<TResult>> mapAsync<TResult>({
+    required Future<Response<TResult>> Function(T value) success,
+    Future<Response<TResult>> Function(Object exception)? failure,
+    Future<Response<TResult>> Function()? empty,
+  }) async {
+    switch (type) {
+      case ResponseType.failure:
+        return failure == null ? Response<TResult>.failure(_exception!) : await failure(_exception!);
+      case ResponseType.empty:
+        return empty == null ? Response<TResult>.empty() : await empty();
+      case ResponseType.success:
+        return success(_value as T);
+    }
   }
 
   @override
@@ -86,97 +116,7 @@ class Response {
       case ResponseType.empty:
         return "{Empty}";
       case ResponseType.success:
-        return "{SuccessOf<${_value.runtimeType}>:${_value}}";
+        return "{Success<${_value.runtimeType}>:${_value}}";
     }
-  }
-
-  ResponseOf<T> toResponseOf<T>({T Function()? success}) {
-    return match(
-      failure: ResponseOf<T>.failure,
-      empty: ResponseOf<T>.empty,
-      success: (value) => success == null ? ResponseOf<T>.success(value as T) : ResponseOf<T>.success(success()),
-    );
-  }
-}
-
-@immutable
-class ResponseOf<TSuccess> extends Response {
-  const ResponseOf.failure(Object exception) : super.failure(exception);
-  const ResponseOf.empty() : super.empty();
-  const ResponseOf.success(TSuccess? value) : super.success(value: value, treatNullAsEmpty: true);
-
-  TSuccess getValue() {
-    if (type != ResponseType.success) {
-      throw UnsupportedError("Cannot get value from a response that is not a success response");
-    }
-
-    return _value as TSuccess;
-  }
-
-  @override
-  T match<T>({
-    required T Function(Object exception) failure,
-    required T Function() empty,
-    required T Function(TSuccess value) success,
-  }) {
-    return super.match(
-      failure: failure,
-      empty: empty,
-      success: (v) => success(v as TSuccess),
-    );
-  }
-
-  @override
-  T maybeMatch<T>({
-    required T Function() otherwise,
-    T Function(Object exception)? failure,
-    T Function()? empty,
-    T Function(TSuccess value)? success,
-  }) {
-    return super.maybeMatch(
-      otherwise: otherwise,
-      failure: failure,
-      empty: empty,
-      success: success == null ? null : (v) => success(v as TSuccess),
-    );
-  }
-
-  ResponseOf<TResult> map<TResult>({
-    required ResponseOf<TResult> Function(TSuccess value) success,
-    ResponseOf<TResult> Function(Object exception)? failure,
-    ResponseOf<TResult> Function()? empty,
-  }) {
-    switch (type) {
-      case ResponseType.failure:
-        return failure == null ? ResponseOf<TResult>.failure(_exception!) : failure(_exception!);
-      case ResponseType.empty:
-        return empty == null ? ResponseOf<TResult>.empty() : empty();
-      case ResponseType.success:
-        return success(_value as TSuccess);
-    }
-  }
-
-  Future<ResponseOf<TResult>> mapAsync<TResult>({
-    required Future<ResponseOf<TResult>> Function(TSuccess value) success,
-    Future<ResponseOf<TResult>> Function(Object exception)? failure,
-    Future<ResponseOf<TResult>> Function()? empty,
-  }) async {
-    switch (type) {
-      case ResponseType.failure:
-        return failure == null ? ResponseOf<TResult>.failure(_exception!) : await failure(_exception!);
-      case ResponseType.empty:
-        return empty == null ? ResponseOf<TResult>.empty() : await empty();
-      case ResponseType.success:
-        return success(_value as TSuccess);
-    }
-  }
-
-  @override
-  Event<T> mapToEvent<T>({T Function(TSuccess value)? success}) {
-    return match(
-      success: success == null ? (v) => Event<T>.success(v as T) : (value) => Event<T>.success(success(value)),
-      empty: () => Event<T>.empty(),
-      failure: (exception) => Event<T>.failure(exception),
-    );
   }
 }
