@@ -30,8 +30,8 @@ class _ToDoApp extends StatelessWidget {
 
     return MaterialApp(
       color: themeColor,
-      darkTheme: ThemeData(primarySwatch: themeColor, brightness: Brightness.dark, useMaterial3: true),
-      theme: ThemeData(primarySwatch: themeColor, brightness: Brightness.light, useMaterial3: true),
+      darkTheme: ThemeData(useMaterial3: true, colorSchemeSeed: themeColor, brightness: Brightness.dark),
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: themeColor, brightness: Brightness.light),
       themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       title: "EvA To Do Example",
       home: const HomePage(),
