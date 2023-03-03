@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../eva/eva.dart';
+import '../../commands/load_to_dos_command.dart';
 import '../../commands/save_editing_to_do_command.dart';
 import '../../commands/update_editing_to_do_command.dart';
 import '../../entities/to_do_entity.dart';
@@ -78,8 +79,9 @@ class EditToDo extends StatelessWidget {
     response.maybeMatch(
       otherwise: (e) {},
       success: (event) {
-        Navigator.of(context).pop(true);
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("To Do saved")));
+        Eva.dispatchCommand(const LoadToDosCommand());
       },
       failure: (event) {
         if (event.exception is Iterable<ToDoValidationFailure> == false) {

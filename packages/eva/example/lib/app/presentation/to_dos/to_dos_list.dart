@@ -13,7 +13,7 @@ class ToDosList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommandEventBuilder<LoadToDosCommand, Iterable<ToDoEntity>>(
-      command: LoadToDosCommand(filter: listToDosFilter),
+      command: const LoadToDosCommand(),
       emptyBuilder: (context, event) {
         final theme = Theme.of(context);
 

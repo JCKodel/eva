@@ -90,11 +90,11 @@ class Response {
     }
   }
 
-  ResponseOf<T> toResponseOf<T>({required T Function() success}) {
+  ResponseOf<T> toResponseOf<T>({T Function()? success}) {
     return match(
       failure: ResponseOf<T>.failure,
       empty: ResponseOf<T>.empty,
-      success: (_) => ResponseOf<T>.success(success()),
+      success: (_) => success == null ? ResponseOf<T>.empty() : ResponseOf<T>.success(success()),
     );
   }
 }

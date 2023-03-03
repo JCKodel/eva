@@ -15,7 +15,10 @@ abstract class BaseEnvironment extends Environment {
     );
 
     registerDependency<ToDoDomain>(
-      (required, platform) => ToDoDomain(toDoRepository: required<IToDoRepository>()),
+      (required, platform) => ToDoDomain(
+        toDoRepository: required<IToDoRepository>(),
+        settingsDomain: required<SettingsDomain>(),
+      ),
     );
   }
 }

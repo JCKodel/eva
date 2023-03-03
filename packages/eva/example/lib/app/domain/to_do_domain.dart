@@ -1,18 +1,29 @@
 import '../../eva/eva.dart';
 import '../contracts/i_to_do_repository.dart';
-import '../entities/list_to_dos_filter.dart';
 import '../entities/to_do_entity.dart';
+
+import 'settings_domain.dart';
 
 @immutable
 class ToDoDomain implements IDomain {
-  const ToDoDomain({required IToDoRepository toDoRepository}) : _toDoRepository = toDoRepository;
+  const ToDoDomain({required IToDoRepository toDoRepository, required SettingsDomain settingsDomain})
+      : _toDoRepository = toDoRepository,
+        _settingsDomain = settingsDomain;
 
   final IToDoRepository _toDoRepository;
+  final SettingsDomain _settingsDomain;
 
   @override
   void initialize() {}
 
-  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
+  Future<ResponseOf<Iterable<ToDoEntity>>> listToDos() async {
+    final filterResponse = await _settingsDomain.getListToDosFilter();
+
+    if (filterResponse.type != ResponseType.success) {
+      return filterResponse.toResponseOf();
+    }
+
+    final filter = filterResponse.getValue();
     final response = await _toDoRepository.listToDos(filter);
 
     return response.map(
