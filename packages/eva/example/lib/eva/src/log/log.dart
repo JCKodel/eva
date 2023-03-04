@@ -79,7 +79,7 @@ abstract class Log {
       _lastLogEntry = null;
     }
 
-    final logTime = "+${_lastLogEntry == null ? now : now.difference(_lastLogEntry!).inMilliseconds}";
+    final logTime = "${_lastLogEntry == null ? now : "+${now.difference(_lastLogEntry!).inMilliseconds}"}";
 
     _lastLogEntry = now;
 
