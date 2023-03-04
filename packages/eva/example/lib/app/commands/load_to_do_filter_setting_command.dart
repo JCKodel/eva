@@ -7,7 +7,7 @@ class LoadToDoFilterSettingCommand extends Command {
   const LoadToDoFilterSettingCommand();
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ListToDosFilter>> handle(required, platform) async* {
     yield const Event<ListToDosFilter>.waiting();
 
     final settingsDomain = required<SettingsDomain>();

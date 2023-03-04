@@ -14,7 +14,7 @@ class LoadToDoCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ToDoEntity>> handle(required, platform) async* {
     yield const Event<ToDoEntity>.waiting();
 
     final toDoDomain = required<ToDoDomain>();

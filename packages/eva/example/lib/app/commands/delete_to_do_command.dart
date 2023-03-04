@@ -14,7 +14,7 @@ class DeleteToDoCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<DeletedToDoEntity>> handle(required, platform) async* {
     yield const Event<DeletedToDoEntity>.waiting();
 
     final toDoDomain = required<ToDoDomain>();

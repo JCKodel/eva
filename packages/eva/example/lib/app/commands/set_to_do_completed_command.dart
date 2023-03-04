@@ -15,10 +15,10 @@ class SetToDoCompletedCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ToDoEntity>> handle(required, platform) async* {
     final toDoDomain = required<ToDoDomain>();
     final newToDoState = await toDoDomain.setToDoCompleted(toDoId: toDoId, completed: completed);
 
-    yield newToDoState.mapToEvent<ToDoEntity>();
+    yield newToDoState.mapToEvent();
   }
 }

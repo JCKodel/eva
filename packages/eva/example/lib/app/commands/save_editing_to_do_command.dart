@@ -14,7 +14,7 @@ class SaveEditingToDoCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<SavingToDoEntity>> handle(required, platform) async* {
     yield const Event<SavingToDoEntity>.waiting();
 
     final toDoDomain = required<ToDoDomain>();

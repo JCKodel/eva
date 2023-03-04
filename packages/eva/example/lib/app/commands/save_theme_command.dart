@@ -14,7 +14,7 @@ class SaveThemeCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ToDoThemeEntity>> handle(required, platform) async* {
     final settingsDomain = required<SettingsDomain>();
     final response = await settingsDomain.setThemeIsDark(isDarkTheme);
 

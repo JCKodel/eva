@@ -7,7 +7,7 @@ class LoadThemeCommand extends Command {
   const LoadThemeCommand();
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ToDoThemeEntity>> handle(required, platform) async* {
     yield const Event<ToDoThemeEntity>.waiting();
 
     final settingsDomain = required<SettingsDomain>();

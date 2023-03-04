@@ -14,7 +14,7 @@ class SetToDoFilterSettingCommand extends Command {
   }
 
   @override
-  Stream<IEvent> handle(required, platform) async* {
+  Stream<Event<ListToDosFilter>> handle(required, platform) async* {
     final settingsDomain = required<SettingsDomain>();
 
     await settingsDomain.setListToDosFilter(filter);
