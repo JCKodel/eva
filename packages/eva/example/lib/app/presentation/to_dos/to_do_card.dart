@@ -4,8 +4,10 @@ import '../../../eva/eva.dart';
 import '../../commands/set_editing_to_do_command.dart';
 import '../../commands/set_to_do_completed_command.dart';
 import '../../entities/to_do_entity.dart';
+
 import 'edit_to_do.dart';
 
+// A to-do card.
 class ToDoCard extends StatelessWidget {
   const ToDoCard({required this.toDo, super.key});
 
@@ -15,6 +17,10 @@ class ToDoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // This EventBuilder is special, it contains the `successFilter`,
+    // because it does not listen to ANY `ToDoEntity`, but only to
+    // THIS `ToDoEntity` (the one with the id `todo.id`), otherwise
+    // a change in this card would rebuild every other card on the app
     return EventBuilder<ToDoEntity>(
       initialValue: toDo,
       successFilter: (value) => value.id == toDo.id,

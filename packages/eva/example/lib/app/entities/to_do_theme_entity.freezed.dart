@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ToDoThemeEntity {
+  /// Theme is dark.
   bool get isDarkTheme => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -94,6 +95,7 @@ class __$$_ToDoThemeEntityCopyWithImpl<$Res>
 class _$_ToDoThemeEntity implements _ToDoThemeEntity {
   const _$_ToDoThemeEntity({required this.isDarkTheme});
 
+  /// Theme is dark.
   @override
   final bool isDarkTheme;
 
@@ -126,6 +128,8 @@ abstract class _ToDoThemeEntity implements ToDoThemeEntity {
       _$_ToDoThemeEntity;
 
   @override
+
+  /// Theme is dark.
   bool get isDarkTheme;
   @override
   @JsonKey(ignore: true)

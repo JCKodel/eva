@@ -16,11 +16,22 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ToDoEntity {
+  /// Every object needs a key (`null` represents a new object)
   int? get id => throw _privateConstructorUsedError;
+
+  /// The to-do title.
   String get title => throw _privateConstructorUsedError;
+
+  /// The to-do description.
   String get description => throw _privateConstructorUsedError;
+
+  /// The date and time this to-do was created.
   DateTime get creationDate => throw _privateConstructorUsedError;
+
+  /// `true` for a completed to-do, `false` otherwise.
   bool get completed => throw _privateConstructorUsedError;
+
+  /// When `completed` is `true`, this is the date and time the to-do was marked as completed.
   DateTime? get completionDate => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -167,16 +178,27 @@ class _$_ToDoEntity implements _ToDoEntity {
       required this.completed,
       this.completionDate});
 
+  /// Every object needs a key (`null` represents a new object)
   @override
   final int? id;
+
+  /// The to-do title.
   @override
   final String title;
+
+  /// The to-do description.
   @override
   final String description;
+
+  /// The date and time this to-do was created.
   @override
   final DateTime creationDate;
+
+  /// `true` for a completed to-do, `false` otherwise.
   @override
   final bool completed;
+
+  /// When `completed` is `true`, this is the date and time the to-do was marked as completed.
   @override
   final DateTime? completionDate;
 
@@ -223,16 +245,28 @@ abstract class _ToDoEntity implements ToDoEntity {
       final DateTime? completionDate}) = _$_ToDoEntity;
 
   @override
+
+  /// Every object needs a key (`null` represents a new object)
   int? get id;
   @override
+
+  /// The to-do title.
   String get title;
   @override
+
+  /// The to-do description.
   String get description;
   @override
+
+  /// The date and time this to-do was created.
   DateTime get creationDate;
   @override
+
+  /// `true` for a completed to-do, `false` otherwise.
   bool get completed;
   @override
+
+  /// When `completed` is `true`, this is the date and time the to-do was marked as completed.
   DateTime? get completionDate;
   @override
   @JsonKey(ignore: true)
@@ -242,8 +276,13 @@ abstract class _ToDoEntity implements ToDoEntity {
 
 /// @nodoc
 mixin _$EditingToDoEntity {
+  /// The current to-do being edited.
   ToDoEntity get toDo => throw _privateConstructorUsedError;
+
+  /// The original unchanged to-do.
   ToDoEntity get originalToDo => throw _privateConstructorUsedError;
+
+  /// A list of validation errors (or empty for no validation errors)
   Iterable<ToDoValidationFailure> get validationFailures =>
       throw _privateConstructorUsedError;
 
@@ -376,10 +415,15 @@ class _$_EditingToDoEntity implements _EditingToDoEntity {
       required this.originalToDo,
       required this.validationFailures});
 
+  /// The current to-do being edited.
   @override
   final ToDoEntity toDo;
+
+  /// The original unchanged to-do.
   @override
   final ToDoEntity originalToDo;
+
+  /// A list of validation errors (or empty for no validation errors)
   @override
   final Iterable<ToDoValidationFailure> validationFailures;
 
@@ -420,10 +464,16 @@ abstract class _EditingToDoEntity implements EditingToDoEntity {
       _$_EditingToDoEntity;
 
   @override
+
+  /// The current to-do being edited.
   ToDoEntity get toDo;
   @override
+
+  /// The original unchanged to-do.
   ToDoEntity get originalToDo;
   @override
+
+  /// A list of validation errors (or empty for no validation errors)
   Iterable<ToDoValidationFailure> get validationFailures;
   @override
   @JsonKey(ignore: true)

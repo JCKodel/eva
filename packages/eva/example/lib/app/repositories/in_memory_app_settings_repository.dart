@@ -1,6 +1,9 @@
 import '../../eva/eva.dart';
 import '../contracts/i_app_settings_repository.dart';
 
+/// This is a fake implementation of `IAppSettingsRepository`
+/// suited for test environments (although you could always use
+/// the mockito package for that)
 @immutable
 class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   const InMemoryAppSettingsRepository();

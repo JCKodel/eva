@@ -3,6 +3,9 @@ import '../contracts/i_to_do_repository.dart';
 import '../entities/list_to_dos_filter.dart';
 import '../entities/to_do_entity.dart';
 
+/// This is a fake implementation of `IToDoRepository`
+/// suited for test environments (although you could always use
+/// the mockito package for that)
 @immutable
 class InMemoryToDoRepository implements IToDoRepository {
   const InMemoryToDoRepository();
@@ -11,7 +14,7 @@ class InMemoryToDoRepository implements IToDoRepository {
     1: ToDoEntity(
       id: 1,
       title: "First To Do",
-      description: "You are using the in memory to do repository",
+      description: "You are using the in-memory to do repository",
       completed: false,
       creationDate: DateTime.now(),
     ),

@@ -4,14 +4,38 @@ import '../contracts/i_to_do_repository.dart';
 import '../domain/settings_domain.dart';
 import '../domain/to_do_domain.dart';
 
+/// This is a base class for all our environments because Domain classes
+/// usually are always concrete, so you don't really need to segregate
+/// then using interfaces (you could if you wanted to).
 @immutable
 abstract class BaseEnvironment extends Environment {
   const BaseEnvironment();
 
+  /// Since this is a base class, this method will be called
+  /// before the `registerDependencies` of any inherited class
+  /// although this doesn't matter at all, since registration
+  /// can be called in any order.
   @override
   Future<void> registerDependencies() async {
     registerDependency<SettingsDomain>(
-      (required, platform) => SettingsDomain(appSettingsRepository: required<IAppSettingsRepository>()),
+      (required, platform) => SettingsDomain(
+        // the `required` argument here is used to require some previous
+        // registered dependency, so, basically, we are saying here:
+        //
+        // Get whatever class we registered using
+        // `registerDependency<IAppSettingsRepository>`
+        //
+        // In dev and prod environments, this means
+        // IsarAppSettingsRepository. In test environment
+        // this means InMemoryAppSettingsRepository (
+        // which is a fake in-memory database for testing
+        // purposes)
+        //
+        // `platform` will allow you to know if you are running
+        // Flutter web, desktop or mobile and in which kind of
+        // device (Android, iOS, Windows, MacOS or Linux)
+        appSettingsRepository: required<IAppSettingsRepository>(),
+      ),
     );
 
     registerDependency<ToDoDomain>(

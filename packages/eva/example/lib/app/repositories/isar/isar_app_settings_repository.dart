@@ -6,11 +6,24 @@ import '../../contracts/i_app_settings_repository.dart';
 import 'base_repository.dart';
 import 'data/app_setting.dart';
 
+/// This is an implementation of `IAppSettingsRepository`, using the Isar database
+/// (check their package in pub.dev)
 class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRepository {
   IsarAppSettingsRepository();
 
+  // Since we're dealing with a local database, a cache will never hurt us!
+  final _cache = <String, String>{};
+
   @override
   Future<Response<String>> get(String key) async {
+    final cachedValue = _cache[key];
+
+    if (cachedValue != null) {
+      // Since a `Response.success(null)` is converted to `Response.empty()`
+      // no extra checks are needed here
+      return Response.success(cachedValue);
+    }
+
     final db = Isar.getInstance()!;
     final appSetting = await db.txn(() => db.appSettings.filter().keyEqualTo(key).build().findFirst());
 
@@ -23,6 +36,8 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
 
   @override
   Future<Response<String>> set(String key, String value) async {
+    _cache[key] = value;
+
     final db = Isar.getInstance()!;
 
     await db.writeTxn(() async {

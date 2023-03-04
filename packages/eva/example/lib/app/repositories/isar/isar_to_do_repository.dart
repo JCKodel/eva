@@ -11,8 +11,13 @@ import 'data/to_do.dart';
 class IsarToDoRepository extends BaseRepository implements IToDoRepository {
   IsarToDoRepository();
 
+  // Since we're dealing with a local database, a cache will never hurt us!
+  final _cache = <int, ToDoEntity>{};
+
   @override
   Future<Response<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
+    // No cache here =(
+
     final db = Isar.getInstance()!;
 
     return db.txn(() async {
@@ -20,13 +25,13 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
 
       switch (filter) {
         case ListToDosFilter.all:
-          toDos = await db.toDos.where().findAll();
+          toDos = await db.toDos.where().sortByCompletionDate().thenByTitle().findAll();
           break;
         case ListToDosFilter.completedOnly:
-          toDos = await db.toDos.filter().completedEqualTo(true).build().findAll();
+          toDos = await db.toDos.filter().completedEqualTo(true).sortByTitle().build().findAll();
           break;
         case ListToDosFilter.uncompletedOnly:
-          toDos = await db.toDos.filter().completedEqualTo(false).build().findAll();
+          toDos = await db.toDos.filter().completedEqualTo(false).sortByCompletionDateDesc().thenByTitle().build().findAll();
           break;
       }
 
@@ -40,6 +45,14 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
 
   @override
   Future<Response<ToDoEntity>> getToDoById(int id) async {
+    final cachedValue = _cache[id];
+
+    if (cachedValue != null) {
+      // Since a `Response.success(null)` is converted to `Response.empty()`
+      // no extra checks are needed here
+      return Response.success(cachedValue);
+    }
+
     final db = Isar.getInstance()!;
 
     return db.txn(() async {
@@ -70,7 +83,11 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
           ),
         );
 
-        return Response.success(toDo.copyWith(id: id));
+        final savedToDo = toDo.copyWith(id: id);
+
+        _cache[id] = savedToDo;
+
+        return Response.success(savedToDo);
       },
     );
   }
@@ -79,6 +96,8 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
   Future<Response<bool>> deleteToDoById(int toDoId) async {
     final db = Isar.getInstance()!;
     final deleted = await db.writeTxn(() => db.toDos.delete(toDoId));
+
+    _cache.remove(toDoId);
 
     return Response.success(deleted);
   }

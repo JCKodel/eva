@@ -4,6 +4,9 @@ import '../../../entities/to_do_entity.dart';
 
 part 'to_do.g.dart';
 
+/// This is an Isar-specific class to allow us to read/write data in an Isar database
+///
+/// Don't rely on or return this kind of repository-specific entity to your domain/UI!
 @collection
 class ToDo {
   ToDo({
