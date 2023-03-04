@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
+
 import '../../../eva/eva.dart';
-import '../../commands/delete_to_do_command.dart';
-import '../../commands/load_to_do_command.dart';
 import '../../commands/load_to_dos_command.dart';
-import '../../commands/save_editing_to_do_command.dart';
 import '../../commands/update_editing_to_do_command.dart';
+import '../../domain/to_do_domain.dart';
 import '../../entities/to_do_entity.dart';
 
 class EditToDo extends StatelessWidget {
@@ -90,19 +90,23 @@ class EditToDo extends StatelessWidget {
     );
   }
 
+  static Future<Response<ToDoEntity>> _saveEditingToDoInDomain(RequiredFactory required, PlatformInfo platform, EditingToDoEntity editingToDo) {
+    return required<ToDoDomain>().saveEditingToDo(editingToDo);
+  }
+
   Future<void> _saveToDo(BuildContext context, EditingToDoEntity editingToDo) async {
-    final response = await Eva.dispatchCommand(SaveEditingToDoCommand(editingToDo: editingToDo)).thenWaitFor<SavingToDoEntity>();
+    final response = await Eva.executeOnDomain(_saveEditingToDoInDomain, editingToDo);
 
     response.maybeMatch(
-      otherwise: (e) {},
-      success: (event) {
+      otherwise: () {},
+      success: (savingToDoEntity) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("To Do saved")));
         Eva.dispatchCommand(const LoadToDosCommand());
       },
-      failure: (event) {
-        if (event.exception is Iterable<ToDoValidationFailure> == false) {
-          throw event.exception;
+      failure: (exception) {
+        if (exception is Iterable<ToDoValidationFailure> == false) {
+          throw exception;
         }
 
         final theme = Theme.of(context);
@@ -115,6 +119,10 @@ class EditToDo extends StatelessWidget {
         );
       },
     );
+  }
+
+  static Future<Response<int>> _deleteToDoInDomain(RequiredFactory required, PlatformInfo platform, int toDoId) async {
+    return required<ToDoDomain>().deleteToDo(toDoId: toDoId);
   }
 
   Future<void> _deleteToDo(BuildContext context, int toDoId) async {
@@ -140,25 +148,27 @@ class EditToDo extends StatelessWidget {
       return;
     }
 
-    final response = await Eva.dispatchCommand(DeleteToDoCommand(toDoId: toDoId)).thenWaitFor<DeletedToDoEntity>();
+    final response = await Eva.executeOnDomain(_deleteToDoInDomain, toDoId);
 
     response.maybeMatch(
-      otherwise: (e) {},
-      success: (event) {
+      otherwise: () {},
+      success: (id) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("To Do was deleted")));
         Eva.dispatchCommand(const LoadToDosCommand());
       },
-      failure: (event) {
-        if (event.exception is Iterable<ToDoValidationFailure> == false) {
-          throw event.exception;
+      failure: (exception) {
+        if (exception is Iterable<ToDoValidationFailure> == false) {
+          throw exception;
         }
       },
     );
   }
 
   Future<bool> _onWillPop(BuildContext context, EditingToDoEntity value) async {
-    final canPop = value.toDo.id == null ? value.toDo.title == "" && value.toDo.description == "" : await _compareToOriginal(value.toDo);
+    final canPop = value.toDo.id == null
+        ? value.toDo.title == "" && value.toDo.description == ""
+        : value.toDo.title == value.originalToDo.title && value.toDo.description == value.originalToDo.description && value.toDo.completed == value.originalToDo.completed;
 
     if (canPop) {
       return true;
@@ -176,14 +186,5 @@ class EditToDo extends StatelessWidget {
           ),
         )) ??
         false;
-  }
-
-  Future<bool> _compareToOriginal(ToDoEntity toDo) async {
-    final response = await Eva.dispatchCommand(LoadToDoCommand(toDoId: toDo.id!)).thenWaitFor<ToDoEntity>();
-
-    return response.maybeMatch(
-      success: (original) => original.value.title == toDo.title && original.value.description == toDo.description && original.value.completed == toDo.completed,
-      otherwise: (_) => false,
-    );
   }
 }

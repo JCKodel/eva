@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:flutter/foundation.dart';
-
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,6 +10,8 @@ import 'commands/command.dart';
 import 'environment/environment.dart';
 import 'events/event.dart';
 import 'log/log.dart';
+
+typedef RequiredFactory = TService Function<TService>({String? key});
 
 abstract class Eva {
   static late Isolate _isolate;
@@ -57,6 +58,22 @@ abstract class Eva {
       return;
     }
 
+    if (message is _ExecuteOnDomainResponseMessage) {
+      final executeOnDomainResponseHandler = _executeOnDomainHandlers[message.completerKey];
+
+      if (executeOnDomainResponseHandler == null) {
+        throw MissingRequiredKeysException([message.completerKey], _executeOnDomainHandlers);
+      }
+
+      executeOnDomainResponseHandler(message);
+
+      return;
+    }
+
+    if (message is IEvent == false) {
+      throw UnsupportedError("Eva received a message ${message.runtimeType}");
+    }
+
     if (message is SuccessEvent<EvaReadyEvent>) {
       _useEnvironmentCompleter.complete();
     }
@@ -75,16 +92,43 @@ abstract class Eva {
     Log.warn(() => "Environment has being disposed");
   }
 
-  static DispatchBuilder dispatchCommand(Command command) {
+  static void dispatchCommand(Command command) {
     Log.debug(() => "Main is emitting `${command.runtimeType}`");
     Log.verbose(() => command.toString());
 
     _domainSendPort.send(command);
-
-    return DispatchBuilder._(command);
   }
 
-  static final Map<int, Object> _lastEmmitedEvents = <int, Object>{};
+  static final _executeOnDomainHandlers = <String, void Function(_ExecuteOnDomainResponseMessage response)>{};
+
+  static Future<TOutput> executeOnDomain<TInput, TOutput>(Future<TOutput> Function(RequiredFactory required, PlatformInfo platform, TInput input) staticHandler,
+      [TInput? input]) async {
+    final completer = Completer<TOutput>();
+    final responseKey = "${staticHandler}:${staticHandler.hashCode}:${input}:${input == null ? 0 : input.hashCode}";
+
+    Log.debug(() => "Main is delegating ${TOutput} Function(${TInput}) to domain");
+    Log.verbose(() => responseKey);
+
+    _executeOnDomainHandlers[responseKey] = (response) {
+      if (response.exception != null) {
+        completer.completeError(response.exception!);
+      } else {
+        completer.complete(response.output as TOutput);
+      }
+    };
+
+    _domainSendPort.send(_ExecuteOnDomainMessage((r, p, i) => staticHandler(r, p, i as TInput), input, responseKey));
+
+    try {
+      final result = await completer.future;
+
+      return result;
+    } finally {
+      _executeOnDomainHandlers.remove(responseKey);
+    }
+  }
+
+  static final _lastEmmitedEvents = <int, Object>{};
 
   static Stream<Event<T>> getEventsStream<T>(int consumer) {
     return _eventBehaviorSubject.stream.where((event) {
@@ -125,9 +169,34 @@ abstract class Domain {
     // ignore: invalid_use_of_protected_member
     await _environment.initialize(ServiceProvider.required, PlatformInfo.platformInfo);
     Log.info(() => "Domain started as an isolated thread");
-    // ignore: invalid_use_of_protected_member
-    _listenerFromMainPort.listen(_environment.onMessageReceived);
+    _listenerFromMainPort.listen(_onMessageReceived);
     dispatchEvent(const Event.success(EvaReadyEvent()));
+  }
+
+  static void _onMessageReceived(dynamic message) {
+    if (message is Command) {
+      // ignore: invalid_use_of_protected_member
+      _environment.onMessageReceived(message);
+      return;
+    }
+
+    if (message is _ExecuteOnDomainMessage) {
+      try {
+        message
+            // ignore: invalid_use_of_protected_member
+            .staticHandler(ServiceProvider.required, PlatformInfo.platformInfo, message.input)
+            .then(
+              (output) => _sendToMainPort.send(_ExecuteOnDomainResponseMessage(output, message.completerKey, null)),
+            )
+            .catchError((Object ex) => _ExecuteOnDomainResponseMessage(null, message.completerKey, ex));
+      } catch (ex) {
+        _sendToMainPort.send(_ExecuteOnDomainResponseMessage(null, message.completerKey, ex));
+      }
+
+      return;
+    }
+
+    throw UnsupportedError("${message} is not supported on Domain.onMessageReceived");
   }
 
   @protected
@@ -139,21 +208,20 @@ abstract class Domain {
   }
 }
 
-class DispatchBuilder {
-  DispatchBuilder._(this.command);
+@immutable
+class _ExecuteOnDomainMessage {
+  const _ExecuteOnDomainMessage(this.staticHandler, this.input, this.completerKey);
 
-  final Command command;
+  final Future<dynamic> Function(RequiredFactory required, PlatformInfo platform, dynamic input) staticHandler;
+  final dynamic input;
+  final String completerKey;
+}
 
-  Future<Event<T>> thenWaitFor<T>({Duration timeout = const Duration(seconds: 5)}) async {
-    final stream = Eva.getEventsStream<T>(hashCode);
+@immutable
+class _ExecuteOnDomainResponseMessage {
+  const _ExecuteOnDomainResponseMessage(this.output, this.completerKey, this.exception);
 
-    try {
-      return stream.where((e) => e is WaitingEvent == false).first.timeout(
-            timeout,
-            onTimeout: () => Event<T>.failure(TimeoutException("Timeout while waiting for a ${T} event after command ${command}")),
-          );
-    } catch (ex) {
-      return Event<T>.failure(ex);
-    }
-  }
+  final Object? output;
+  final String completerKey;
+  final Object? exception;
 }

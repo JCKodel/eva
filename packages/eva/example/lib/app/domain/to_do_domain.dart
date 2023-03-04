@@ -39,17 +39,29 @@ class ToDoDomain implements IDomain {
         completed: false,
       );
 
-      return validateToDo(emptyToDo);
+      return Response.success(
+        EditingToDoEntity(
+          originalToDo: emptyToDo.copyWith(),
+          toDo: emptyToDo,
+          validationFailures: validateToDo(emptyToDo),
+        ),
+      );
     }
 
     final currentToDo = await _toDoRepository.getToDoById(toDoId);
 
     return currentToDo.map(
-      success: (toDo) => validateToDo(toDo),
+      success: (toDo) => Response.success(
+        EditingToDoEntity(
+          originalToDo: toDo.copyWith(),
+          toDo: toDo,
+          validationFailures: validateToDo(toDo),
+        ),
+      ),
     );
   }
 
-  Response<EditingToDoEntity> validateToDo(ToDoEntity toDo) {
+  Iterable<ToDoValidationFailure> validateToDo(ToDoEntity toDo) {
     final validationFailures = <ToDoValidationFailure>[];
 
     if (toDo.title == "") {
@@ -60,34 +72,25 @@ class ToDoDomain implements IDomain {
       validationFailures.add(ToDoValidationFailure.descriptionIsEmpty);
     }
 
-    return Response.success(
-      EditingToDoEntity(
-        toDo: toDo,
-        validationFailures: validationFailures,
-      ),
-    );
+    return validationFailures;
   }
 
-  Future<Response<SavingToDoEntity>> saveEditingToDo(EditingToDoEntity editingToDo) async {
-    final validationResult = validateToDo(editingToDo.toDo);
+  Future<Response<ToDoEntity>> saveEditingToDo(EditingToDoEntity editingToDo) async {
+    final validationFailures = validateToDo(editingToDo.toDo);
 
-    return validationResult.mapAsync(
-      success: (validation) async {
-        if (validation.validationFailures.isNotEmpty) {
-          return Response.failure(validation.validationFailures);
-        }
+    if (validationFailures.isNotEmpty) {
+      return Response.failure(validationFailures);
+    }
 
-        late Response<ToDoEntity> response;
+    late Response<ToDoEntity> response;
 
-        if (editingToDo.toDo.id == null && editingToDo.toDo.completed) {
-          response = await _toDoRepository.saveToDo(editingToDo.toDo.copyWith(completionDate: DateTime.now()));
-        } else {
-          response = await _toDoRepository.saveToDo(editingToDo.toDo);
-        }
+    if (editingToDo.toDo.id == null && editingToDo.toDo.completed) {
+      response = await _toDoRepository.saveToDo(editingToDo.toDo.copyWith(completionDate: DateTime.now()));
+    } else {
+      response = await _toDoRepository.saveToDo(editingToDo.toDo);
+    }
 
-        return response.map(success: (toDo) => Response.success(SavingToDoEntity(toDo: toDo)));
-      },
-    );
+    return response;
   }
 
   Future<Response<ToDoEntity>> setToDoCompleted({required int toDoId, required bool completed}) async {

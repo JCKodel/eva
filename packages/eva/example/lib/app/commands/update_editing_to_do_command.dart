@@ -17,6 +17,8 @@ class UpdateEditingToDoCommand extends Command {
   Stream<Event<EditingToDoEntity>> handle(required, platform) async* {
     final toDoDomain = required<ToDoDomain>();
 
-    yield toDoDomain.validateToDo(editingToDo.toDo).mapToEvent();
+    yield Event.success(
+      editingToDo.copyWith(validationFailures: toDoDomain.validateToDo(editingToDo.toDo)),
+    );
   }
 }

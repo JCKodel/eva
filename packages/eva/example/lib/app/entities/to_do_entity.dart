@@ -23,20 +23,7 @@ enum ToDoValidationFailure {
 class EditingToDoEntity with _$EditingToDoEntity {
   const factory EditingToDoEntity({
     required ToDoEntity toDo,
+    required ToDoEntity originalToDo,
     required Iterable<ToDoValidationFailure> validationFailures,
   }) = _EditingToDoEntity;
-}
-
-@freezed
-class SavingToDoEntity with _$SavingToDoEntity {
-  const factory SavingToDoEntity({
-    required ToDoEntity toDo,
-  }) = _SavingToDoEntity;
-}
-
-@freezed
-class DeletedToDoEntity with _$DeletedToDoEntity {
-  const factory DeletedToDoEntity({
-    required int toDoId,
-  }) = _DeletedToDoEntity;
 }

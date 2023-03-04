@@ -243,6 +243,7 @@ abstract class _ToDoEntity implements ToDoEntity {
 /// @nodoc
 mixin _$EditingToDoEntity {
   ToDoEntity get toDo => throw _privateConstructorUsedError;
+  ToDoEntity get originalToDo => throw _privateConstructorUsedError;
   Iterable<ToDoValidationFailure> get validationFailures =>
       throw _privateConstructorUsedError;
 
@@ -258,9 +259,12 @@ abstract class $EditingToDoEntityCopyWith<$Res> {
       _$EditingToDoEntityCopyWithImpl<$Res, EditingToDoEntity>;
   @useResult
   $Res call(
-      {ToDoEntity toDo, Iterable<ToDoValidationFailure> validationFailures});
+      {ToDoEntity toDo,
+      ToDoEntity originalToDo,
+      Iterable<ToDoValidationFailure> validationFailures});
 
   $ToDoEntityCopyWith<$Res> get toDo;
+  $ToDoEntityCopyWith<$Res> get originalToDo;
 }
 
 /// @nodoc
@@ -277,12 +281,17 @@ class _$EditingToDoEntityCopyWithImpl<$Res, $Val extends EditingToDoEntity>
   @override
   $Res call({
     Object? toDo = null,
+    Object? originalToDo = null,
     Object? validationFailures = null,
   }) {
     return _then(_value.copyWith(
       toDo: null == toDo
           ? _value.toDo
           : toDo // ignore: cast_nullable_to_non_nullable
+              as ToDoEntity,
+      originalToDo: null == originalToDo
+          ? _value.originalToDo
+          : originalToDo // ignore: cast_nullable_to_non_nullable
               as ToDoEntity,
       validationFailures: null == validationFailures
           ? _value.validationFailures
@@ -298,6 +307,14 @@ class _$EditingToDoEntityCopyWithImpl<$Res, $Val extends EditingToDoEntity>
       return _then(_value.copyWith(toDo: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ToDoEntityCopyWith<$Res> get originalToDo {
+    return $ToDoEntityCopyWith<$Res>(_value.originalToDo, (value) {
+      return _then(_value.copyWith(originalToDo: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -309,10 +326,14 @@ abstract class _$$_EditingToDoEntityCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {ToDoEntity toDo, Iterable<ToDoValidationFailure> validationFailures});
+      {ToDoEntity toDo,
+      ToDoEntity originalToDo,
+      Iterable<ToDoValidationFailure> validationFailures});
 
   @override
   $ToDoEntityCopyWith<$Res> get toDo;
+  @override
+  $ToDoEntityCopyWith<$Res> get originalToDo;
 }
 
 /// @nodoc
@@ -327,12 +348,17 @@ class __$$_EditingToDoEntityCopyWithImpl<$Res>
   @override
   $Res call({
     Object? toDo = null,
+    Object? originalToDo = null,
     Object? validationFailures = null,
   }) {
     return _then(_$_EditingToDoEntity(
       toDo: null == toDo
           ? _value.toDo
           : toDo // ignore: cast_nullable_to_non_nullable
+              as ToDoEntity,
+      originalToDo: null == originalToDo
+          ? _value.originalToDo
+          : originalToDo // ignore: cast_nullable_to_non_nullable
               as ToDoEntity,
       validationFailures: null == validationFailures
           ? _value.validationFailures
@@ -346,16 +372,20 @@ class __$$_EditingToDoEntityCopyWithImpl<$Res>
 
 class _$_EditingToDoEntity implements _EditingToDoEntity {
   const _$_EditingToDoEntity(
-      {required this.toDo, required this.validationFailures});
+      {required this.toDo,
+      required this.originalToDo,
+      required this.validationFailures});
 
   @override
   final ToDoEntity toDo;
+  @override
+  final ToDoEntity originalToDo;
   @override
   final Iterable<ToDoValidationFailure> validationFailures;
 
   @override
   String toString() {
-    return 'EditingToDoEntity(toDo: $toDo, validationFailures: $validationFailures)';
+    return 'EditingToDoEntity(toDo: $toDo, originalToDo: $originalToDo, validationFailures: $validationFailures)';
   }
 
   @override
@@ -364,12 +394,14 @@ class _$_EditingToDoEntity implements _EditingToDoEntity {
         (other.runtimeType == runtimeType &&
             other is _$_EditingToDoEntity &&
             (identical(other.toDo, toDo) || other.toDo == toDo) &&
+            (identical(other.originalToDo, originalToDo) ||
+                other.originalToDo == originalToDo) &&
             const DeepCollectionEquality()
                 .equals(other.validationFailures, validationFailures));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, toDo,
+  int get hashCode => Object.hash(runtimeType, toDo, originalToDo,
       const DeepCollectionEquality().hash(validationFailures));
 
   @JsonKey(ignore: true)
@@ -383,265 +415,18 @@ class _$_EditingToDoEntity implements _EditingToDoEntity {
 abstract class _EditingToDoEntity implements EditingToDoEntity {
   const factory _EditingToDoEntity(
           {required final ToDoEntity toDo,
+          required final ToDoEntity originalToDo,
           required final Iterable<ToDoValidationFailure> validationFailures}) =
       _$_EditingToDoEntity;
 
   @override
   ToDoEntity get toDo;
   @override
+  ToDoEntity get originalToDo;
+  @override
   Iterable<ToDoValidationFailure> get validationFailures;
   @override
   @JsonKey(ignore: true)
   _$$_EditingToDoEntityCopyWith<_$_EditingToDoEntity> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$SavingToDoEntity {
-  ToDoEntity get toDo => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $SavingToDoEntityCopyWith<SavingToDoEntity> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $SavingToDoEntityCopyWith<$Res> {
-  factory $SavingToDoEntityCopyWith(
-          SavingToDoEntity value, $Res Function(SavingToDoEntity) then) =
-      _$SavingToDoEntityCopyWithImpl<$Res, SavingToDoEntity>;
-  @useResult
-  $Res call({ToDoEntity toDo});
-
-  $ToDoEntityCopyWith<$Res> get toDo;
-}
-
-/// @nodoc
-class _$SavingToDoEntityCopyWithImpl<$Res, $Val extends SavingToDoEntity>
-    implements $SavingToDoEntityCopyWith<$Res> {
-  _$SavingToDoEntityCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? toDo = null,
-  }) {
-    return _then(_value.copyWith(
-      toDo: null == toDo
-          ? _value.toDo
-          : toDo // ignore: cast_nullable_to_non_nullable
-              as ToDoEntity,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ToDoEntityCopyWith<$Res> get toDo {
-    return $ToDoEntityCopyWith<$Res>(_value.toDo, (value) {
-      return _then(_value.copyWith(toDo: value) as $Val);
-    });
-  }
-}
-
-/// @nodoc
-abstract class _$$_SavingToDoEntityCopyWith<$Res>
-    implements $SavingToDoEntityCopyWith<$Res> {
-  factory _$$_SavingToDoEntityCopyWith(
-          _$_SavingToDoEntity value, $Res Function(_$_SavingToDoEntity) then) =
-      __$$_SavingToDoEntityCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({ToDoEntity toDo});
-
-  @override
-  $ToDoEntityCopyWith<$Res> get toDo;
-}
-
-/// @nodoc
-class __$$_SavingToDoEntityCopyWithImpl<$Res>
-    extends _$SavingToDoEntityCopyWithImpl<$Res, _$_SavingToDoEntity>
-    implements _$$_SavingToDoEntityCopyWith<$Res> {
-  __$$_SavingToDoEntityCopyWithImpl(
-      _$_SavingToDoEntity _value, $Res Function(_$_SavingToDoEntity) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? toDo = null,
-  }) {
-    return _then(_$_SavingToDoEntity(
-      toDo: null == toDo
-          ? _value.toDo
-          : toDo // ignore: cast_nullable_to_non_nullable
-              as ToDoEntity,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_SavingToDoEntity implements _SavingToDoEntity {
-  const _$_SavingToDoEntity({required this.toDo});
-
-  @override
-  final ToDoEntity toDo;
-
-  @override
-  String toString() {
-    return 'SavingToDoEntity(toDo: $toDo)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_SavingToDoEntity &&
-            (identical(other.toDo, toDo) || other.toDo == toDo));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, toDo);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_SavingToDoEntityCopyWith<_$_SavingToDoEntity> get copyWith =>
-      __$$_SavingToDoEntityCopyWithImpl<_$_SavingToDoEntity>(this, _$identity);
-}
-
-abstract class _SavingToDoEntity implements SavingToDoEntity {
-  const factory _SavingToDoEntity({required final ToDoEntity toDo}) =
-      _$_SavingToDoEntity;
-
-  @override
-  ToDoEntity get toDo;
-  @override
-  @JsonKey(ignore: true)
-  _$$_SavingToDoEntityCopyWith<_$_SavingToDoEntity> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-mixin _$DeletedToDoEntity {
-  int get toDoId => throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $DeletedToDoEntityCopyWith<DeletedToDoEntity> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DeletedToDoEntityCopyWith<$Res> {
-  factory $DeletedToDoEntityCopyWith(
-          DeletedToDoEntity value, $Res Function(DeletedToDoEntity) then) =
-      _$DeletedToDoEntityCopyWithImpl<$Res, DeletedToDoEntity>;
-  @useResult
-  $Res call({int toDoId});
-}
-
-/// @nodoc
-class _$DeletedToDoEntityCopyWithImpl<$Res, $Val extends DeletedToDoEntity>
-    implements $DeletedToDoEntityCopyWith<$Res> {
-  _$DeletedToDoEntityCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? toDoId = null,
-  }) {
-    return _then(_value.copyWith(
-      toDoId: null == toDoId
-          ? _value.toDoId
-          : toDoId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_DeletedToDoEntityCopyWith<$Res>
-    implements $DeletedToDoEntityCopyWith<$Res> {
-  factory _$$_DeletedToDoEntityCopyWith(_$_DeletedToDoEntity value,
-          $Res Function(_$_DeletedToDoEntity) then) =
-      __$$_DeletedToDoEntityCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int toDoId});
-}
-
-/// @nodoc
-class __$$_DeletedToDoEntityCopyWithImpl<$Res>
-    extends _$DeletedToDoEntityCopyWithImpl<$Res, _$_DeletedToDoEntity>
-    implements _$$_DeletedToDoEntityCopyWith<$Res> {
-  __$$_DeletedToDoEntityCopyWithImpl(
-      _$_DeletedToDoEntity _value, $Res Function(_$_DeletedToDoEntity) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? toDoId = null,
-  }) {
-    return _then(_$_DeletedToDoEntity(
-      toDoId: null == toDoId
-          ? _value.toDoId
-          : toDoId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_DeletedToDoEntity implements _DeletedToDoEntity {
-  const _$_DeletedToDoEntity({required this.toDoId});
-
-  @override
-  final int toDoId;
-
-  @override
-  String toString() {
-    return 'DeletedToDoEntity(toDoId: $toDoId)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_DeletedToDoEntity &&
-            (identical(other.toDoId, toDoId) || other.toDoId == toDoId));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, toDoId);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_DeletedToDoEntityCopyWith<_$_DeletedToDoEntity> get copyWith =>
-      __$$_DeletedToDoEntityCopyWithImpl<_$_DeletedToDoEntity>(
-          this, _$identity);
-}
-
-abstract class _DeletedToDoEntity implements DeletedToDoEntity {
-  const factory _DeletedToDoEntity({required final int toDoId}) =
-      _$_DeletedToDoEntity;
-
-  @override
-  int get toDoId;
-  @override
-  @JsonKey(ignore: true)
-  _$$_DeletedToDoEntityCopyWith<_$_DeletedToDoEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }

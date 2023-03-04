@@ -13,7 +13,7 @@ abstract class Environment {
 
   /// Called after `registerDependencies`
   @mustCallSuper
-  Future<void> initialize(TService Function<TService>({String? key}) required, PlatformInfo platform);
+  Future<void> initialize(RequiredFactory required, PlatformInfo platform);
 
   /// Called before `initialize`
   @mustCallSuper

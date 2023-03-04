@@ -1,13 +1,12 @@
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
-import 'package:meta/meta.dart';
 
-import '../events/event.dart';
+import '../../eva.dart';
 
 @immutable
 abstract class Command {
   const Command();
 
-  Stream<IEvent> handle(TService Function<TService>({String? key}) required, PlatformInfo platform);
+  Stream<IEvent> handle(RequiredFactory required, PlatformInfo platform);
 
   @override
   String toString() {
