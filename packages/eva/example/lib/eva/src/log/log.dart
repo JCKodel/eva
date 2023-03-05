@@ -3,15 +3,27 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 
+/// Log levels
 enum LogLevel {
+  /// Errors and exceptions
   error,
+
+  /// Non-fatal errors
   warn,
+
+  /// General information
   info,
+
+  /// Useful debug info
   debug,
+
+  /// Verbose detailed logs
   verbose,
 }
 
+/// ANSI colors to use in logs
 enum LogColor {
+  /// Default color
   reset("\x1B[0m"),
   black("\x1B[30m"),
   red("\x1B[31m"),
@@ -27,11 +39,13 @@ enum LogColor {
   final String ansiString;
 }
 
+/// A simple Dart logger
 abstract class Log {
   static DateTime? _lastLogEntry;
 
   static LogLevel _minLogLevel = kDebugMode ? LogLevel.debug : LogLevel.info;
 
+  /// The minimum level to show (order: verbose > debug > info > warn > error)
   static LogLevel get minLogLevel => _minLogLevel;
 
   static set minLogLevel(LogLevel logLevel) {
@@ -39,6 +53,13 @@ abstract class Log {
     Log.info(() => "Log level changed to ${logLevel}");
   }
 
+  /// Logs a verbose message, if `minLogLevel` allows it
+  ///
+  /// Since the message is a closure that returns a String, this
+  /// message will never be built if the current log level doesn't
+  /// allow this level of log
+  ///
+  /// Verbose logs are never executed in release builds, no matter the `minLogLevel`
   static void verbose(String Function() messageGenerator) {
     if (kDebugMode) {
       if (minLogLevel.index >= LogLevel.verbose.index) {
@@ -47,6 +68,13 @@ abstract class Log {
     }
   }
 
+  /// Logs a debug message, if `minLogLevel` allows it
+  ///
+  /// Since the message is a closure that returns a String, this
+  /// message will never be built if the current log level doesn't
+  /// allow this level of log
+  ///
+  /// Debug logs are never executed in release builds, no matter the `minLogLevel`
   static void debug(String Function() messageGenerator) {
     if (kDebugMode) {
       if (minLogLevel.index >= LogLevel.debug.index) {
@@ -55,18 +83,33 @@ abstract class Log {
     }
   }
 
+  /// Logs an informational message, if `minLogLevel` allows it
+  ///
+  /// Since the message is a closure that returns a String, this
+  /// message will never be built if the current log level doesn't
+  /// allow this level of log
   static void info(String Function() messageGenerator) {
     if (minLogLevel.index >= LogLevel.info.index) {
       _log(LogLevel.info, LogColor.blue, "🔵", messageGenerator);
     }
   }
 
+  /// Logs a warning message, if `minLogLevel` allows it
+  ///
+  /// Since the message is a closure that returns a String, this
+  /// message will never be built if the current log level doesn't
+  /// allow this level of log
   static void warn(String Function() messageGenerator, [Object? error]) {
     if (minLogLevel.index >= LogLevel.warn.index) {
       _log(LogLevel.warn, LogColor.yellow, "🟠", messageGenerator, error);
     }
   }
 
+  /// Logs an error message, if `minLogLevel` allows it
+  ///
+  /// Since the message is a closure that returns a String, this
+  /// message will never be built if the current log level doesn't
+  /// allow this level of log
   static void error(String Function() messageGenerator, [Object? error]) {
     _log(LogLevel.error, LogColor.red, "🔴", messageGenerator, error);
   }

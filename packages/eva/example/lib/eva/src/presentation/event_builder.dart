@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../eva.dart';
 
+/// Inherited widget that holds the last event captured by the
+/// previous `EventBuilder<TEventState>` or `CommandEventBuilder<TEventState>`
 @immutable
 class EventState<TEventState> extends InheritedWidget {
   const EventState({required this.state, required super.child, super.key});
 
+  /// The last dispatched even of `TEventState`
   final Event<TEventState> state;
 
   @override
@@ -13,11 +16,18 @@ class EventState<TEventState> extends InheritedWidget {
     return state != oldWidget.state;
   }
 
+  /// Gets the last event built by a previous builder
+  ///
+  /// It will throw an exception if there are no events ever built of that
+  /// type (just in case you are trying to get an EventState at some point of
+  /// the widget tree where there are no ancestors of type EventBuilder)
   static EventState<TEventState> of<TEventState>(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<EventState<TEventState>>()!;
   }
 }
 
+/// Listens to events of type `TEventState` and rebuilds using
+/// the appropriated arguments depending on the type of the Event
 class EventBuilder<TEventState> extends StatelessWidget {
   const EventBuilder({
     required this.successBuilder,
@@ -35,23 +45,49 @@ class EventBuilder<TEventState> extends StatelessWidget {
     this.waitingBuilder,
   });
 
+  /// The initial value used when this builder is in the waiting state.
   final TEventState? initialValue;
+
+  /// The builder to run if no other build is provided (it will ignore the default builders)
   final Widget Function(BuildContext context, Event<TEventState> event)? otherwiseBuilder;
+
+  /// The builder to run when the event is in the empty state (defaults to `defaultEmptyBuilder`)
   final Widget Function(BuildContext context, EmptyEvent<TEventState> event)? emptyBuilder;
+
+  /// The builder to run when the event is in the waiting state (defaults to `defaultWaitingBuilder`)
   final Widget Function(BuildContext context, WaitingEvent<TEventState> event)? waitingBuilder;
+
+  /// The builder to run when the event is in the failure state (defaults to `defaultFailureBuilder`)
   final Widget Function(BuildContext context, FailureEvent<TEventState> event)? failureBuilder;
+
+  /// The builder to run when the event is in the success state
   final Widget Function(BuildContext context, SuccessEvent<TEventState> event) successBuilder;
+
+  /// This method will run if no other `on` method was provided
   final void Function(BuildContext context, Event<TEventState> event)? onOtherwise;
+
+  /// Run this method whenever the event is empty
   final void Function(BuildContext context, EmptyEvent<TEventState> event)? onEmpty;
+
+  /// Run this method whenever the event is waiting
   final void Function(BuildContext context, WaitingEvent<TEventState> event)? onWaiting;
+
+  /// Run this method whenever the event is failure
   final void Function(BuildContext context, FailureEvent<TEventState> event)? onFailure;
+
+  /// Run this method whenever the event is success
   final void Function(BuildContext context, SuccessEvent<TEventState> event)? onSuccess;
+
+  /// Whenever the event is success, run this method to filter the event to be built
   final bool Function(TEventState value)? successFilter;
 
+  /// If no empty builder is provided, use this (the default is a `const SizedBox`, but you can override it (usually on `main`))
   static Widget Function(BuildContext context, IEmptyEvent event) defaultEmptyBuilder = (context, event) => const SizedBox();
 
+  /// If no waiting builder is provided, use this (the default is a `CircularProgressIndicator.adaptive`, but you can override it (usually on `main`))
   static Widget Function(BuildContext context, IWaitingEvent event) defaultWaitingBuilder = (context, event) => const Center(child: CircularProgressIndicator.adaptive());
 
+  /// If no failure builder is provided, use this (the default is a `ErrorWidget`, but you can override it (usually on `main`))
   static Widget Function(BuildContext context, IFailureEvent event) defaultFailureBuilder = (context, event) => event.exception is FlutterError
       ? ErrorWidget.withDetails(
           message: (event.exception as FlutterError).message,
@@ -118,6 +154,8 @@ class EventBuilder<TEventState> extends StatelessWidget {
   }
 }
 
+/// This is an `EventBuilder<TEventState>`, but it will dispatch the `command` when the widget is
+/// added to the widget tree
 class CommandEventBuilder<TCommand extends Command, TEventState> extends EventBuilder<TEventState> {
   const CommandEventBuilder({
     required this.command,
@@ -135,6 +173,7 @@ class CommandEventBuilder<TCommand extends Command, TEventState> extends EventBu
     super.waitingBuilder,
   });
 
+  /// The `Command` to run.
   final TCommand command;
 
   @override
