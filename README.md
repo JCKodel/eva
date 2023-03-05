@@ -49,6 +49,34 @@ sequenceDiagram
     deactivate Command
 ```
 
+## Suggested project organization
+
+```
+📁 lib
+├── 📁 app
+│   ├── 📁 commands
+│   │   └── 📄 some_command.dart
+│   ├── 📁 contracts
+│   │   └── 📄 i_repo_interface.dart
+│   ├── 📁 domain
+│   │   └── 📄 some_domain.dart
+│   ├── 📁 entities
+│   │   └── 📄 freezed_entity.dart
+│   ├── 📁 environments
+│   │   ├── 📄 base_environment.dart
+│   │   ├── 📄 development_environment.dart
+│   │   └── 📄 production_environment.dart
+│   ├── 📁 presentation
+│   │   ├── 📁 pages
+│   │   │   └── 📄 home_page_widget.dart
+│   │   └── 📄 your_app.dart
+│   ├── 📁 repositories
+│   │   ├── 📁 data
+│   │   │   └── 📄 some_repository_specific_dto.dart
+│   │   └── 📄 sqlite_repository.dart
+└── main.dart
+```
+
 Your Flutter code is kept as pure as possible, there is no need for `InheritedWidget` or some obtrusive widget, other than an `EventBuilder<T>` that listens to some event.
 
 You write some domain class (a pure class that only handles business logic - given any input, call your repositories (if needed) and then respond with some output)
