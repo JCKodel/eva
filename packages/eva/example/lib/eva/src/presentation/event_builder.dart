@@ -62,7 +62,9 @@ class EventBuilder<TEventState> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stream = successFilter == null
+        // ignore: invalid_use_of_protected_member
         ? Eva.getEventsStream<TEventState>(hashCode)
+        // ignore: invalid_use_of_protected_member
         : Eva.getEventsStream<TEventState>(hashCode).where((event) => event is SuccessEvent<TEventState> && successFilter!(event.value));
 
     return StreamBuilder<Event<TEventState>>(

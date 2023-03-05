@@ -11,8 +11,14 @@ import 'environment/environment.dart';
 import 'events/event.dart';
 import 'log/log.dart';
 
+/// This delegate is a function that returns whatever dependency was
+/// injected.
+///
+/// Example: `required<ISomeInterface>()` will return the concrete class
+/// that was injected for `ISomeInterface`
 typedef RequiredFactory = TService Function<TService>({String? key});
 
+/// Event Architecture
 abstract class Eva {
   static late Isolate _isolate;
 
@@ -23,6 +29,10 @@ abstract class Eva {
 
   static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
 
+  /// Initializes an `Environment` to be used with Eva.
+  ///
+  /// It will spawn the domain isolate, then run the `Environment.registerDependencies` in that
+  /// isolate, then run `Environment.initialize` on the domain isolate.
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
     if (Isolate.current.debugName != "main") {
       throw IsolateSpawnException("This method can only be called in the main thread");
@@ -84,6 +94,10 @@ abstract class Eva {
     _eventBehaviorSubject.add(message);
   }
 
+  /// If you ever needed, you can kill an environment
+  ///
+  /// This will kill the isolate and close the
+  /// event stream immediately
   static void disposeEnvironment() {
     _domainReceivePort.close();
     _errorPort.close();
@@ -92,6 +106,8 @@ abstract class Eva {
     Log.warn(() => "Environment has being disposed");
   }
 
+  /// Sends the `command` to the domain isolate, where the
+  /// `Command.handle` method will run
   static void dispatchCommand(Command command) {
     Log.debug(() => "Main is emitting `${command.runtimeType}`");
     Log.verbose(() => command.toString());
@@ -101,6 +117,10 @@ abstract class Eva {
 
   static final _executeOnDomainHandlers = <String, void Function(_ExecuteOnDomainResponseMessage response)>{};
 
+  /// Executes the static or top-level function `staticHandler`, passing the `input` argument on the domain isolate.
+  ///
+  /// The `TOutput` output will be then returned whenever that handler terminates. This `Future<TOutput>` will be
+  /// completed with the exception thrown by the `staticHandler`, if any
   static Future<TOutput> executeOnDomain<TInput, TOutput>(Future<TOutput> Function(RequiredFactory required, PlatformInfo platform, TInput input) staticHandler,
       [TInput? input]) async {
     final completer = Completer<TOutput>();
@@ -130,6 +150,7 @@ abstract class Eva {
 
   static final _lastEmmitedEvents = <int, Object>{};
 
+  @protected
   static Stream<Event<T>> getEventsStream<T>(int consumer) {
     return _eventBehaviorSubject.stream.where((event) {
       if (event is Event<T> == false) {
@@ -154,6 +175,7 @@ abstract class Eva {
   }
 }
 
+// This is the domain isolate controller
 abstract class Domain {
   static final _listenerFromMainPort = ReceivePort();
   static late SendPort _sendToMainPort;
