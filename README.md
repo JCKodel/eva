@@ -53,27 +53,27 @@ sequenceDiagram
 
 ```
 📁 lib
-├── 📁 app
-│   ├── 📁 commands
-│   │   └── 📄 some_command.dart
-│   ├── 📁 contracts
-│   │   └── 📄 i_repo_interface.dart
-│   ├── 📁 domain
-│   │   └── 📄 some_domain.dart
-│   ├── 📁 entities
-│   │   └── 📄 freezed_entity.dart
-│   ├── 📁 environments
-│   │   ├── 📄 base_environment.dart
-│   │   ├── 📄 development_environment.dart
-│   │   └── 📄 production_environment.dart
-│   ├── 📁 presentation
-│   │   ├── 📁 pages
-│   │   │   └── 📄 home_page_widget.dart
-│   │   └── 📄 your_app.dart
-│   ├── 📁 repositories
-│   │   ├── 📁 data
-│   │   │   └── 📄 some_repository_specific_dto.dart
-│   │   └── 📄 sqlite_repository.dart
+├─ 📁 app
+│  ├─ 📁 commands
+│  │  └─ 📄 some_command.dart
+│  ├─ 📁 contracts
+│  │  └─ 📄 i_repo_interface.dart
+│  ├─ 📁 domain
+│  │  └─ 📄 some_domain.dart
+│  ├─ 📁 entities
+│  │  └─ 📄 freezed_entity.dart
+│  ├─ 📁 environments
+│  │  ├─ 📄 base_environment.dart
+│  │  ├─ 📄 development_environment.dart
+│  │  └─ 📄 production_environment.dart
+│  ├─ 📁 presentation
+│  │  ├─ 📁 pages
+│  │  │   └─ 📄 home_page_widget.dart
+│  │  └─ 📄 your_app.dart
+│  ├─ 📁 repositories
+│  │  ├─ 📁 data
+│  │  │  └─ 📄 some_repository_specific_dto.dart
+│  │  └─ 📄 sqlite_repository.dart
 └── main.dart
 ```
 
