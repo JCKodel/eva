@@ -33,14 +33,6 @@
 
 ```mermaid
 sequenceDiagram
-    box Purple Main thread
-    participant Flutter
-    end
-    box blue Domain thread
-    participant Command
-    participant Domain
-    participant Repository
-    end
     Flutter->>Command: Hey, execute this LoadSomething
     Note over Flutter,Command: Isolate communication<br/>through events or direct<br/>calls using top-level functions
     activate Command
