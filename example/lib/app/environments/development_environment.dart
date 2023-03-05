@@ -1,4 +1,5 @@
 import 'package:eva/eva.dart';
+
 import '../contracts/i_app_settings_repository.dart';
 import '../contracts/i_to_do_repository.dart';
 import '../repositories/isar/isar_app_settings_repository.dart';
@@ -39,13 +40,13 @@ class DevelopmentEnvironment extends BaseEnvironment {
   /// homolog, prod, etc. environments using, for example,
   /// `(required, platform) => APIRepository(serverUrl: "https://example.com")`
   @override
-  Future<void> registerDependencies() async {
+  void registerDependencies() {
     // Notice that you MUST call `super.registerDependencies` and Dart will
     // remind you (if you configure analysis correctly) because `Environment`
     // has a `@mustCallSuper` meta-annotation on it. We recommend using the
     // `analysis_options.yaml` file provided by this project so you can get
     // all warnings for best practices.
-    await super.registerDependencies();
+    super.registerDependencies();
 
     // A dependency registration is pretty easy:
     // Here, whenever someone requires an `IAppSettingsRepository` (an abstract

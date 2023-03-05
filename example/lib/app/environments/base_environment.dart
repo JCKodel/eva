@@ -1,4 +1,5 @@
 import 'package:eva/eva.dart';
+
 import '../contracts/i_app_settings_repository.dart';
 import '../contracts/i_to_do_repository.dart';
 import '../domain/settings_domain.dart';
@@ -20,7 +21,7 @@ abstract class BaseEnvironment extends Environment {
   /// although this doesn't matter at all, since registration
   /// can be called in any order.
   @override
-  Future<void> registerDependencies() async {
+  void registerDependencies() {
     registerDependency<SettingsDomain>(
       (required, platform) => SettingsDomain(
         // the `required` argument here is used to require some previous
