@@ -34,11 +34,11 @@ abstract class Eva {
   /// It will spawn the domain isolate, then run the `Environment.registerDependencies` in that
   /// isolate, then run `Environment.initialize` on the domain isolate.
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
-    if (Isolate.current.debugName != "main") {
+    final environment = environmentFactory();
+
+    if (environment.allowRunInMainIsolate == false && Isolate.current.debugName != "main") {
       throw IsolateSpawnException("This method can only be called in the main thread");
     }
-
-    final environment = environmentFactory();
 
     Log.minLogLevel = environment.minLogLevel;
     Log.info(() => "Initializing Eva with `${T}`");

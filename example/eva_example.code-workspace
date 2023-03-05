@@ -20,6 +20,24 @@
 			"activityBar.background": "#19207B",
 			"titleBar.activeBackground": "#242DAC",
 			"titleBar.activeForeground": "#F9FAFE"
-		}
+		},
+		"multiCommand.commands": [
+			{
+				"command": "multiCommand.fixAndSaveDart",
+				"interval": 100,
+				"sequence": [
+					"dart-import.fix",
+					"workbench.action.files.save"
+				]
+			},
+			{
+				"command": "multiCommand.fixAndSaveAllDart",
+				"interval": 100,
+				"sequence": [
+					"dart-import.fix",
+					"workbench.action.files.saveAll"
+				]
+			}
+		],
 	}
 }

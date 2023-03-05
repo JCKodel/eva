@@ -16,6 +16,11 @@ import '../../eva.dart';
 abstract class Environment {
   const Environment();
 
+  /// When overridden to `true`, allows the execution of an environment in the main thread.
+  ///
+  /// This should ONLY be used for unit testing purposes!!!
+  bool get allowRunInMainIsolate => false;
+
   /// This method is called when you use `Eva.useEnvironment()`, just after the `registerDependencies`.
   ///
   /// The `required` function returns the concrete class registered by `registerDependencies`
@@ -43,7 +48,7 @@ abstract class Environment {
   /// It doesn't matter the order you register your dependencies, as long you do inside the `registerDependencies` method.
   @protected
   void registerDependency<TService>(TService Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) constructor) {
-    if (Isolate.current.debugName == "main") {
+    if (allowRunInMainIsolate == false && Isolate.current.debugName == "main") {
       throw IsolateSpawnException("Environments cannot be executed on the main thread (i.e.: never call an Environment directly from Flutter code)");
     }
 

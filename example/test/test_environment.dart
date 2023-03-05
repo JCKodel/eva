@@ -1,19 +1,22 @@
 import 'package:eva/eva.dart';
 import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 
 import 'package:eva_to_do_example/app/contracts/i_app_settings_repository.dart';
 import 'package:eva_to_do_example/app/contracts/i_to_do_repository.dart';
 import 'package:eva_to_do_example/app/environments/base_environment.dart';
-import 'package:eva_to_do_example/app/repositories/in_memory_app_settings_repository.dart';
-import 'package:eva_to_do_example/app/repositories/in_memory_to_do_repository.dart';
 
+@GenerateNiceMocks([MockSpec<IAppSettingsRepository>(), MockSpec<IToDoRepository>()])
 import "test_environment.mocks.dart";
 
 @immutable
 class TestEnvironment extends BaseEnvironment {
   const TestEnvironment();
+
+  /// You MUST override this to `true` to be able to test
+  /// your domain in your unit test isolate (main)
+  @override
+  bool get allowRunInMainIsolate => true;
 
   @override
   LogLevel get minLogLevel => LogLevel.verbose;
@@ -23,11 +26,11 @@ class TestEnvironment extends BaseEnvironment {
     super.registerDependencies();
 
     registerDependency<IAppSettingsRepository>(
-      (required, platform) => const InMemoryAppSettingsRepository(),
+      (required, platform) => MockIAppSettingsRepository(),
     );
 
     registerDependency<IToDoRepository>(
-      (required, platform) => const InMemoryToDoRepository(),
+      (required, platform) => MockIToDoRepository(),
     );
   }
 
