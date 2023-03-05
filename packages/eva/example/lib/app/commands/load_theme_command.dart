@@ -8,6 +8,8 @@ import '../entities/to_do_theme_entity.dart';
 /// This command will be dispatched whenever we need to load the current
 /// app theme (this will be dispatched by a `CommandEventBuilder<LoadThemeCommand, ToDoThemeEntity>`
 /// widget that wraps the whole app)
+///
+/// Commands are instantiated when needed, so they are stateless
 @immutable
 class LoadThemeCommand extends Command {
   const LoadThemeCommand();

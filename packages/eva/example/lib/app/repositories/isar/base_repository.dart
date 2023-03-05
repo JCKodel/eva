@@ -10,6 +10,13 @@ import 'data/to_do.dart';
 ///
 /// This base shared repository does actions that are common amongst all repositories
 /// used in this project, so, DRY (Don't Repeat Yourself)!
+///
+/// In this example, all repositories are const (stateless), but you can
+/// make them stateful, if you wish (just keep in mind that those classes
+/// are singleton, i.e.: they are instantiated only once)
+///
+/// A usefull stateful information in a repository is some API key or OAuth token
+/// that is used throughout the app life-cycle.
 @immutable
 abstract class BaseRepository implements IRepository {
   @override

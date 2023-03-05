@@ -17,6 +17,11 @@ import '../entities/list_to_dos_filter.dart';
 /// Since this domain will handle Settings related actions, it requires an
 /// `IAppSettingsRepository` which is kindly provided by our environment in the
 /// previous steps.
+///
+/// In this example, all domains are const (stateless), but this is not a rule.
+///
+/// Since domains are singletons (i.e.: you are always working in the same instance,
+/// you can save a state (for example, some API key or some global wide-app state)
 @immutable
 class SettingsDomain implements IDomain {
   // You don't really need to, but since the `IAppSettingsRepository` is only used

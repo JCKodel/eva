@@ -7,6 +7,10 @@ import '../domain/to_do_domain.dart';
 /// This is a base class for all our environments because Domain classes
 /// usually are always concrete, so you don't really need to segregate
 /// then using interfaces (you could if you wanted to).
+///
+/// In this example, all environments are const (stateless), but you can
+/// make them stateful, if you wish (just keep in mind that those classes
+/// are singleton, i.e.: they are instantiated only once)
 @immutable
 abstract class BaseEnvironment extends Environment {
   const BaseEnvironment();
