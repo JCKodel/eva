@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:eva/eva.dart';
+import 'package:flutter/material.dart';
 
 import '../../commands/load_to_do_filter_setting_command.dart';
 import '../../commands/load_to_dos_command.dart';
@@ -13,7 +12,7 @@ import '../to_dos/edit_to_do.dart';
 import '../to_dos/to_dos_list.dart';
 
 /// STEP#11
-/// This is the home (and only) page of the app
+/// This is the home page of the app
 class HomePage extends StatelessWidget {
   /// Since we listen for events, all widgets can be stateless
   const HomePage({super.key});

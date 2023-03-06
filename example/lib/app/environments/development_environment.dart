@@ -5,6 +5,8 @@ import '../contracts/i_to_do_repository.dart';
 import '../repositories/isar/isar_app_settings_repository.dart';
 import '../repositories/isar/isar_to_do_repository.dart';
 
+/// This is a base class (it's YOUR code) to register dependencies
+/// that are shared among all environments, just for the sake of DRY
 import 'base_environment.dart';
 
 /// This is the environment used for development, using a real database
