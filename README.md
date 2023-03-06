@@ -2,6 +2,8 @@
 
 # EVent-drive Architecture for SOLID Flutter applications
 
+> Until I have some time to write a decent documentation, please, check the [example project](https://github.com/JCKodel/eva/tree/main/example). It is fully commented, with numbered steps and it is a complete to-do application with a real data-base and unit tests. I would love to have some help in this regard =)
+
 ## Features
 
 * Automatic multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate.
@@ -29,6 +31,8 @@
 * Event-driven: the UI emits `Command`, which is handled by your code (whenever a TCommand is dispatched, what you wanna do?), call your domain and dispatch events to be listened to by the Flutter UI.
 
 ## Clean Architecture
+
+(the following chart is available only on GitHub, as pub.dev doesn't support [mermaid.js](https://mermaid.js.org/) markdown yet)
 
 ```mermaid
 sequenceDiagram
