@@ -2,7 +2,6 @@
 
 # EVent-drive Architecture for SOLID Flutter applications
 
-
 ## Features
 
 * Automatic multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate.
@@ -68,7 +67,7 @@ sequenceDiagram
 │  │  └─ 📄 production_environment.dart
 │  ├─ 📁 presentation
 │  │  ├─ 📁 pages
-│  │  │   └─ 📄 home_page_widget.dart
+│  │  │  └─ 📄 home_page_widget.dart
 │  │  └─ 📄 your_app.dart
 │  ├─ 📁 repositories
 │  │  ├─ 📁 data
