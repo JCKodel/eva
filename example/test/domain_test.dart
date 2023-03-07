@@ -2,8 +2,6 @@ import 'package:eva/eva.dart';
 import 'package:eva_to_do_example/app/contracts/i_app_settings_repository.dart';
 import 'package:eva_to_do_example/app/domain/settings_domain.dart';
 import 'package:eva_to_do_example/app/entities/list_to_dos_filter.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

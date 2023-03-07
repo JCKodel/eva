@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:eva/eva.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 
 import '../../commands/load_to_dos_command.dart';
 import '../../commands/update_editing_to_do_command.dart';

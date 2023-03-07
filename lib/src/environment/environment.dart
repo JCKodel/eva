@@ -2,9 +2,6 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
-
 import '../../eva.dart';
 
 /// An environment is a class that configures all your dependencies and injections

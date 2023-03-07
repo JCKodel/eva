@@ -1,5 +1,3 @@
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
-
 import '../../eva.dart';
 
 /// This is the base class for all Commands.

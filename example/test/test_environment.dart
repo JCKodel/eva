@@ -1,5 +1,4 @@
 import 'package:eva/eva.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:mockito/annotations.dart';
 
 import 'package:eva_to_do_example/app/contracts/i_app_settings_repository.dart';

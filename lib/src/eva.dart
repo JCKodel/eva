@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
-import 'package:kfx_dependency_injection/kfx_dependency_injection/platform_info.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
