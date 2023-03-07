@@ -2,6 +2,7 @@
 
 library eva;
 
+export 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 export 'package:meta/meta.dart';
 
 export 'src/commands/command.dart';
