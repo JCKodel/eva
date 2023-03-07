@@ -15,3 +15,7 @@
 ## 1.0.0+3
 
 * Fixed dependencies and some typos on documentation
+
+## 1.0.0+4
+
+* Removed unused dependencies
