@@ -42,10 +42,10 @@ packages:
     dependency: "direct main"
     description:
       name: kfx_dependency_injection
-      sha256: "4a7161728d510c1f491814b0501524b29ab29773e115e7271227d88cdb504e17"
+      sha256: ab66f7ec8956d751f2d321221cff7711f1b22156f7d1f011a2ff45ccf03cc730
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.1"
+    version: "1.5.1+1"
   lints:
     dependency: transitive
     description:

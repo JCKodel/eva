@@ -11,3 +11,7 @@
 ## 1.0.0+2
 
 * The example to-do application is now explained step-by-step in the README.md. Documentation by example.
+
+## 1.0.0+3
+
+* Fixed dependencies and some typos on documentation

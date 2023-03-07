@@ -1,16 +1,16 @@
 name: eva
 description: Event Architecture - A multithread event driven clean architecture framework
-version: 1.0.0+2
+version: 1.0.0+3
 homepage: https://github.com/JCKodel/eva
 
 environment:
-  sdk: '>=2.19.3 <3.0.0'
+  sdk: ">=2.19.3 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  kfx_dependency_injection: ^1.5.1
+  kfx_dependency_injection: ^1.5.1+1
   meta: ^1.8.0
   rxdart: ^0.27.7
 
