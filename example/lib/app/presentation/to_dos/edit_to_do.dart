@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:eva/eva.dart';
+import 'package:flutter/material.dart';
 
 import '../../commands/load_to_dos_command.dart';
 import '../../commands/update_editing_to_do_command.dart';
@@ -179,7 +178,7 @@ class EditToDo extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Discard"),
+            child: const Text("Delete"),
           ),
         ],
       ),

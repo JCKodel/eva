@@ -37,7 +37,6 @@ class _FakeResponse_0<T> extends _i1.SmartFake implements _i2.Response<T> {
 /// A class which mocks [IAppSettingsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-// ignore: must_be_immutable
 class MockIAppSettingsRepository extends _i1.Mock
     implements _i3.IAppSettingsRepository {
   @override
@@ -99,21 +98,11 @@ class MockIAppSettingsRepository extends _i1.Mock
           ),
         )),
       ) as _i4.Future<_i2.Response<String>>);
-  @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
-        Invocation.method(
-          #initialize,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
 }
 
 /// A class which mocks [IToDoRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-// ignore: must_be_immutable
 class MockIToDoRepository extends _i1.Mock implements _i5.IToDoRepository {
   @override
   _i4.Future<_i2.Response<Iterable<_i6.ToDoEntity>>> listToDos(
@@ -214,13 +203,4 @@ class MockIToDoRepository extends _i1.Mock implements _i5.IToDoRepository {
           ),
         )),
       ) as _i4.Future<_i2.Response<bool>>);
-  @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
-        Invocation.method(
-          #initialize,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
 }

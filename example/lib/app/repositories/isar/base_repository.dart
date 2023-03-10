@@ -16,10 +16,8 @@ import 'data/to_do.dart';
 ///
 /// A usefull stateful information in a repository is some API key or OAuth token
 /// that is used throughout the app life-cycle.
-@immutable
 abstract class BaseRepository implements IRepository {
-  @override
-  Future<void> initialize() async {
+  Future<Isar> get dbInstance async {
     if (Isar.getInstance() == null) {
       await Isar.open(
         [AppSettingSchema, ToDoSchema],
@@ -27,5 +25,7 @@ abstract class BaseRepository implements IRepository {
         compactOnLaunch: const CompactCondition(minFileSize: 1024 * 1024),
       );
     }
+
+    return Isar.getInstance()!;
   }
 }

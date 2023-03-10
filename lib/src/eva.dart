@@ -25,8 +25,10 @@ abstract class Eva {
 
   static final ReceivePort _domainReceivePort = ReceivePort("domain");
   static final ReceivePort _errorPort = ReceivePort("error");
-  static late final SendPort _domainSendPort;
   static final _useEnvironmentCompleter = Completer<void>();
+  static late final SendPort _domainSendPort;
+  static late final bool _useMultithreading;
+  static bool get useMultithreading => _useMultithreading;
 
   static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
 
@@ -34,33 +36,39 @@ abstract class Eva {
   ///
   /// It will spawn the domain isolate, then run the `Environment.registerDependencies` in that
   /// isolate, then run `Environment.initialize` on the domain isolate.
-  static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory) async {
+  static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory, {required bool useMultithreading}) async {
+    _useMultithreading = useMultithreading;
+
     final environment = environmentFactory();
 
-    if (environment.allowRunInMainIsolate == false && Isolate.current.debugName != "main") {
+    if (_useMultithreading && environment.allowRunInMainIsolate == false && Isolate.current.debugName != "main") {
       throw IsolateSpawnException("This method can only be called in the main thread");
     }
 
     Log.minLogLevel = environment.minLogLevel;
     Log.info(() => "Initializing Eva with `${T}`");
 
-    _errorPort.listen((error) {
-      Log.error(() => "Received error from domain thread: ${error}");
-      throw error as Object;
-    });
+    if (_useMultithreading) {
+      _errorPort.listen((error) {
+        Log.error(() => "Received error from domain thread: ${error}");
+        throw error as Object;
+      });
 
-    _domainReceivePort.listen(_onMessageReceived);
+      _domainReceivePort.listen(_onMessageReceived);
 
-    _isolate = await Isolate.spawn<List<dynamic>>(
-      DomainIsolateController._isolateEntryPoint,
-      [_domainReceivePort.sendPort, environmentFactory, RootIsolateToken.instance!],
-      paused: false,
-      debugName: "domain",
-      errorsAreFatal: false,
-      onError: _errorPort.sendPort,
-    );
+      _isolate = await Isolate.spawn<List<dynamic>>(
+        DomainIsolateController._isolateEntryPoint,
+        [_domainReceivePort.sendPort, environmentFactory, RootIsolateToken.instance!],
+        paused: false,
+        debugName: "domain",
+        errorsAreFatal: false,
+        onError: _errorPort.sendPort,
+      );
 
-    await _useEnvironmentCompleter.future;
+      await _useEnvironmentCompleter.future;
+    } else {
+      DomainIsolateController._initialize(environment);
+    }
   }
 
   static void _onMessageReceived(dynamic message) {
@@ -100,9 +108,12 @@ abstract class Eva {
   /// This will kill the isolate and close the
   /// event stream immediately
   static void disposeEnvironment() {
-    _domainReceivePort.close();
-    _errorPort.close();
-    _isolate.kill(priority: Isolate.immediate);
+    if (_useMultithreading) {
+      _domainReceivePort.close();
+      _errorPort.close();
+      _isolate.kill(priority: Isolate.immediate);
+    }
+
     _eventBehaviorSubject.close();
     Log.warn(() => "Environment has being disposed");
   }
@@ -113,7 +124,11 @@ abstract class Eva {
     Log.debug(() => "Main is emitting `${command.runtimeType}`");
     Log.verbose(() => command.toString());
 
-    _domainSendPort.send(command);
+    if (_useMultithreading) {
+      _domainSendPort.send(command);
+    } else {
+      DomainIsolateController._onMessageReceived(command);
+    }
   }
 
   static final _executeOnDomainHandlers = <String, void Function(_ExecuteOnDomainResponseMessage response)>{};
@@ -122,8 +137,15 @@ abstract class Eva {
   ///
   /// The `TOutput` output will be then returned whenever that handler terminates. This `Future<TOutput>` will be
   /// completed with the exception thrown by the `staticHandler`, if any
-  static Future<TOutput> executeOnDomain<TInput, TOutput>(Future<TOutput> Function(RequiredFactory required, PlatformInfo platform, TInput input) staticHandler,
-      [TInput? input]) async {
+  static Future<TOutput> executeOnDomain<TInput, TOutput>(
+    Future<TOutput> Function(RequiredFactory required, PlatformInfo platform, TInput input) staticHandler, [
+    TInput? input,
+  ]) async {
+    if (_useMultithreading == false) {
+      // ignore: invalid_use_of_protected_member
+      return staticHandler(ServiceProvider.required, PlatformInfo.platformInfo, input as TInput);
+    }
+
     final completer = Completer<TOutput>();
     final responseKey = "${staticHandler}:${staticHandler.hashCode}:${input}:${input == null ? 0 : input.hashCode}";
 
@@ -201,6 +223,17 @@ abstract class DomainIsolateController {
     dispatchEvent(const Event.success(EvaReadyEvent()));
   }
 
+  static void _initialize(Environment environment) async {
+    _environment = environment;
+    Log.minLogLevel = _environment.minLogLevel;
+    _environment.registerDependencies();
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    // ignore: invalid_use_of_protected_member
+    await _environment.initialize(ServiceProvider.required, PlatformInfo.platformInfo);
+    Log.info(() => "Domain started without multithreading support");
+    dispatchEvent(const Event.success(EvaReadyEvent()));
+  }
+
   static void _onMessageReceived(dynamic message) {
     if (message is Command) {
       // ignore: invalid_use_of_protected_member
@@ -231,7 +264,11 @@ abstract class DomainIsolateController {
     Log.debug(() => "Domain is emitting `${eventState.runtimeType}`");
     Log.verbose(() => eventState.toString());
 
-    _sendToMainPort.send(eventState);
+    if (Eva.useMultithreading) {
+      _sendToMainPort.send(eventState);
+    } else {
+      Eva._onMessageReceived(eventState);
+    }
   }
 }
 

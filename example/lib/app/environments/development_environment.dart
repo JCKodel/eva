@@ -79,10 +79,5 @@ class DevelopmentEnvironment extends BaseEnvironment {
   /// Of course, this initialization isn't required, so you just can
   /// ignore it if you don't have any initialization.
   @override
-  Future<void> initialize(required, platform) async {
-    await Future.wait([
-      required<IAppSettingsRepository>().initialize(),
-      required<IToDoRepository>().initialize(),
-    ]);
-  }
+  Future<void> initialize(required, platform) async {}
 }

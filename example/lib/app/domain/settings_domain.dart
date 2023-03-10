@@ -39,14 +39,6 @@ class SettingsDomain implements IDomain {
   static const String kDarkThemeSettingValue = "D";
   static const String kLightThemeSettingValue = "L";
 
-  /// Every domain is initializable, but we don't have anything here to
-  /// initialize, so, we just ignore it.
-  ///
-  /// This method runs once and only once when the dependency injection
-  /// is creating the singleton instance of this class.
-  @override
-  void initialize() {}
-
   // Best practice: don't repeat strings (if you need to change this key name,
   // you should do the change in only one place)
   static const kBrightnessKey = "themeBrightness";

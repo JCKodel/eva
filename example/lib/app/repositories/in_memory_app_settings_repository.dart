@@ -11,9 +11,6 @@ class InMemoryAppSettingsRepository implements IAppSettingsRepository {
   static final _settings = <String, String>{};
 
   @override
-  Future<void> initialize() async {}
-
-  @override
   Future<Response<String>> get(String key) async {
     return Response.success(_settings[key]);
   }

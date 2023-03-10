@@ -21,9 +21,6 @@ class InMemoryToDoRepository implements IToDoRepository {
   };
 
   @override
-  Future<void> initialize() async {}
-
-  @override
   Future<Response<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     switch (filter) {
       case ListToDosFilter.all:

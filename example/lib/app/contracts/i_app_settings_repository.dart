@@ -25,7 +25,6 @@ import 'package:eva/eva.dart';
 /// a null String, we just return a `Response<String>.empty()`.
 ///
 /// Check the `Response` class for more information.
-@immutable
 abstract class IAppSettingsRepository implements IRepository {
   /// Saves the `value` in the `key` app setting.
   Future<Response<String>> set(String key, String value);

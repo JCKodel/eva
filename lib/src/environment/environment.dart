@@ -45,7 +45,7 @@ abstract class Environment {
   /// It doesn't matter the order you register your dependencies, as long you do inside the `registerDependencies` method.
   @protected
   void registerDependency<TService>(TService Function(TConcrete Function<TConcrete>() required, PlatformInfo platform) constructor) {
-    if (allowRunInMainIsolate == false && Isolate.current.debugName == "main") {
+    if (Eva.useMultithreading && allowRunInMainIsolate == false && Isolate.current.debugName == "main") {
       throw IsolateSpawnException("Environments cannot be executed on the main thread (i.e.: never call an Environment directly from Flutter code)");
     }
 

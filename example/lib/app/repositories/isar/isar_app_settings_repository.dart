@@ -2,7 +2,6 @@ import 'package:eva/eva.dart';
 import 'package:isar/isar.dart';
 
 import '../../contracts/i_app_settings_repository.dart';
-
 import 'base_repository.dart';
 import 'data/app_setting.dart';
 
@@ -24,7 +23,7 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
       return Response.success(cachedValue);
     }
 
-    final db = Isar.getInstance()!;
+    final db = await dbInstance;
     final appSetting = await db.txn(() => db.appSettings.filter().keyEqualTo(key).build().findFirst());
 
     if (appSetting == null) {
@@ -38,7 +37,7 @@ class IsarAppSettingsRepository extends BaseRepository implements IAppSettingsRe
   Future<Response<String>> set(String key, String value) async {
     _cache[key] = value;
 
-    final db = Isar.getInstance()!;
+    final db = await dbInstance;
 
     await db.writeTxn(() async {
       var appSetting = await db.appSettings.filter().keyEqualTo(key).build().findFirst();

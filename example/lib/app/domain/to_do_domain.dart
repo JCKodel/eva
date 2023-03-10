@@ -15,9 +15,6 @@ class ToDoDomain implements IDomain {
   final IToDoRepository _toDoRepository;
   final SettingsDomain _settingsDomain;
 
-  @override
-  void initialize() {}
-
   /// Returns a list of all to-dos, based on the saved filter.
   Future<Response<Iterable<ToDoEntity>>> listToDos() async {
     // Notice that we are asking the filter to the SettingsDomain, because

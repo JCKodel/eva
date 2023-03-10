@@ -10,11 +10,11 @@
 
 ## 1.0.0+2
 
-* The example to-do application is now explained step-by-step in the README.md. Documentation by example.
+* The example to-do application is now explained step-by-step in README.md. Documentation by example.
 
 ## 1.0.0+3
 
-* Fixed dependencies and some typos on documentation
+* Fixed dependencies and some typos in the documentation
 
 ## 1.0.0+4
 
@@ -35,3 +35,9 @@
 ## 1.0.3
 
 * Changing the `DomainIsolateController.dispatchEvent` to be non-protected, so repositories can dispatch events without a related command
+
+## 1.1.0
+
+* Due to incompatibilities with Firebase, now it is possible to completely turn off multithreading (maybe in the future Flutter will allow 2-way binary communication between platform and isolates)
+* Now both `IDomain` and `IRepository` are not immutable by default (because those places are perfect to store mutable states in your app)
+* Both `IDomain` and `IRepository` no longer implement `IInitializable`, so they will NOT run `void initialize()` during their first use

@@ -4,7 +4,6 @@ import 'package:isar/isar.dart';
 import '../../contracts/i_to_do_repository.dart';
 import '../../entities/list_to_dos_filter.dart';
 import '../../entities/to_do_entity.dart';
-
 import 'base_repository.dart';
 import 'data/to_do.dart';
 
@@ -18,7 +17,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
   Future<Response<Iterable<ToDoEntity>>> listToDos(ListToDosFilter filter) async {
     // No cache here =(
 
-    final db = Isar.getInstance()!;
+    final db = await dbInstance;
 
     return db.txn(() async {
       late final List<ToDo> toDos;
@@ -53,7 +52,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
       return Response.success(cachedValue);
     }
 
-    final db = Isar.getInstance()!;
+    final db = await dbInstance;
 
     return db.txn(() async {
       final toDo = await db.toDos.get(id);
@@ -94,7 +93,7 @@ class IsarToDoRepository extends BaseRepository implements IToDoRepository {
 
   @override
   Future<Response<bool>> deleteToDoById(int toDoId) async {
-    final db = Isar.getInstance()!;
+    final db = await dbInstance;
     final deleted = await db.writeTxn(() => db.toDos.delete(toDoId));
 
     _cache.remove(toDoId);
