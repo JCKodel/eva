@@ -19,3 +19,7 @@
 ## 1.0.0+4
 
 * Removed unused dependencies
+
+## 1.0.0+5
+
+* Update architecture graphic
