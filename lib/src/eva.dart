@@ -67,7 +67,7 @@ abstract class Eva {
 
       await _useEnvironmentCompleter.future;
     } else {
-      DomainIsolateController._initialize(environment);
+      await DomainIsolateController._initialize(environment);
     }
   }
 
@@ -223,7 +223,7 @@ abstract class DomainIsolateController {
     dispatchEvent(const Event.success(EvaReadyEvent()));
   }
 
-  static void _initialize(Environment environment) async {
+  static Future<void> _initialize(Environment environment) async {
     _environment = environment;
     Log.minLogLevel = _environment.minLogLevel;
     _environment.registerDependencies();
