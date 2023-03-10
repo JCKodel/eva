@@ -28,7 +28,6 @@ abstract class Eva {
   static final _useEnvironmentCompleter = Completer<void>();
   static late final SendPort _domainSendPort;
   static late final bool _useMultithreading;
-  static bool get useMultithreading => _useMultithreading;
 
   static final BehaviorSubject<IEvent> _eventBehaviorSubject = BehaviorSubject<IEvent>();
 
@@ -67,7 +66,7 @@ abstract class Eva {
 
       await _useEnvironmentCompleter.future;
     } else {
-      await DomainIsolateController._initialize(environment);
+      await DomainIsolateController._initialize(environment, _useMultithreading);
     }
   }
 
@@ -203,8 +202,11 @@ abstract class DomainIsolateController {
   static final _listenerFromMainPort = ReceivePort();
   static late SendPort _sendToMainPort;
   static late Environment _environment;
+  static late bool _useMultithreading;
+  static bool get useMultithreading => _useMultithreading;
 
   static Future<void> _isolateEntryPoint(List<dynamic> args) async {
+    _useMultithreading = true;
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
 
@@ -223,7 +225,8 @@ abstract class DomainIsolateController {
     dispatchEvent(const Event.success(EvaReadyEvent()));
   }
 
-  static Future<void> _initialize(Environment environment) async {
+  static Future<void> _initialize(Environment environment, bool useMultithreading) async {
+    _useMultithreading = useMultithreading;
     _environment = environment;
     Log.minLogLevel = _environment.minLogLevel;
     _environment.registerDependencies();
@@ -264,7 +267,7 @@ abstract class DomainIsolateController {
     Log.debug(() => "Domain is emitting `${eventState.runtimeType}`");
     Log.verbose(() => eventState.toString());
 
-    if (Eva.useMultithreading) {
+    if (_useMultithreading) {
       _sendToMainPort.send(eventState);
     } else {
       Eva._onMessageReceived(eventState);

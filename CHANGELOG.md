@@ -45,3 +45,7 @@
 ## 1.1.0+1
 
 * Documentation updates on optional multithreading
+
+## 1.1.0+2
+
+* Minor fix in multithreading
