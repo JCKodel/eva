@@ -30,25 +30,7 @@
 
 ## Clean Architecture
 
-(the following chart is available only on GitHub, as pub.dev doesn't support [mermaid.js](https://mermaid.js.org/) markdown yet)
-
-```mermaid
-sequenceDiagram
-    Flutter->>Command: Hey, execute this LoadSomething
-    Note over Flutter,Command: Isolate communication<br/>through events or direct<br/>calls using top-level functions
-    activate Command
-    Command-->>Flutter: First, show some progress indicator
-    activate Domain
-    Command->>Domain: Do your magic
-    activate Repository
-    Domain->>Repository: I need some data
-    Repository->>Domain: Here it goes
-    deactivate Repository
-    Domain->>Command: Work is done, forward the result
-    deactivate Domain
-    Command-->>Flutter: Rebuild the UI to show the result
-    deactivate Command
-```
+![image](https://user-images.githubusercontent.com/379339/224379125-515cd5f7-dafc-4b5c-b045-c96e693def4a.png)
 
 ## Suggested project organization
 
