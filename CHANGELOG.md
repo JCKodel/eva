@@ -27,3 +27,7 @@
 ## 1.0.1
 
 * Changed the internal class `Domain` to `DomainIsolateController` to avoid confusion about what a domain class must extend (which is nothing, it must IMPLEMENT IDomain)
+
+## 1.0.2
+
+* Handling and executing `BackgroundIsolateBinaryMessenger.ensureInitialized()` automatically in the background isolate

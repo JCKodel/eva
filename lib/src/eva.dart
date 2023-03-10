@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:flutter/services.dart';
+
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,7 +53,7 @@ abstract class Eva {
 
     _isolate = await Isolate.spawn<List<dynamic>>(
       DomainIsolateController._isolateEntryPoint,
-      [_domainReceivePort.sendPort, environmentFactory],
+      [_domainReceivePort.sendPort, environmentFactory, RootIsolateToken.instance!],
       paused: false,
       debugName: "domain",
       errorsAreFatal: false,
@@ -183,6 +185,11 @@ abstract class DomainIsolateController {
   static Future<void> _isolateEntryPoint(List<dynamic> args) async {
     _sendToMainPort = args[0] as SendPort;
     _environment = (args[1] as Environment Function())();
+
+    final rootIsolationToken = args[2] as RootIsolateToken;
+
+    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolationToken);
+
     Log.minLogLevel = _environment.minLogLevel;
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
