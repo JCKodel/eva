@@ -23,3 +23,7 @@
 ## 1.0.0+5
 
 * Update architecture graphic
+
+## 1.0.1
+
+* Changed the internal class `Domain` to `DomainIsolateController` to avoid confusion about what a domain class must extend (which is nothing, it must IMPLEMENT IDomain)

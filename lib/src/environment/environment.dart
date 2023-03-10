@@ -79,7 +79,7 @@ abstract class Environment {
         Log.debug(() => "Event `${event.runtimeType}` emitted `${event.runtimeType}`");
 
         // ignore: invalid_use_of_protected_member
-        Domain.dispatchEvent(event);
+        DomainIsolateController.dispatchEvent(event);
       });
     } catch (ex) {
       late String exceptionMessage;
@@ -98,7 +98,7 @@ abstract class Environment {
       }
 
       // ignore: invalid_use_of_protected_member
-      Domain.dispatchEvent(Event<UnexpectedExceptionEvent>.failure(ex));
+      DomainIsolateController.dispatchEvent(Event<UnexpectedExceptionEvent>.failure(ex));
     }
   }
 }

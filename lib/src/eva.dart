@@ -50,7 +50,7 @@ abstract class Eva {
     _domainReceivePort.listen(_onMessageReceived);
 
     _isolate = await Isolate.spawn<List<dynamic>>(
-      Domain._isolateEntryPoint,
+      DomainIsolateController._isolateEntryPoint,
       [_domainReceivePort.sendPort, environmentFactory],
       paused: false,
       debugName: "domain",
@@ -175,7 +175,7 @@ abstract class Eva {
 }
 
 // This is the domain isolate controller
-abstract class Domain {
+abstract class DomainIsolateController {
   static final _listenerFromMainPort = ReceivePort();
   static late SendPort _sendToMainPort;
   static late Environment _environment;
