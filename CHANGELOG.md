@@ -41,3 +41,7 @@
 * Due to incompatibilities with Firebase, now it is possible to completely turn off multithreading (maybe in the future Flutter will allow 2-way binary communication between platform and isolates)
 * Now both `IDomain` and `IRepository` are not immutable by default (because those places are perfect to store mutable states in your app)
 * Both `IDomain` and `IRepository` no longer implement `IInitializable`, so they will NOT run `void initialize()` during their first use
+
+## 1.1.0+1
+
+* Documentation updates on optional multithreading

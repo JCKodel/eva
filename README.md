@@ -4,7 +4,7 @@
 
 ## Features
 
-* Automatic multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate.
+* Automatic optional multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate. Works fine with local databases such as Isar, but it fails with platform packages that requires 2-way binary communication (such as Firebase Auth): see [https://github.com/flutter/flutter/issues/119207](https://github.com/flutter/flutter/issues/119207) for details
 
 * Separation of concerns - Clear separation between UI orchestration (which UI event triggers a domain response), unit testable business logic in domain classes that uses data-driven repositories (local databases, APIs, etc.)
 
@@ -12,7 +12,7 @@
 
 * Built-in environments - All dependency injection configuration resides in environment classes, so you can have `DevelopmentEnvironment` with one setting and `ProductionEnvironment` with other settings. You can have as many environments as you want.
 
-* No code-generation required - Eva runs with one single line of code: `Eva.useEnvironment(() => const YourEnvironmentClass())`
+* No code-generation required - Eva runs with one single line of code: `Eva.useEnvironment(() => const YourEnvironmentClass(), useMultithreading: true/false)`
 
 * No boiler-plate - Aside from dependency injection, there is no framework-related code (aka boiler-plate)
 
@@ -81,7 +81,14 @@ Future<void> main() async {
   //
   // You can have as many environments as you want, such as test,
   // development, homologation, production, beta, etc.
-  await Eva.useEnvironment(() => kDebugMode ? const DevelopmentEnvironment() : const ProductionEnvironment());
+  await Eva.useEnvironment(
+    () => kDebugMode ? const DevelopmentEnvironment() : const ProductionEnvironment(),
+    // Some features won't work with Dart isolates (for instance: Firebase Auth)
+    // If you run into error messages about binary messages not supported in isolates,
+    // set this value to false (at least until the Dart team fully support 2-way platform
+    // communication between Flutter and isolates)
+    useMultithreading: true,
+  );
 
   // That's it. Eva requires only the one line of code above.
   runApp(const ToDoApp());

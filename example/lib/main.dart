@@ -1,6 +1,7 @@
-import 'package:eva/eva.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eva/eva.dart';
 
 import 'app/environments/development_environment.dart';
 import 'app/environments/production_environment.dart';
@@ -22,7 +23,10 @@ Future<void> main() async {
   // development, homologation, production, beta, etc.
   await Eva.useEnvironment(
     () => kDebugMode ? const DevelopmentEnvironment() : const ProductionEnvironment(),
-    useMultithreading: false,
+    // Since this sample only uses Isar, using multithreading is safe
+    // (some are not, such as FirebaseAuth, which will throw an exception
+    // if you try to use it on isolates)
+    useMultithreading: true,
   );
 
   // That's it. Eva requires only the one line of code above.
