@@ -1,6 +1,6 @@
 name: eva
 description: Event Architecture - A multithread event driven clean architecture framework
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/JCKodel/eva
 
 environment:

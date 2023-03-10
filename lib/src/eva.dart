@@ -227,7 +227,6 @@ abstract class DomainIsolateController {
     throw UnsupportedError("${message} is not supported on Domain.onMessageReceived");
   }
 
-  @protected
   static void dispatchEvent(IEvent eventState) {
     Log.debug(() => "Domain is emitting `${eventState.runtimeType}`");
     Log.verbose(() => eventState.toString());

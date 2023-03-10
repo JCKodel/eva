@@ -31,3 +31,7 @@
 ## 1.0.2
 
 * Handling and executing `BackgroundIsolateBinaryMessenger.ensureInitialized()` automatically in the background isolate
+
+## 1.0.3
+
+* Changing the `DomainIsolateController.dispatchEvent` to be non-protected, so repositories can dispatch events without a related command
