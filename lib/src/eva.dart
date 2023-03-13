@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:kfx_dependency_injection/kfx_dependency_injection.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'commands/command.dart';
@@ -36,7 +36,7 @@ abstract class Eva {
   /// It will spawn the domain isolate, then run the `Environment.registerDependencies` in that
   /// isolate, then run `Environment.initialize` on the domain isolate.
   static Future<void> useEnvironment<T extends Environment>(T Function() environmentFactory, {required bool useMultithreading}) async {
-    _useMultithreading = useMultithreading;
+    _useMultithreading = DomainIsolateController._useMultithreading = useMultithreading;
 
     final environment = environmentFactory();
 
@@ -66,7 +66,7 @@ abstract class Eva {
 
       await _useEnvironmentCompleter.future;
     } else {
-      await DomainIsolateController._initialize(environment, _useMultithreading);
+      await DomainIsolateController._initialize(environment);
     }
   }
 
@@ -120,14 +120,16 @@ abstract class Eva {
   /// Sends the `command` to the domain isolate, where the
   /// `Command.handle` method will run
   static void dispatchCommand(Command command) {
-    Log.debug(() => "Main is emitting `${command.runtimeType}`");
-    Log.verbose(() => command.toString());
+    _useEnvironmentCompleter.future.then((_) {
+      Log.debug(() => "Main is emitting `${command.runtimeType}`");
+      Log.verbose(() => command.toString());
 
-    if (_useMultithreading) {
-      _domainSendPort.send(command);
-    } else {
-      DomainIsolateController._onMessageReceived(command);
-    }
+      if (_useMultithreading) {
+        _domainSendPort.send(command);
+      } else {
+        DomainIsolateController._onMessageReceived(command);
+      }
+    });
   }
 
   static final _executeOnDomainHandlers = <String, void Function(_ExecuteOnDomainResponseMessage response)>{};
@@ -217,17 +219,18 @@ abstract class DomainIsolateController {
     Log.minLogLevel = _environment.minLogLevel;
     _sendToMainPort.send(_listenerFromMainPort.sendPort);
     _environment.registerDependencies();
+    Log.info(() => "Domain started as an isolated thread");
+    _listenerFromMainPort.listen(_onMessageReceived);
     await Future<void>.delayed(const Duration(milliseconds: 10));
     // ignore: invalid_use_of_protected_member
     await _environment.initialize(ServiceProvider.required, PlatformInfo.platformInfo);
-    Log.info(() => "Domain started as an isolated thread");
-    _listenerFromMainPort.listen(_onMessageReceived);
     dispatchEvent(const Event.success(EvaReadyEvent()));
   }
 
-  static Future<void> _initialize(Environment environment, bool useMultithreading) async {
-    _useMultithreading = useMultithreading;
+  static Future<void> _initialize(Environment environment) async {
+    _useMultithreading = false;
     _environment = environment;
+    WidgetsFlutterBinding.ensureInitialized();
     Log.minLogLevel = _environment.minLogLevel;
     _environment.registerDependencies();
     await Future<void>.delayed(const Duration(milliseconds: 10));

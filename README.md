@@ -4,11 +4,11 @@
 
 ## Features
 
-* Automatic optional multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate. Works fine with local databases such as Isar, but it fails with platform packages that requires 2-way binary communication (such as Firebase Auth): see [https://github.com/flutter/flutter/issues/119207](https://github.com/flutter/flutter/issues/119207) for details
+* Automatic optional multithreading - Flutter runs on its isolate while the event orchestrator, your domain code and your repositories run on a separate isolate. Works fine with local databases such as Isar, but it fails with platform packages that require 2-way binary communication (such as Firebase Auth): see [https://github.com/flutter/flutter/issues/119207](https://github.com/flutter/flutter/issues/119207) for details
 
-* Separation of concerns - Clear separation between UI orchestration (which UI event triggers a domain response), unit testable business logic in domain classes that uses data-driven repositories (local databases, APIs, etc.)
+* Separation of concerns - Clear separation between UI orchestration (which UI event triggers a domain response), and unit-testable business logic in domain classes that uses data-driven repositories (local databases, APIs, etc.)
 
-* Built-in dependency injection system - All layers are configurated through simple dependency injection, so you can inject whatever you need in your constructors (for example: use a `SomeClass` whenever someone asks for a `IInterfaceOfSomeClass`)
+* Built-in dependency injection system - All layers are configurated through simple dependency injection, so you can inject whatever you need in your constructors (for example: use a `SomeClass` whenever someone asks for an `IInterfaceOfSomeClass`)
 
 * Built-in environments - All dependency injection configuration resides in environment classes, so you can have `DevelopmentEnvironment` with one setting and `ProductionEnvironment` with other settings. You can have as many environments as you want.
 
@@ -361,7 +361,7 @@ abstract class IAppSettingsRepository implements IRepository {
 
 ## [app/domain/to_do_domain.dart](https://github.com/JCKodel/eva/blob/199c24cd6ab9ebaf98285fd4470fd52a6df735ae/example/lib/app/domain/to_do_domain.dart)
 
-Uncle Bob, the creator of Clean Architecture, states that domains are classes and they have single responsibility. But, this is a suggestion, not a rule.
+Uncle Bob, the creator of Clean Architecture, states that domains are classes and they have a single responsibility. But, this is a suggestion, not a rule.
 
 In this example, I'm using the class to group features of my app (there are two of them: app settings and to-dos) and the methods are the use cases.
 
@@ -552,7 +552,7 @@ As Uncle Bob said, the domain is in the centre of your architecture, so it depen
 
 Since repositories MUST BE treated as plugins, you must provide to the domain only a contract, so it will know what kind of operations it is capable of and it can ask for the dependency injection system the current most suitable concrete repository implementation, given only its contract. (This is literally the meaning of Polymorphism and Encapsulation).
 
-In other languages, such as C#, you have a contract-only entity called interface. It contains only a description of the methods some class must have, but no code whatsoever. Then, you `implements` interfaces instead of extending classes with them.
+In other languages, such as C#, you have a contract-only entity called interface. It contains only a description of the methods some classes must have, but no code whatsoever. Then, you `implements` interfaces instead of extending classes with them.
 
 Dart doesn't have a keyword for interfaces, but you can still create them using only abstract methods (methods without body) and make sure your repositories `implements` them (instead of `extends` them). Dart abstract classes used as interfaces CANNOT have ANY code whatsoever, not constructors, not variables (final or otherwise), nothing except abstract methods (methods without `{}`):
 
@@ -669,7 +669,7 @@ class LoadThemeCommand extends Command {
 
 ## [app/repositories/isar/base_repository.dart](https://github.com/JCKodel/eva/blob/199c24cd6ab9ebaf98285fd4470fd52a6df735ae/example/lib/app/repositories/isar/base_repository.dart)
 
-It is always a good idea to not repeat code (DRY - Don't Repeat Yourself), so it is considered a good practice to use class inheritance to write common shared code and then specialize (inherit) some classes so they can deal with specific details. That's what abstract classes are about: a base class that will have some code that will work fine for all classes that inherits it (if not, you can always `@override` something).
+It is always a good idea to not repeat code (DRY - Don't Repeat Yourself), so it is considered a good practice to use class inheritance to write common shared code and then specialize (inherit) some classes so they can deal with specific details. That's what abstract classes are about: a base class that will have some code that will work fine for all classes that inherit it (if not, you can always `@override` something).
 
 In this case, since both our repositories require Isar database initialization, and that initialization is idempotent (doesn't matter if you call it 100x times, it will only initialize once), we can write this initialization code in a base class:
 

@@ -49,3 +49,7 @@
 ## 1.1.0+2
 
 * Minor fix in multithreading
+
+## 1.1.0+3
+
+* Minor fix when multithreading = false
