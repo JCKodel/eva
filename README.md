@@ -833,7 +833,7 @@ class HomePage extends StatelessWidget {
     // We dispatch a `LoadToDoFilterSettingCommand` to get the current filter state...
     return CommandEventBuilder<LoadToDoFilterSettingCommand, ListToDosFilter>(
       /// ...that will be `all` if the current filter state is empty
-      initialValue: ListToDosFilter.all,
+      initialValue: Event<ListToDosFilter>.success(ListToDosFilter.all),
       command: const LoadToDoFilterSettingCommand(),
       successBuilder: (context, listToDosFilterEvent) {
         // Best practice: is always a good idea to cache method calls

@@ -53,3 +53,9 @@
 ## 1.1.0+3
 
 * Minor fix when multithreading = false
+
+## 1.2.0
+
+* Now `successBuilder` of `EventBuilder` is optional (but required if `otherwiseBuilder` is not informed)
+
+* BREAKING CHANGE: `EventBuilder<T>.initialValue` now must be an `Event<T>`, so we can set an initial value of an empty value (i.e.: `initialValue: const Event<Class>.empty()`). Also, `initialValue` is only displayed while the `StreamBuilder` is waiting for the stream (otherwise, it will default to `Event<T>.waiting()`)

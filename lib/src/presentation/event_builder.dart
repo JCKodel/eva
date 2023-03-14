@@ -30,7 +30,7 @@ class EventState<TEventState> extends InheritedWidget {
 /// the appropriated arguments depending on the type of the Event
 class EventBuilder<TEventState> extends StatelessWidget {
   const EventBuilder({
-    required this.successBuilder,
+    this.successBuilder,
     super.key,
     this.emptyBuilder,
     this.failureBuilder,
@@ -43,10 +43,10 @@ class EventBuilder<TEventState> extends StatelessWidget {
     this.onWaiting,
     this.otherwiseBuilder,
     this.waitingBuilder,
-  });
+  }) : assert(successBuilder != null || otherwiseBuilder != null);
 
   /// The initial value used when this builder is in the waiting state.
-  final TEventState? initialValue;
+  final Event<TEventState>? initialValue;
 
   /// The builder to run if no other build is provided (it will ignore the default builders)
   final Widget Function(BuildContext context, Event<TEventState> event)? otherwiseBuilder;
@@ -61,7 +61,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
   final Widget Function(BuildContext context, FailureEvent<TEventState> event)? failureBuilder;
 
   /// The builder to run when the event is in the success state
-  final Widget Function(BuildContext context, SuccessEvent<TEventState> event) successBuilder;
+  final Widget Function(BuildContext context, SuccessEvent<TEventState> event)? successBuilder;
 
   /// This method will run if no other `on` method was provided
   final void Function(BuildContext context, Event<TEventState> event)? onOtherwise;
@@ -104,7 +104,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
         : Eva.getEventsStream<TEventState>(hashCode).where((event) => event is SuccessEvent<TEventState> && successFilter!(event.value));
 
     return StreamBuilder<Event<TEventState>>(
-      initialData: initialValue == null ? Event<TEventState>.waiting() : Event<TEventState>.success(initialValue as TEventState),
+      initialData: initialValue == null ? Event<TEventState>.waiting() : initialValue!,
       stream: stream,
       builder: (innerContext, snapshot) {
         if (snapshot.hasError) {
@@ -113,20 +113,13 @@ class EventBuilder<TEventState> extends StatelessWidget {
 
         late final Event<TEventState> event;
 
-        if (initialValue == null) {
-          event = snapshot.data!;
-        } else {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            event = Event.success(initialValue as TEventState);
-          } else {
-            event = snapshot.data!.maybeMatch(
-              waiting: (e) => Event.success(initialValue as TEventState),
-              otherwise: (e) => e,
-            );
-          }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          event = initialValue ?? Event<TEventState>.waiting();
+        } else if (snapshot.hasData) {
+          event = snapshot.data ?? Event<TEventState>.waiting();
         }
 
-        Log.verbose(() => "${runtimeType} is building ${event}");
+        Log.verbose(() => "${runtimeType} (${hashCode.toRadixString(16)}) is building ${event}");
 
         return EventState<TEventState>(
           state: event,
@@ -145,7 +138,7 @@ class EventBuilder<TEventState> extends StatelessWidget {
             },
             success: (e) {
               Future<void>.delayed(const Duration(milliseconds: 10)).then((_) => onSuccess?.call(context, e));
-              return successBuilder(context, e);
+              return (successBuilder ?? otherwiseBuilder)!(context, e);
             },
           ),
         );

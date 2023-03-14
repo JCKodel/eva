@@ -181,20 +181,13 @@ abstract class Eva {
         return false;
       }
 
-      if (event is SuccessEvent<T> == false) {
-        return true;
-      }
+      final lastEmmitedEvent = _lastEmmitedEvents[consumer];
 
-      final value = (event as SuccessEvent<T>).value;
-      final lastEmmitedValue = _lastEmmitedEvents[consumer];
+      _lastEmmitedEvents[consumer] = event;
 
-      _lastEmmitedEvents[consumer] = value as Object;
+      Log.verbose(() => "EventStream #${consumer.toRadixString(16)}: (${event} == ${lastEmmitedEvent}) : filtered = ${!(event != lastEmmitedEvent)}");
 
-      if (lastEmmitedValue == null) {
-        return true;
-      }
-
-      return value != lastEmmitedValue;
+      return event != lastEmmitedEvent;
     }).cast<Event<T>>();
   }
 }

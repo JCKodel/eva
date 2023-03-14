@@ -1,5 +1,6 @@
-import 'package:eva/eva.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eva/eva.dart';
 
 import '../../commands/load_to_do_filter_setting_command.dart';
 import '../../commands/load_to_dos_command.dart';
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
     // We dispatch a `LoadToDoFilterSettingCommand` to get the current filter state...
     return CommandEventBuilder<LoadToDoFilterSettingCommand, ListToDosFilter>(
       /// ...that will be `all` if the current filter state is empty
-      initialValue: ListToDosFilter.all,
+      initialValue: const Event<ListToDosFilter>.success(ListToDosFilter.all),
       command: const LoadToDoFilterSettingCommand(),
       successBuilder: (context, listToDosFilterEvent) {
         // Best practice: is always a good idea to cache method calls

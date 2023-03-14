@@ -23,7 +23,7 @@ class ToDoCard extends StatelessWidget {
     // THIS `ToDoEntity` (the one with the id `todo.id`), otherwise
     // a change in this card would rebuild every other card on the app
     return EventBuilder<ToDoEntity>(
-      initialValue: toDo,
+      initialValue: Event<ToDoEntity>.success(toDo),
       successFilter: (value) => value.id == toDo.id,
       successBuilder: (context, event) {
         return Card(
